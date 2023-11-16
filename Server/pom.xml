@@ -11,4 +11,11 @@
         <maven.compiler.target>20</maven.compiler.target>
         <exec.mainClass>com.btv.Server.Server</exec.mainClass>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.23</version> <!-- Thay đổi version phù hợp với phiên bản bạn đang sử dụng -->
+        </dependency>
+    </dependencies>
 </project>
