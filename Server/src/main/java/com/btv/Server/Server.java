@@ -21,6 +21,9 @@ public class Server {
             String password = "asd12345";
             connection = DriverManager.getConnection(url, username, password);
             // Perform database operations here
+            if(connection != null){
+                System.out.print("connected");
+            }
         } catch (SQLException e) {
             System.err.println(e);
         } finally {
