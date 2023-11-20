@@ -3,6 +3,8 @@
  */
 
 package com.btv.Admin;
+import com.formdev.flatlaf.FlatLightLaf;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -10,7 +12,13 @@ package com.btv.Admin;
  */
 public class Admin {
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
+    public static void main(String args[]) {           
+        FlatLightLaf.setup();
+        /* Create and display the form */
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new AllUsers().setVisible(true);
+            }
+        });
     }
 }
