@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.btv.assetCustom;
 
 import java.awt.Color;
@@ -22,16 +18,16 @@ public class TableHeader extends JLabel {
         setBackground(Color.BLACK);
         setFont(new Font("sansserif", 1, 12));
         setForeground(Color.WHITE);
-        setBorder(new EmptyBorder(10, 5, 10, 5));
-
+        setBorder(new EmptyBorder(10, 20, 10, 5));
+       
     }
-
+    
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(new Color(230, 230, 230));
         g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-
     }
-
+    
 }
