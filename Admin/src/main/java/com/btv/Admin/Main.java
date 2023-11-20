@@ -4,6 +4,7 @@
  */
 package com.btv.Admin;
 
+import com.btv.GUI.AllGroups;
 import com.btv.GUI.LoginList;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -77,7 +78,7 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginList().setVisible(true);
+                new AllGroups().setVisible(true);
             }
         });
     }

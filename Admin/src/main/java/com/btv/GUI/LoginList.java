@@ -37,18 +37,13 @@ public class LoginList extends javax.swing.JFrame {
         loginScollPane = new javax.swing.JScrollPane();
         tableLogin = new com.btv.assetCustom.TableCustom();
         hamButton = new javax.swing.JLabel();
-        navbar = new com.btv.GUI.Navbar();
+        navbar = new com.btv.assetCustom.Navbar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         background.setBackground(new java.awt.Color(237, 237, 237));
         background.setMinimumSize(new java.awt.Dimension(800, 600));
         background.setPreferredSize(new java.awt.Dimension(1024, 768));
-        background.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                backgroundMouseDragged(evt);
-            }
-        });
         background.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 backgroundMouseClicked(evt);
@@ -114,7 +109,7 @@ public class LoginList extends javax.swing.JFrame {
                         .addGap(278, 278, 278)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(loginScollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 925, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,21 +123,14 @@ public class LoginList extends javax.swing.JFrame {
                 .addContainerGap(180, Short.MAX_VALUE))
         );
 
-        navbar.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                navbarFocusGained(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addComponent(navbar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 1027, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,11 +145,6 @@ public class LoginList extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void backgroundMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseDragged
-        this.setLocation(this.getLocation().x + evt.getX() - pX,
-                this.getLocation().y + evt.getY() - pY);
-    }//GEN-LAST:event_backgroundMouseDragged
 
     private void backgroundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMousePressed
         pX = evt.getX();
@@ -246,7 +229,7 @@ public class LoginList extends javax.swing.JFrame {
     private javax.swing.JLabel hamButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane loginScollPane;
-    private com.btv.GUI.Navbar navbar;
+    private com.btv.assetCustom.Navbar navbar;
     private com.btv.assetCustom.TableCustom tableLogin;
     // End of variables declaration//GEN-END:variables
 }

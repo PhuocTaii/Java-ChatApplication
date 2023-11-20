@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.GUI;
+package com.btv.assetCustom;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -338,7 +338,7 @@ public class Navbar extends javax.swing.JPanel {
     }//GEN-LAST:event_hamButtonMouseClicked
     private int widthNavbar = 250;
 
-    void closeNavbar() {
+    public void closeNavbar() {
 
         new Thread(new Runnable() {
             @Override
@@ -356,7 +356,7 @@ public class Navbar extends javax.swing.JPanel {
 
     }
 
-    void openNavbar() {
+    public void openNavbar() {
 
         new Thread(new Runnable() {
             @Override
