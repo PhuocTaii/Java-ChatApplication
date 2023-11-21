@@ -19,13 +19,24 @@ import com.btv.User.Utils.SignUpListener;
 public class User {
     private Login logInForm;
     private SignUp signUpForm;
+    private Layout mainLayout;
 
     public User() {
+        mainLayout = new Layout();
+        
         logInForm = new Login(new LoginListener() {
             @Override
             public void onSignUpLinkClicked() {
                 logInForm.setVisible(false);
                 signUpForm.setVisible(true);
+            }
+            @Override
+            public void onLoginButtonClicked() {
+                logInForm.setVisible(false);
+                signUpForm.setVisible(false);
+                
+                mainLayout.setVisible(true);
+                mainLayout.setTitle("ChatChat");
             }
         });
         signUpForm = new SignUp(new SignUpListener() {

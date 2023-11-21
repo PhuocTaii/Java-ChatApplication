@@ -10,4 +10,5 @@ package com.btv.User.Utils;
  */
 public interface LoginListener {
     void onSignUpLinkClicked();
+    void onLoginButtonClicked();
 }
