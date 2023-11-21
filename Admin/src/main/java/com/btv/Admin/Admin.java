@@ -3,6 +3,7 @@
  */
 
 package com.btv.Admin;
+import com.btv.Admin.LayoutComponents.Layout;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.SwingUtilities;
 
@@ -17,7 +18,7 @@ public class Admin {
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new AllUsers().setVisible(true);
+                new Layout().setVisible(true);
             }
         });
     }

@@ -1,37 +1,31 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin;
-import java.awt.Dimension;
+package com.btv.Admin.Features;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-
 /**
  *
  * @author Admin
  */
-public class AllUsers extends JFrame {
-    
+public class AllUsers extends javax.swing.JPanel {
     boolean isLocked = false; // temp
-    
     /**
-     * Creates new form AllUsers
+     * Creates new form AllUser
      */
     public AllUsers() {
         initComponents();
-        this.setVisible(true);
     }
 
     /**
@@ -78,7 +72,6 @@ public class AllUsers extends JFrame {
         saveButton = new javax.swing.JButton();
         genderAddbuttonGroup = new javax.swing.ButtonGroup();
         title = new javax.swing.JLabel();
-        menuToggle = new javax.swing.JToggleButton();
         controlSection = new javax.swing.JPanel();
         filterLabel = new javax.swing.JLabel();
         filterOptions = new javax.swing.JComboBox<>();
@@ -120,7 +113,6 @@ public class AllUsers extends JFrame {
         lockToggleButton = new javax.swing.JToggleButton();
         loginHistoryPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         loginList = new javax.swing.JList<>();
         friendsPanel = new javax.swing.JPanel();
@@ -152,7 +144,6 @@ public class AllUsers extends JFrame {
         jPanel4.setPreferredSize(new java.awt.Dimension(130, 42));
         jPanel4.setLayout(new java.awt.BorderLayout(0, 2));
 
-        usernameAddLabel.setLabelFor(usernameAddField);
         usernameAddLabel.setText("Username");
         jPanel4.add(usernameAddLabel, java.awt.BorderLayout.NORTH);
 
@@ -169,7 +160,6 @@ public class AllUsers extends JFrame {
         jPanel5.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel5.setLayout(new java.awt.BorderLayout(0, 2));
 
-        emailAddLabel.setLabelFor(emailAddField);
         emailAddLabel.setText("Email");
         jPanel5.add(emailAddLabel, java.awt.BorderLayout.NORTH);
 
@@ -186,7 +176,6 @@ public class AllUsers extends JFrame {
         jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel6.setLayout(new java.awt.BorderLayout(0, 2));
 
-        nameAddLabel.setLabelFor(nameAddField);
         nameAddLabel.setText("Full name");
         jPanel6.add(nameAddLabel, java.awt.BorderLayout.NORTH);
 
@@ -209,7 +198,6 @@ public class AllUsers extends JFrame {
         jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel7.setLayout(new java.awt.BorderLayout(0, 2));
 
-        addressAddLabel.setLabelFor(addressAddField);
         addressAddLabel.setText("Address");
         jPanel7.add(addressAddLabel, java.awt.BorderLayout.PAGE_START);
 
@@ -226,7 +214,6 @@ public class AllUsers extends JFrame {
         jPanel8.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel8.setLayout(new java.awt.BorderLayout(0, 2));
 
-        birthAddLabel.setLabelFor(birthDateChooserAdd);
         birthAddLabel.setText("Date of birth");
         jPanel8.add(birthAddLabel, java.awt.BorderLayout.CENTER);
 
@@ -309,11 +296,7 @@ public class AllUsers extends JFrame {
 
         addUserDialog.getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("ChatChat-All Users");
-        setMaximumSize(null);
-        setResizable(false);
-        setSize(new java.awt.Dimension(1080, 768));
+        setPreferredSize(new java.awt.Dimension(1080, 768));
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -321,22 +304,7 @@ public class AllUsers extends JFrame {
         title.setMinimumSize(new java.awt.Dimension(900, 32));
         title.setPreferredSize(new java.awt.Dimension(1080, 32));
 
-        menuToggle.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/menu-line.png"));
-        menuToggle.setContentAreaFilled(false);
-        menuToggle.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        menuToggle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        menuToggle.setName(""); // NOI18N
-        menuToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuToggleActionPerformed(evt);
-            }
-        });
-
-        controlSection.setMaximumSize(null);
-        controlSection.setPreferredSize(new Dimension(1080, 35));
-
         filterLabel.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
-        filterLabel.setLabelFor(filterOptions);
         filterLabel.setText("Filter by");
 
         filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Name", "Username", "Status" }));
@@ -396,7 +364,7 @@ public class AllUsers extends JFrame {
             controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlSectionLayout.createSequentialGroup()
                 .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(0, 0, 0)
                 .addComponent(filterLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -407,8 +375,7 @@ public class AllUsers extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         controlSectionLayout.setVerticalGroup(
             controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,11 +384,12 @@ public class AllUsers extends JFrame {
                     .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(statusOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterLabel))
-                    .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -430,9 +398,9 @@ public class AllUsers extends JFrame {
 
         userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(1), "vanvan", "Thanh Vân", "123 Vườn Lài", null, "Female", "van@gmail.com", "19-10-2023", "Offline", "thanhvan123"},
-                { new Integer(2), "haha", "Thanh Hà", "123 Vườn Lài", null, "Female", "ha@mail.com", "17-11-2023", "Lock", "thanhha456"},
-                { new Integer(3), "duck", "Nguyên Đức", "456 Vườn Lài", null, "Male", "duc@mail.com", "18-11-2023", "Online", "duck123"}
+                { Integer.valueOf(1), "vanvan", "Thanh Vân", "123 Vườn Lài", "26-08-2003", "Female", "van@gmail.com", "19-10-2023", "Offline", "thanhvan123"},
+                { Integer.valueOf(2), "haha", "Thanh Hà", "123 Vườn Lài", "26-08-2003", "Female", "ha@mail.com", "17-11-2023", "Lock", "thanhha456"},
+                { Integer.valueOf(3), "duck", "Nguyên Đức", "456 Vườn Lài", "26-08-2003", "Male", "duc@mail.com", "18-11-2023", "Online", "duck123"}
             },
             new String [] {
                 "ID", "Username", "Name", "Address", "Date of birth", "Gender", "Email", "Time create", "Status", "Password"
@@ -453,9 +421,9 @@ public class AllUsers extends JFrame {
                 return canEdit [columnIndex];
             }
         });
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(userTable.getModel());
-        userTable.setRowSorter(sorter);
-        userTable.setColumnSelectionAllowed(true);
+        //TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(userTable.getModel());
+        //userTable.setRowSorter(sorter);
+        userTable.setRowSorter(new TableRowSorter<TableModel>(userTable.getModel()));
         userTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         userTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         userTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -464,7 +432,6 @@ public class AllUsers extends JFrame {
             }
         });
         tablePanel.setViewportView(userTable);
-        userTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (userTable.getColumnModel().getColumnCount() > 0) {
             userTable.getColumnModel().getColumn(0).setResizable(false);
             userTable.getColumnModel().getColumn(0).setPreferredWidth(3);
@@ -478,7 +445,6 @@ public class AllUsers extends JFrame {
 
         usernamePanel.setLayout(new java.awt.BorderLayout());
 
-        usernameLabel.setLabelFor(usernameField);
         usernameLabel.setText("Username:");
         usernameLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         usernamePanel.add(usernameLabel, java.awt.BorderLayout.CENTER);
@@ -492,7 +458,6 @@ public class AllUsers extends JFrame {
 
         namePanel.setLayout(new java.awt.BorderLayout());
 
-        nameLabel.setLabelFor(nameField);
         nameLabel.setText("Name:");
         nameLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         namePanel.add(nameLabel, java.awt.BorderLayout.CENTER);
@@ -506,7 +471,6 @@ public class AllUsers extends JFrame {
 
         addressPanel.setLayout(new java.awt.BorderLayout());
 
-        addressLabel.setLabelFor(addressField);
         addressLabel.setText("Address:");
         addressLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         addressPanel.add(addressLabel, java.awt.BorderLayout.LINE_START);
@@ -520,7 +484,6 @@ public class AllUsers extends JFrame {
 
         birthPanel.setLayout(new java.awt.BorderLayout());
 
-        birthLabel.setLabelFor(birthChooser);
         birthLabel.setText("Date of birth:");
         birthLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         birthPanel.add(birthLabel, java.awt.BorderLayout.LINE_START);
@@ -534,7 +497,6 @@ public class AllUsers extends JFrame {
 
         genderPanel.setLayout(new java.awt.BorderLayout());
 
-        genderLabel.setLabelFor(addressField);
         genderLabel.setText("Gender:");
         genderLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         genderLabel.setPreferredSize(new java.awt.Dimension(70, 16));
@@ -562,7 +524,6 @@ public class AllUsers extends JFrame {
 
         emailPanel.setLayout(new java.awt.BorderLayout());
 
-        addressLabel1.setLabelFor(emailField);
         addressLabel1.setText("Email:");
         addressLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         emailPanel.add(addressLabel1, java.awt.BorderLayout.LINE_START);
@@ -576,7 +537,6 @@ public class AllUsers extends JFrame {
 
         passwordPanel.setLayout(new java.awt.BorderLayout());
 
-        passwordLabel.setLabelFor(addressField);
         passwordLabel.setText("Password:");
         passwordLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         passwordPanel.add(passwordLabel, java.awt.BorderLayout.LINE_START);
@@ -617,7 +577,7 @@ public class AllUsers extends JFrame {
         lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
         lockToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                toggleLockUser(evt);
+                lockToggleButtontoggleLockUser(evt);
             }
         });
         actionPanel.add(lockToggleButton);
@@ -638,20 +598,7 @@ public class AllUsers extends JFrame {
         loginList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(loginList);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        loginHistoryPanel.add(jPanel1, java.awt.BorderLayout.CENTER);
+        loginHistoryPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         friendsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -676,66 +623,54 @@ public class AllUsers extends JFrame {
         infoSectionLayout.setHorizontalGroup(
             infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoSectionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(0, 0, 0)
+                .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(actionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(loginHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(loginHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         infoSectionLayout.setVerticalGroup(
             infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(infoFields, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(loginHistoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(infoSectionLayout.createSequentialGroup()
-                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(loginHistoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(friendsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(actionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(infoFields, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(actionPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(tablePanel)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(menuToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(controlSection, javax.swing.GroupLayout.DEFAULT_SIZE, 1074, Short.MAX_VALUE)
-                    .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(tablePanel)
+                    .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(controlSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(menuToggle, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(controlSection, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
-
-        pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void menuToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuToggleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuToggleActionPerformed
 
     private void filterOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOptionsActionPerformed
         // TODO add your handling code here:
@@ -772,39 +707,16 @@ public class AllUsers extends JFrame {
         addUserDialog.setVisible(true);
     }//GEN-LAST:event_addBtnActionPerformed
 
-    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-        int res = JOptionPane.showConfirmDialog(this,
-             "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
-        if(res == JOptionPane.YES_OPTION) {
-            // handle update here
-        }
-    }//GEN-LAST:event_updateButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
-        int res = JOptionPane.showConfirmDialog(this,
-             "Sure you want to delete this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if(res == JOptionPane.YES_OPTION) {
-            // handle update here
-        }
-    }//GEN-LAST:event_deleteButtonActionPerformed
-
-    private void toggleLockUser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleLockUser
-        // TODO add your handling code here:
-        isLocked = !isLocked;
-        if(isLocked)
-            lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-fill.png"));
-        else
-            lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
-            
-    }//GEN-LAST:event_toggleLockUser
+    }//GEN-LAST:event_searchButtonActionPerformed
 
     private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
         // TODO add your handling code here:
-        int row = userTable.getSelectedRow();
+        int viewRow = userTable.getSelectedRow();
+        int row = userTable.convertRowIndexToModel(viewRow);
         DefaultTableModel model = (DefaultTableModel)userTable.getModel();
-        
+
         usernameField.setText(model.getValueAt(row, 1).toString());
         nameField.setText(model.getValueAt(row, 2).toString());
         addressField.setText(model.getValueAt(row, 3).toString());
@@ -833,9 +745,33 @@ public class AllUsers extends JFrame {
         passwordField.setText(model.getValueAt(row, 9).toString());
     }//GEN-LAST:event_userTableMouseClicked
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_searchButtonActionPerformed
+        int res = JOptionPane.showConfirmDialog(this,
+            "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
+        if(res == JOptionPane.YES_OPTION) {
+            // handle update here
+        }
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        // TODO add your handling code here:
+        int res = JOptionPane.showConfirmDialog(this,
+            "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if(res == JOptionPane.YES_OPTION) {
+            // handle update here
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void lockToggleButtontoggleLockUser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockToggleButtontoggleLockUser
+        // TODO add your handling code here:
+        isLocked = !isLocked;
+        if(isLocked)
+        lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-fill.png"));
+        else
+        lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
+
+    }//GEN-LAST:event_lockToggleButtontoggleLockUser
 
     private void usernameAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAddFieldActionPerformed
         // TODO add your handling code here:
@@ -865,9 +801,6 @@ public class AllUsers extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel actionPanel;
@@ -911,7 +844,6 @@ public class AllUsers extends JFrame {
     private javax.swing.JPanel inputPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -927,7 +859,6 @@ public class AllUsers extends JFrame {
     private javax.swing.JList<String> loginList;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JRadioButton maleRadioButtonAdd;
-    private javax.swing.JToggleButton menuToggle;
     private javax.swing.JTextField nameAddField;
     private javax.swing.JLabel nameAddLabel;
     private javax.swing.JTextField nameField;
