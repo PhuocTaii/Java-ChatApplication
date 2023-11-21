@@ -1,20 +1,21 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin;
+package com.btv.Admin.Features;
+
 import javax.swing.JComboBox;
 
 /**
  *
- * @author taing
+ * @author Admin
  */
-public class NewUser extends javax.swing.JFrame {
+public class NewUsers extends javax.swing.JPanel {
 
     /**
-     * Creates new form NewUser
+     * Creates new form NewUsers
      */
-    public NewUser() {
+    public NewUsers() {
         initComponents();
     }
 
@@ -45,19 +46,14 @@ public class NewUser extends javax.swing.JFrame {
         year = new javax.swing.JLabel();
         yearchooser = new com.toedter.calendar.JYearChooser();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setAutoRequestFocus(false);
-        setResizable(false);
-        setSize(new java.awt.Dimension(1080, 768));
+        setPreferredSize(new java.awt.Dimension(1080, 768));
 
-        pageHeader.setBackground(new java.awt.Color(214, 217, 223));
         pageHeader.setPreferredSize(new java.awt.Dimension(100, 45));
         pageHeader.setLayout(new java.awt.BorderLayout());
 
-        Tittle.setBackground(new java.awt.Color(214, 217, 223));
         Tittle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         Tittle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        Tittle.setText("NEW USER");
+        Tittle.setText("NEW USERS");
         Tittle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         pageHeader.add(Tittle, java.awt.BorderLayout.CENTER);
 
@@ -97,7 +93,7 @@ public class NewUser extends javax.swing.JFrame {
         optionsLayout.setHorizontalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -113,7 +109,7 @@ public class NewUser extends javax.swing.JFrame {
                 .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(searchButton)
-                .addGap(30, 30, 30))
+                .addContainerGap())
         );
         optionsLayout.setVerticalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,17 +143,18 @@ public class NewUser extends javax.swing.JFrame {
             new String [] {
                 "ID", "Username", "Name", "Time create"
             }
-        ));
-        jScrollPane1.setViewportView(friendTable);
-        if (friendTable.getColumnModel().getColumnCount() > 0) {
-            friendTable.getColumnModel().getColumn(0).setResizable(false);
-            friendTable.getColumnModel().getColumn(0).setPreferredWidth(180);
-            friendTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-            friendTable.getColumnModel().getColumn(2).setPreferredWidth(300);
-            friendTable.getColumnModel().getColumn(3).setPreferredWidth(300);
-        }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-        statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(friendTable);
+
+        statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -180,7 +177,7 @@ public class NewUser extends javax.swing.JFrame {
                 .addComponent(year)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(yearchooser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(454, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         statisticzoneLayout.setVerticalGroup(
             statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,21 +188,21 @@ public class NewUser extends javax.swing.JFrame {
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(yearchooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(year, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(315, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pageHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 1084, Short.MAX_VALUE)
+            .addComponent(pageHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE)
             .addComponent(options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,14 +216,15 @@ public class NewUser extends javax.swing.JFrame {
                 .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        setSize(new java.awt.Dimension(1094, 775));
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_InputActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchButtonActionPerformed
 
     private void filterOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOptionsActionPerformed
         // TODO add your handling code here:
@@ -244,14 +242,6 @@ public class NewUser extends javax.swing.JFrame {
         options.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Input;

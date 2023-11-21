@@ -5,6 +5,9 @@
 package com.btv.Admin.LayoutComponents;
 
 import com.btv.Admin.Features.AllUsers;
+import com.btv.Admin.Features.NewUsers;
+import com.btv.Admin.Features.OnlineUsers;
+import com.btv.Admin.Features.UserFriends;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,6 +19,10 @@ import java.awt.event.MouseEvent;
 public class Layout extends javax.swing.JFrame {
     
     private MenuSidebar myMenu;
+    private AllUsers allUsersScreen;
+    private NewUsers newUsersScreen;
+    private OnlineUsers onlineUsersScreen;
+    private UserFriends userFriendsScreen;
 
     /**
      * Creates new form Layout
@@ -38,6 +45,18 @@ public class Layout extends javax.swing.JFrame {
         allUsersScreen.setSize(contentPage.getWidth(), contentPage.getHeight());
         contentPage.add(allUsersScreen);
         allUsersScreen.setVisible(true);
+        
+        newUsersScreen = new NewUsers();
+        newUsersScreen.setSize(contentPage.getWidth(), contentPage.getHeight());
+        contentPage.add(newUsersScreen);
+        
+        onlineUsersScreen = new OnlineUsers();
+        onlineUsersScreen.setSize(contentPage.getWidth(), contentPage.getHeight());
+        contentPage.add(onlineUsersScreen);
+        
+        userFriendsScreen = new UserFriends();
+        userFriendsScreen.setSize(contentPage.getWidth(), contentPage.getHeight());
+        contentPage.add(userFriendsScreen);
     }
 
     /**
@@ -93,8 +112,7 @@ public class Layout extends javax.swing.JFrame {
     private javax.swing.JPanel contentPage;
     private javax.swing.JPanel menuLayout;
     // End of variables declaration//GEN-END:variables
-    private AllUsers allUsersScreen;
-    
+
     private void addMouseListenerToMenuItem(MenuItem currItem) {
         currItem.addMouseListener(new MouseAdapter() {
             @Override
@@ -113,24 +131,66 @@ public class Layout extends javax.swing.JFrame {
                 switch (currItem.name) {
                     case "All users":
                         allUsersScreen.setVisible(true);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "Login list":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "All group chats":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "Spams":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "New users":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(true);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "Friends":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(true);
+                        onlineUsersScreen.setVisible(false);
                         break;
                     case "Online users":
                         allUsersScreen.setVisible(false);
+                        
+                        
+                        
+                        newUsersScreen.setVisible(false);
+                        userFriendsScreen.setVisible(false);
+                        onlineUsersScreen.setVisible(true);
                         break;
                     default:
 

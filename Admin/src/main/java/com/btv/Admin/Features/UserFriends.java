@@ -1,16 +1,16 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin;
+package com.btv.Admin.Features;
 
 import javax.swing.JComboBox;
 
 /**
  *
- * @author taing
+ * @author Admin
  */
-public class UserFriends extends javax.swing.JFrame {
+public class UserFriends extends javax.swing.JPanel {
 
     /**
      * Creates new form UserFriends
@@ -38,12 +38,6 @@ public class UserFriends extends javax.swing.JFrame {
         filterOptions = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         friendTable = new javax.swing.JTable();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(1080, 743));
-        setMinimumSize(new java.awt.Dimension(1080, 743));
-        setResizable(false);
-        setSize(new java.awt.Dimension(1080, 768));
 
         headpage.setMaximumSize(new java.awt.Dimension(121, 32));
         headpage.setMinimumSize(new java.awt.Dimension(121, 32));
@@ -82,7 +76,7 @@ public class UserFriends extends javax.swing.JFrame {
         optionsLayout.setHorizontalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addComponent(filter)
                 .addGap(18, 18, 18)
                 .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -92,7 +86,7 @@ public class UserFriends extends javax.swing.JFrame {
                 .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(searchButton)
-                .addContainerGap(569, Short.MAX_VALUE))
+                .addContainerGap(593, Short.MAX_VALUE))
         );
         optionsLayout.setVerticalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,29 +125,17 @@ public class UserFriends extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(friendTable);
-        if (friendTable.getColumnModel().getColumnCount() > 0) {
-            friendTable.getColumnModel().getColumn(0).setResizable(false);
-            friendTable.getColumnModel().getColumn(0).setPreferredWidth(180);
-            friendTable.getColumnModel().getColumn(1).setResizable(false);
-            friendTable.getColumnModel().getColumn(1).setPreferredWidth(300);
-            friendTable.getColumnModel().getColumn(2).setResizable(false);
-            friendTable.getColumnModel().getColumn(2).setPreferredWidth(300);
-            friendTable.getColumnModel().getColumn(3).setResizable(false);
-            friendTable.getColumnModel().getColumn(3).setPreferredWidth(200);
-            friendTable.getColumnModel().getColumn(4).setResizable(false);
-            friendTable.getColumnModel().getColumn(4).setPreferredWidth(200);
-        }
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(headpage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addComponent(jScrollPane1)
-                .addGap(30, 30, 30))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,8 +147,6 @@ public class UserFriends extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
@@ -179,17 +159,17 @@ public class UserFriends extends javax.swing.JFrame {
         int selection = cb.getSelectedIndex();
         Input.setVisible(true);
         numberOptions.setVisible(true);
-        
+
         if(selection == 0){
             Input.setVisible(false);
             numberOptions.setVisible(false);
         }
-        
+
         else if (selection == 1){
             Input.setVisible(true);
             numberOptions.setVisible(false);
         }
-        
+
         else{
             Input.setVisible(true);
             numberOptions.setVisible(true);
@@ -197,10 +177,6 @@ public class UserFriends extends javax.swing.JFrame {
         options.revalidate();
         options.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
