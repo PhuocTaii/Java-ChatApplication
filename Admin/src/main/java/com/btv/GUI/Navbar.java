@@ -16,6 +16,8 @@ public class Navbar extends javax.swing.JPanel {
     /**
      * Creates new form Navbar
      */
+    public boolean isOpen = false;
+
     public Navbar() {
         initComponents();
     }
@@ -335,6 +337,7 @@ public class Navbar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void hamButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamButtonMouseClicked
+//        closeNavbar();
     }//GEN-LAST:event_hamButtonMouseClicked
     private int widthNavbar = 250;
 
@@ -343,6 +346,8 @@ public class Navbar extends javax.swing.JPanel {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                isOpen = false;
+
                 for (int i = widthNavbar; i > 0; i--) {
                     setSize(i, getHeight());
                     try {
@@ -361,6 +366,8 @@ public class Navbar extends javax.swing.JPanel {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                isOpen = true;
+                
                 for (int i = 0; i < widthNavbar; i++) {
                     setSize(i, getHeight());
                     try {

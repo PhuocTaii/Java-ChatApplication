@@ -45,7 +45,7 @@ public class TableCustom extends JTable {
 
         });
         this.setIntercellSpacing(new Dimension(40, 0));
-
+        
     }
 
 }

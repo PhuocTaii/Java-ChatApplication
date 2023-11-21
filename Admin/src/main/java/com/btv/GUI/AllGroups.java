@@ -38,6 +38,9 @@ public class AllGroups extends javax.swing.JFrame {
 
     private int widthNavbar = 250;
 
+    String query = "";
+    String queryOrder = "";
+
     private void init() {
         setIconImage(new ImageIcon(getClass().getResource("/com/btv/image"))
                 .getImage()
@@ -99,39 +102,39 @@ public class AllGroups extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        background = new javax.swing.JPanel();
+        backgroundGroup = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         hamButton = new javax.swing.JLabel();
         loginScollPane = new javax.swing.JScrollPane();
         tableGroups = new com.btv.assetCustom.TableCustom();
         jLabel2 = new javax.swing.JLabel();
         comboBox = new com.btv.assetCustom.ComboboxCustom();
-        filterButton = new javax.swing.JLabel();
+        comboBoxOrder = new com.btv.assetCustom.ComboboxCustom();
         menuGroups = new com.btv.assetCustom.Navbar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(new java.awt.Dimension(1080, 768));
 
-        background.setBackground(new java.awt.Color(237, 237, 237));
-        background.setPreferredSize(new java.awt.Dimension(1080, 768));
-        background.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        backgroundGroup.setBackground(new java.awt.Color(237, 237, 237));
+        backgroundGroup.setPreferredSize(new java.awt.Dimension(1080, 768));
+        backgroundGroup.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                backgroundMouseDragged(evt);
+                backgroundGroupMouseDragged(evt);
             }
         });
-        background.addMouseListener(new java.awt.event.MouseAdapter() {
+        backgroundGroup.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                backgroundMouseClicked(evt);
+                backgroundGroupMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                backgroundMousePressed(evt);
+                backgroundGroupMousePressed(evt);
             }
         });
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("ALL GROUP CHATS");
+        jLabel1.setText("ALL GROUPS");
 
         hamButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         hamButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/image/ham.png"))); // NOI18N
@@ -169,59 +172,70 @@ public class AllGroups extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel2.setText("Filtered by");
 
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ID", "Name", "Time create" }));
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ID", "Username", "Time report", "Reported user", "Lock" }));
+        comboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxItemStateChanged(evt);
+            }
+        });
         comboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 comboBoxActionPerformed(evt);
             }
         });
 
-        filterButton.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        filterButton.setText("Filter");
-        filterButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        filterButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                filterButtonMouseClicked(evt);
+        comboBoxOrder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ASC", "DESC" }));
+        comboBoxOrder.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxOrderItemStateChanged(evt);
+            }
+        });
+        comboBoxOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxOrderActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
-        background.setLayout(backgroundLayout);
-        backgroundLayout.setHorizontalGroup(
-            backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(368, 368, 368))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
-                .addContainerGap(91, Short.MAX_VALUE)
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(loginScollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 911, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(backgroundLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(filterButton)))
-                .addGap(81, 81, 81))
+        javax.swing.GroupLayout backgroundGroupLayout = new javax.swing.GroupLayout(backgroundGroup);
+        backgroundGroup.setLayout(backgroundGroupLayout);
+        backgroundGroupLayout.setHorizontalGroup(
+            backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundGroupLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(backgroundGroupLayout.createSequentialGroup()
+                        .addComponent(hamButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(368, 368, 368))
+                    .addGroup(backgroundGroupLayout.createSequentialGroup()
+                        .addGroup(backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(backgroundGroupLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(comboBoxOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(loginScollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(40, Short.MAX_VALUE))))
         );
-        backgroundLayout.setVerticalGroup(
-            backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundLayout.createSequentialGroup()
+        backgroundGroupLayout.setVerticalGroup(
+            backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundGroupLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundGroupLayout.createSequentialGroup()
+                        .addComponent(hamButton)
+                        .addGap(24, 24, 24)))
                 .addGap(18, 18, 18)
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(backgroundGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(filterButton))
-                .addGap(28, 28, 28)
+                    .addComponent(comboBoxOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
                 .addComponent(loginScollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(344, Short.MAX_VALUE))
+                .addContainerGap(353, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -231,7 +245,7 @@ public class AllGroups extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(menuGroups, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 1083, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(backgroundGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 1083, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
@@ -239,7 +253,7 @@ public class AllGroups extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(menuGroups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(backgroundGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
 
@@ -253,34 +267,46 @@ public class AllGroups extends javax.swing.JFrame {
         isNavbarVisible = true;
     }//GEN-LAST:event_hamButtonMouseClicked
 
-    private void backgroundMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseDragged
+    private void backgroundGroupMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundGroupMouseDragged
         this.setLocation(this.getLocation().x + evt.getX() - pX,
                 this.getLocation().y + evt.getY() - pY);
         // TODO add your handling code here:
-    }//GEN-LAST:event_backgroundMouseDragged
+    }//GEN-LAST:event_backgroundGroupMouseDragged
 
-    private void backgroundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMousePressed
+    private void backgroundGroupMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundGroupMousePressed
         pX = evt.getX();
         pY = evt.getY();
-    }//GEN-LAST:event_backgroundMousePressed
+    }//GEN-LAST:event_backgroundGroupMousePressed
 
     private void comboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxActionPerformed
 
-    private void filterButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filterButtonMouseClicked
-        String query = comboBox.getSelectedItem().toString();
-
-        filter(query);
-    }//GEN-LAST:event_filterButtonMouseClicked
-
-    private void backgroundMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseClicked
+    private void backgroundGroupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundGroupMouseClicked
         if (isNavbarVisible) {
             menuGroups.closeNavbar();
             setTableVisible(true);
             isNavbarVisible = false;
         }
-    }//GEN-LAST:event_backgroundMouseClicked
+    }//GEN-LAST:event_backgroundGroupMouseClicked
+
+    private void comboBoxOrderItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxOrderItemStateChanged
+        query = comboBox.getSelectedItem().toString();
+        queryOrder=comboBoxOrder.getSelectedItem().toString();
+        
+        filter(query, queryOrder);
+    }//GEN-LAST:event_comboBoxOrderItemStateChanged
+
+    private void comboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxItemStateChanged
+        query = comboBox.getSelectedItem().toString();
+        queryOrder=comboBoxOrder.getSelectedItem().toString();
+        
+        filter(query, queryOrder);
+    }//GEN-LAST:event_comboBoxItemStateChanged
+
+    private void comboBoxOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrderActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxOrderActionPerformed
 
     private void setTableVisible(boolean bl) {
         tableGroups.setVisible(bl);
@@ -290,9 +316,10 @@ public class AllGroups extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public void filter(String query) {
+    public void filter(String query, String queryOrder) {
 
         int sortKey = 0;
+        SortOrder sortKeyOrder = SortOrder.ASCENDING;
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableGroups.getModel());
         tableGroups.setRowSorter(sorter);
@@ -305,10 +332,18 @@ public class AllGroups extends javax.swing.JFrame {
             } else {
                 sortKey = 2;
             }
-        } else {
         }
+
+        if (queryOrder != "None") {
+            if (queryOrder.equals("ASC")) {
+                sortKeyOrder = SortOrder.ASCENDING;
+            } else {
+                sortKeyOrder = SortOrder.DESCENDING;
+            }
+        }
+
         List<RowSorter.SortKey> sortKeys = new ArrayList<>(25);
-        sortKeys.add(new RowSorter.SortKey(sortKey, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(sortKey, sortKeyOrder));
         sorter.setSortKeys(sortKeys);
 
     }
@@ -346,9 +381,9 @@ public class AllGroups extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel background;
+    private javax.swing.JPanel backgroundGroup;
     private com.btv.assetCustom.ComboboxCustom comboBox;
-    private javax.swing.JLabel filterButton;
+    private com.btv.assetCustom.ComboboxCustom comboBoxOrder;
     private javax.swing.JLabel hamButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
