@@ -1,5 +1,6 @@
 package com.btv.component;
 
+import com.btv.model.MenuModel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -13,36 +14,76 @@ public class Menu extends javax.swing.JPanel {
     public Menu() {
         initComponents();
         setOpaque(false);
+        menuList.setOpaque(false);
+        init();
+    }
+
+    void init() {
+        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
+        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
+        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
+        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
+
+        menuList.addItem(new MenuModel("allUsers", "UI Elements", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("login", "Comonents", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("groups", "Forms Stuff", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("spams", "Date Table", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("newUsers", "Date Table", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("friends", "Date Table", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("online", "Date Table", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("", " ", MenuModel.MenuType.EMPTY));
+
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
+        menuList = new com.btv.component.MenuList<>();
+        labelTitle = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(48, 162, 255));
         setPreferredSize(new java.awt.Dimension(250, 768));
 
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("CHAT CHAT");
+        menuList.setOpaque(false);
+
+        labelTitle.setOpaque(false);
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("CHAT CHAT");
+
+        javax.swing.GroupLayout labelTitleLayout = new javax.swing.GroupLayout(labelTitle);
+        labelTitle.setLayout(labelTitleLayout);
+        labelTitleLayout.setHorizontalGroup(
+            labelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(labelTitleLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel1)
+                .addContainerGap(21, Short.MAX_VALUE))
+        );
+        labelTitleLayout.setVerticalGroup(
+            labelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelTitleLayout.createSequentialGroup()
+                .addContainerGap(151, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(70, 70, 70))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(19, 19, 19))
+            .addComponent(menuList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jLabel2)
-                .addContainerGap(576, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(menuList, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
     private int widthNavbar = 250;
@@ -93,17 +134,13 @@ public class Menu extends javax.swing.JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setPaint(getBackground());
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), 0, 0);
-        
+
         super.paintChildren(g);
-        
-        
     }
 
-    
-    
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel labelTitle;
+    private com.btv.component.MenuList<String> menuList;
     // End of variables declaration//GEN-END:variables
 }
