@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.btv.GUI;
+package com.btv.gui;
 
-import com.btv.assetCustom.ScrollBar;
+import com.btv.newSwing.ScrollBar;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,11 +106,11 @@ public class AllGroups extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         hamButton = new javax.swing.JLabel();
         loginScollPane = new javax.swing.JScrollPane();
-        tableGroups = new com.btv.assetCustom.TableCustom();
+        tableGroups = new com.btv.newSwing.TableCustom();
         jLabel2 = new javax.swing.JLabel();
-        comboBox = new com.btv.assetCustom.ComboboxCustom();
-        comboBoxOrder = new com.btv.assetCustom.ComboboxCustom();
-        menuGroups = new com.btv.assetCustom.Navbar();
+        comboBox = new com.btv.newSwing.ComboboxCustom();
+        comboBoxOrder = new com.btv.newSwing.ComboboxCustom();
+        menuGroups = new com.btv.component.Menu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -263,7 +263,7 @@ public class AllGroups extends javax.swing.JFrame {
 
     private void hamButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamButtonMouseClicked
         menuGroups.openNavbar();
-        setTableVisible(false);
+        setBackgroundVisible(false);
         isNavbarVisible = true;
     }//GEN-LAST:event_hamButtonMouseClicked
 
@@ -285,7 +285,7 @@ public class AllGroups extends javax.swing.JFrame {
     private void backgroundGroupMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundGroupMouseClicked
         if (isNavbarVisible) {
             menuGroups.closeNavbar();
-            setTableVisible(true);
+            setBackgroundVisible(true);
             isNavbarVisible = false;
         }
     }//GEN-LAST:event_backgroundGroupMouseClicked
@@ -308,7 +308,7 @@ public class AllGroups extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxOrderActionPerformed
 
-    private void setTableVisible(boolean bl) {
+    private void setBackgroundVisible(boolean bl) {
         tableGroups.setVisible(bl);
         tableGroups.getTableHeader().setVisible(bl);
     }
@@ -348,47 +348,17 @@ public class AllGroups extends javax.swing.JFrame {
 
     }
 
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AllGroups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AllGroups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AllGroups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AllGroups.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AllGroups().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundGroup;
-    private com.btv.assetCustom.ComboboxCustom comboBox;
-    private com.btv.assetCustom.ComboboxCustom comboBoxOrder;
+    private com.btv.newSwing.ComboboxCustom comboBox;
+    private com.btv.newSwing.ComboboxCustom comboBoxOrder;
     private javax.swing.JLabel hamButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane loginScollPane;
-    private com.btv.assetCustom.Navbar menuGroups;
-    private com.btv.assetCustom.TableCustom tableGroups;
+    private com.btv.component.Menu menuGroups;
+    private com.btv.newSwing.TableCustom tableGroups;
     // End of variables declaration//GEN-END:variables
 }

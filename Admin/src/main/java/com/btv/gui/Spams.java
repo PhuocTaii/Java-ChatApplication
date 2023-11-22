@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.btv.GUI;
+package com.btv.gui;
 
-import com.btv.assetCustom.ScrollBar;
+import com.btv.newSwing.ScrollBar;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +60,11 @@ public class Spams extends javax.swing.JFrame {
         titleSpams = new javax.swing.JLabel();
         hamSpams = new javax.swing.JLabel();
         spamScrollPane = new javax.swing.JScrollPane();
-        tableSpams = new com.btv.assetCustom.TableCustom();
+        tableSpams = new com.btv.newSwing.TableCustom();
         jLabel2 = new javax.swing.JLabel();
-        comboBoxSpams = new com.btv.assetCustom.ComboboxCustom();
-        comboBoxOrderSpams = new com.btv.assetCustom.ComboboxCustom();
-        menuSpam = new com.btv.assetCustom.Navbar();
+        comboBoxSpams = new com.btv.newSwing.ComboboxCustom();
+        comboBoxOrderSpams = new com.btv.newSwing.ComboboxCustom();
+        menuSpam = new com.btv.component.Menu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -251,14 +251,14 @@ public class Spams extends javax.swing.JFrame {
     private void backgroundSpamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundSpamsMouseClicked
         if (isNavbarVisible) {
             menuSpam.closeNavbar();
-            setTableVisible(true);
+            setBackgroundVisible(true);
             isNavbarVisible = false;
         }
     }//GEN-LAST:event_backgroundSpamsMouseClicked
 
     private void hamSpamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamSpamsMouseClicked
         menuSpam.openNavbar();
-        setTableVisible(false);
+        setBackgroundVisible(false);
         isNavbarVisible = true;
     }//GEN-LAST:event_hamSpamsMouseClicked
 
@@ -270,9 +270,9 @@ public class Spams extends javax.swing.JFrame {
 //        if (menuSpam.isOpen == false) {
         System.out.println(menuSpam.isOpen);
         menuSpam.closeNavbar();
-        setTableVisible(true);
+        setBackgroundVisible(true);
 //        } else {
-//            setTableVisible(true);
+//            setBackgroundVisible(true);
 //        }
 
     }//GEN-LAST:event_formMouseClicked
@@ -366,51 +366,20 @@ public class Spams extends javax.swing.JFrame {
         
     }
     
-    private void setTableVisible(boolean bl) {
+    private void setBackgroundVisible(boolean bl) {
         backgroundSpams.setVisible(bl);
     }
     
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Spams.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Spams.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Spams.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Spams.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Spams().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundSpams;
-    private com.btv.assetCustom.ComboboxCustom comboBoxOrderSpams;
-    private com.btv.assetCustom.ComboboxCustom comboBoxSpams;
+    private com.btv.newSwing.ComboboxCustom comboBoxOrderSpams;
+    private com.btv.newSwing.ComboboxCustom comboBoxSpams;
     private javax.swing.JLabel hamSpams;
     private javax.swing.JLabel jLabel2;
-    private com.btv.assetCustom.Navbar menuSpam;
+    private com.btv.component.Menu menuSpam;
     private javax.swing.JScrollPane spamScrollPane;
-    private com.btv.assetCustom.TableCustom tableSpams;
+    private com.btv.newSwing.TableCustom tableSpams;
     private javax.swing.JLabel titleSpams;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,7 +1,8 @@
-package com.btv.GUI;
+package com.btv.gui;
 
-import com.btv.assetCustom.ScrollBar;
+import com.btv.newSwing.ScrollBar;
 import java.awt.Image;
+import java.awt.MenuBar;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -35,11 +36,16 @@ public class LoginList extends javax.swing.JFrame {
         background = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         loginScollPane = new javax.swing.JScrollPane();
-        tableLogin = new com.btv.assetCustom.TableCustom();
+        tableLogin = new com.btv.newSwing.TableCustom();
         hamButton = new javax.swing.JLabel();
-        navbar = new com.btv.assetCustom.Navbar();
+        menuLogin = new com.btv.component.Menu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         background.setBackground(new java.awt.Color(237, 237, 237));
         background.setMinimumSize(new java.awt.Dimension(800, 600));
@@ -123,12 +129,18 @@ public class LoginList extends javax.swing.JFrame {
                 .addContainerGap(180, Short.MAX_VALUE))
         );
 
+        menuLogin.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                menuLoginPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(navbar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menuLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, 1027, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -137,7 +149,7 @@ public class LoginList extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(navbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(menuLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(background, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -152,26 +164,39 @@ public class LoginList extends javax.swing.JFrame {
     }//GEN-LAST:event_backgroundMousePressed
 
     private void hamButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamButtonMouseClicked
-        navbar.openNavbar();
-        setTableVisible(false);
+        menuLogin.openNavbar();
+        setBackgroundVisible(false);
         isNavbarVisible = true;
     }//GEN-LAST:event_hamButtonMouseClicked
 
-    private void navbarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_navbarFocusGained
-
-    }//GEN-LAST:event_navbarFocusGained
-
     private void backgroundMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseClicked
         if (isNavbarVisible) {
-            navbar.closeNavbar();
-            setTableVisible(true);
+            menuLogin.closeNavbar();
+            setBackgroundVisible(true);
             isNavbarVisible = false;
         }
     }//GEN-LAST:event_backgroundMouseClicked
 
-    private void setTableVisible(boolean bl) {
-        tableLogin.setVisible(bl);
-        tableLogin.getTableHeader().setVisible(bl);
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        menuLogin.closeNavbar();
+        setBackgroundVisible(true);
+        isNavbarVisible = false;
+       
+    }//GEN-LAST:event_formMouseClicked
+
+    private void menuLoginPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_menuLoginPropertyChange
+//            setBackgroundVisible(true);
+    }//GEN-LAST:event_menuLoginPropertyChange
+
+    @Override
+    public MenuBar getMenuBar() {
+        return super.getMenuBar(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    
+    
+    private void setBackgroundVisible(boolean bl) {
+        background.setVisible(bl);
     }
 
     private void testData(JTable table) {
@@ -229,7 +254,7 @@ public class LoginList extends javax.swing.JFrame {
     private javax.swing.JLabel hamButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane loginScollPane;
-    private com.btv.assetCustom.Navbar navbar;
-    private com.btv.assetCustom.TableCustom tableLogin;
+    private com.btv.component.Menu menuLogin;
+    private com.btv.newSwing.TableCustom tableLogin;
     // End of variables declaration//GEN-END:variables
 }
