@@ -20,13 +20,13 @@ public class Menu extends javax.swing.JPanel {
     }
 
     void init() {
-        menuList.addItem(new MenuModel("allUsers", "All users", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("login", "Login list", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("groups", "All group chats", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("spams", "Spams", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("newUsers", "New users", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("friends", "Friends", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("online", "Online users", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("allUsers", "All users"));
+        menuList.addItem(new MenuModel("login", "Login list"));
+        menuList.addItem(new MenuModel("groups", "All group chats"));
+        menuList.addItem(new MenuModel("spams", "Spams"));
+        menuList.addItem(new MenuModel("newUsers", "New users"));
+        menuList.addItem(new MenuModel("friends", "Friends"));
+        menuList.addItem(new MenuModel("online", "Online users"));
 
     }
 

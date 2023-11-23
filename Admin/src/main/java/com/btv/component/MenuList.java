@@ -26,7 +26,7 @@ public class MenuList<E extends Object> extends JList<Object> {
                 if (o instanceof MenuModel) {
                     data = (MenuModel) o;
                 } else {
-                    data = new MenuModel("", o + "", MenuModel.MenuType.EMPTY);
+                    data = new MenuModel("", o + "");
                 }
                 MenuItem item = new MenuItem(data);
                 return item;
