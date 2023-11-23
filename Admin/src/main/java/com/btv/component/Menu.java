@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 
 public class Menu extends javax.swing.JPanel {
 
@@ -14,24 +15,18 @@ public class Menu extends javax.swing.JPanel {
     public Menu() {
         initComponents();
         setOpaque(false);
-        menuList.setOpaque(false);
+//        menuList.setOpaque(false);
         init();
     }
 
     void init() {
-        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
-        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
-        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
-        menuList.addItem(new MenuModel("", "Dashboard", MenuModel.MenuType.TITLE));
-
-        menuList.addItem(new MenuModel("allUsers", "UI Elements", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("login", "Comonents", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("groups", "Forms Stuff", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("spams", "Date Table", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("newUsers", "Date Table", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("friends", "Date Table", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("online", "Date Table", MenuModel.MenuType.MENU));
-        menuList.addItem(new MenuModel("", " ", MenuModel.MenuType.EMPTY));
+        menuList.addItem(new MenuModel("allUsers", "All users", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("login", "Login list", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("groups", "All group chats", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("spams", "Spams", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("newUsers", "New users", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("friends", "Friends", MenuModel.MenuType.MENU));
+        menuList.addItem(new MenuModel("online", "Online users", MenuModel.MenuType.MENU));
 
     }
 
@@ -42,10 +37,12 @@ public class Menu extends javax.swing.JPanel {
         menuList = new com.btv.component.MenuList<>();
         labelTitle = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        testIcon = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(48, 162, 255));
         setPreferredSize(new java.awt.Dimension(250, 768));
 
+        menuList.setForeground(new java.awt.Color(255, 255, 255));
         menuList.setOpaque(false);
 
         labelTitle.setOpaque(false);
@@ -60,13 +57,17 @@ public class Menu extends javax.swing.JPanel {
             labelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelTitleLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jLabel1)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGroup(labelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(testIcon)
+                    .addComponent(jLabel1))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         labelTitleLayout.setVerticalGroup(
             labelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelTitleLayout.createSequentialGroup()
-                .addContainerGap(151, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
+                .addComponent(testIcon)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(70, 70, 70))
         );
@@ -82,7 +83,7 @@ public class Menu extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(0, 0, 0)
                 .addComponent(menuList, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -142,5 +143,6 @@ public class Menu extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelTitle;
     private com.btv.component.MenuList<String> menuList;
+    private javax.swing.JLabel testIcon;
     // End of variables declaration//GEN-END:variables
 }

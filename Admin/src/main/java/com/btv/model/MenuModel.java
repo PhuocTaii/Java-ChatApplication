@@ -40,6 +40,7 @@ public class MenuModel {
     }
 
     public Icon toIcon() {
+        System.out.println(getClass().getResource("/com/btv/image/" + icon + ".png"));
         return new ImageIcon(getClass().getResource("/com/btv/image/" + icon + ".png"));
     }
 
