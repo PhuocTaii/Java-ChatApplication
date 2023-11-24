@@ -29,8 +29,8 @@ public class MenuModel {
 
 
     public Icon toIcon() {
-        System.out.println(getClass().getResource("/com/btv/image/" + icon + ".png"));
-        return new ImageIcon(getClass().getResource("/com/btv/image/" + icon + ".png"));
+        System.out.println(getClass().getResource("/com/btv/images/" + icon + ".png"));
+        return new ImageIcon(getClass().getResource("/com/btv/images/" + icon + ".png"));
     }
 
     String icon;

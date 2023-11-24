@@ -11,7 +11,13 @@ import javax.swing.ImageIcon;
 public class MenuItem extends javax.swing.JPanel {
 
     private boolean isSelected;
+    private boolean isHovered;
 
+    public void setIsHovered(boolean isHovered) {
+        this.isHovered = isHovered;
+        repaint();
+    }
+    
     public MenuItem(MenuModel data) {
         initComponents();
         setOpaque(false);
@@ -26,6 +32,21 @@ public class MenuItem extends javax.swing.JPanel {
     }
 
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        if (isSelected || isHovered) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            if (isSelected) {
+                g2.setColor(new Color(255, 255, 255, 60));
+            } else {
+                g2.setColor(new Color(255, 255, 255, 30));
+            }
+            g2.fillRoundRect(10, 0, getWidth() - 20, getHeight(), 5, 5);
+        }
+        super.paintComponent(g);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
