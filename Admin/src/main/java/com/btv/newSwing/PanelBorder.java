@@ -18,6 +18,7 @@ public class PanelBorder extends javax.swing.JPanel {
      * Creates new form NewJPanel
      */
     public PanelBorder() {
+        super();
         initComponents();
     }
 

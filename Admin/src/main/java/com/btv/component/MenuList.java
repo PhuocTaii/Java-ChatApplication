@@ -1,6 +1,7 @@
 package com.btv.component;
 
 import com.btv.model.MenuModel;
+import com.btv.event.EventMenuSelected;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,15 +13,20 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 
 public class MenuList<E extends Object> extends JList<Object> {
-    
+
     private final DefaultListModel model;
     private int selectedIndex = -1;
     private int hoveredIndex = -1;
-    
+    private EventMenuSelected event;
+
+    public void addEventMenuSelected(EventMenuSelected event) {
+        this.event = event;
+    }
+
     public MenuList() {
         model = new DefaultListModel();
         setModel(model);
-        
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -29,18 +35,20 @@ public class MenuList<E extends Object> extends JList<Object> {
                     Object o = model.getElementAt(index);
                     MenuModel menu = (MenuModel) o;
                     selectedIndex = index;
-                    
+                    if (event != null) {
+                        event.selected(index);
+                    }
                     repaint();
                 }
             }
-            
+
             @Override
             public void mouseExited(MouseEvent me) {
                 hoveredIndex = -1;
                 repaint();
             }
         });
-        
+
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent me) {
@@ -49,14 +57,14 @@ public class MenuList<E extends Object> extends JList<Object> {
                     Object o = model.getElementAt(index);
                     MenuModel menu = (MenuModel) o;
                     hoveredIndex = index;
-                    
+
                     repaint();
-                    
+
                 }
             }
         });
     }
-    
+
     @Override
     public ListCellRenderer<? super Object> getCellRenderer() {
         return new DefaultListCellRenderer() {
@@ -75,9 +83,9 @@ public class MenuList<E extends Object> extends JList<Object> {
             }
         };
     }
-    
+
     public void addItem(MenuModel data) {
         model.addElement(data);
     }
-    
+
 }
