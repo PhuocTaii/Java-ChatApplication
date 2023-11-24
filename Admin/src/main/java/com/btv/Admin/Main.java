@@ -6,6 +6,7 @@ package com.btv.Admin;
 
 import com.btv.event.EventMenuSelected;
 import com.btv.gui.AllGroup;
+import com.btv.gui.ListLogin;
 import com.btv.gui.Spam;
 import java.awt.Color;
 import javax.swing.JComponent;
@@ -21,12 +22,14 @@ public class Main extends javax.swing.JFrame {
      */
     private AllGroup group;
     private Spam spam;
+    private ListLogin listLogin;
 
     public Main() {
         initComponents();
 
         group = new AllGroup();
         spam = new Spam();
+        listLogin = new ListLogin();
 
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
@@ -35,7 +38,7 @@ public class Main extends javax.swing.JFrame {
                 if (index == 0) {
 
                 } else if (index == 1) {
-
+                    setForm(listLogin);
                 } else if (index == 2) {
                     setForm(group);
                 } else if (index == 3) {
@@ -49,6 +52,8 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
+        
+        setForm(listLogin);
     }
 
     private void setForm(JComponent com) {
