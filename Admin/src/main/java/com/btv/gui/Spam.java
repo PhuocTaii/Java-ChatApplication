@@ -4,10 +4,13 @@
  */
 package com.btv.gui;
 
+import com.btv.newSwing.ScrollBar;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -22,6 +25,7 @@ public class Spam extends javax.swing.JPanel {
 
     public Spam() {
         initComponents();
+        testData(tableSpams);
     }
 
     /**
@@ -41,7 +45,10 @@ public class Spam extends javax.swing.JPanel {
         comboBoxSpams = new com.btv.newSwing.ComboboxCustom();
         comboBoxOrderSpams = new com.btv.newSwing.ComboboxCustom();
 
+        setOpaque(false);
+
         backgroundSpams.setBackground(new java.awt.Color(237, 237, 237));
+        backgroundSpams.setOpaque(false);
         backgroundSpams.setPreferredSize(new java.awt.Dimension(1080, 768));
 
         titleSpams.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
@@ -176,6 +183,57 @@ public class Spam extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxOrderSpamsActionPerformed
 
+    
+    private void testData(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        
+        spamScrollPane.setVerticalScrollBar(new ScrollBar());
+        
+        model.addRow(new Object[]{1, "Chai", "Beverages", 18, true});
+        model.addRow(new Object[]{2, "Chang", "Beverages", 19, false});
+        model.addRow(new Object[]{3, "Aniseed Syrup", "Beverages", 18, true});
+        model.addRow(new Object[]{4, "Chef Anton's Cajun Seasoning", "Beverages", 19, false});
+        model.addRow(new Object[]{5, "Chef Anton's Gumbo Mix", "Beverages", 18, true});
+        model.addRow(new Object[]{6, "Grandma's Boysenberry Spread", "Beverages", 19, false});
+        model.addRow(new Object[]{7, "Uncle Bob's Organic Dried Pears", "Beverages", 18, true});
+        model.addRow(new Object[]{8, "Northwoods Cranberry Sauce", "Beverages", 19, false});
+        model.addRow(new Object[]{9, "Mishi Kobe Niku", "Beverages", 18, true});
+        model.addRow(new Object[]{10, "Ikura", "Beverages", 19, false});
+        model.addRow(new Object[]{11, "Queso Cabrales", "Beverages", 18, true});
+        model.addRow(new Object[]{12, "Queso Manchego La Pastora", "Beverages", 19, false});
+        model.addRow(new Object[]{13, "Konbu", "Beverages", 18, true});
+        model.addRow(new Object[]{14, "Tofu", "Seafood", 19, false});
+        model.addRow(new Object[]{15, "Genen Shouyu", "Seafood", 18, true});
+        model.addRow(new Object[]{16, "Pavlova", "Seafood", 19, false});
+        model.addRow(new Object[]{17, "Alice Mutton", "Seafood", 18, true});
+        model.addRow(new Object[]{18, "Carnarvon Tigers", "Seafood", 19, false});
+        model.addRow(new Object[]{19, "Teatime Chocolate Biscuits", "Seafood", 19, true});
+        model.addRow(new Object[]{20, "Sir Rodney's Marmalade", "Seafood", 19, false});
+        model.addRow(new Object[]{21, "Sir Rodney's Scones", "Seafood", 19, true});
+        model.addRow(new Object[]{22, "Gustaf's Knäckebröd", "Seafood", 19, false});
+        model.addRow(new Object[]{23, "Tunnbröd", "Seafood", 19, true});
+        model.addRow(new Object[]{24, "Guaraná Fantástica", "Seafood", 19, false});
+        model.addRow(new Object[]{25, "NuNuCa Nuß-Nougat-Creme", "Seafood", 19, true});
+        model.addRow(new Object[]{26, "Gumbär Gummibärchen", "Seafood", 19, false});
+        model.addRow(new Object[]{27, "Schoggi Schokolade", "Seafood", 19, true});
+        model.addRow(new Object[]{28, "Rössle Sauerkraut", "Seafood", 19, false});
+        model.addRow(new Object[]{29, "Thüringer Rostbratwurst", "Seafood", 19, true});
+        model.addRow(new Object[]{30, "Nord-Ost Matjeshering", "Seafood", 19, false});
+        model.addRow(new Object[]{31, "Gorgonzola Telino", "Seafood", 19, true});
+        model.addRow(new Object[]{32, "Mascarpone Fabioli", "Seafood", 19, 39});
+        model.addRow(new Object[]{33, "Geitost", "Seafood", 19, true});
+        model.addRow(new Object[]{34, "Sasquatch Ale", "Seafood", 19, false});
+        model.addRow(new Object[]{35, "Steeleye Stout", "Seafood", 19, true});
+        model.addRow(new Object[]{36, "Inlagd Sill", "Seafood", 19, false});
+        model.addRow(new Object[]{37, "Gravad lax", "Seafood", 19, true});
+        model.addRow(new Object[]{38, "Côte de Blaye", "Seafood", 19, false});
+        model.addRow(new Object[]{39, "Chartreuse verte", "Seafood", 19, true});
+        model.addRow(new Object[]{40, "Boston Crab Meat", "Seafood", 19, false});
+        model.addRow(new Object[]{41, "Jack's New England Clam Chowder", "Seafood", 19, true});
+        model.addRow(new Object[]{42, "Singaporean Hokkien Fried Mee", "Seafood", 19, false});
+        model.addRow(new Object[]{43, "Ipoh Coffee", "Seafood", 19, true});
+    }
+    
     public void filter(String query, String queryOrder) {
         
         int sortKey = 0;
