@@ -63,8 +63,11 @@ public class UserFriends extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(friendTable);
 
+        setOpaque(false);
+
         headpage.setMaximumSize(new java.awt.Dimension(121, 32));
         headpage.setMinimumSize(new java.awt.Dimension(121, 32));
+        headpage.setOpaque(false);
         headpage.setPreferredSize(new java.awt.Dimension(121, 32));
         headpage.setLayout(new java.awt.BorderLayout());
 
@@ -72,6 +75,8 @@ public class UserFriends extends javax.swing.JPanel {
         header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         header.setText("FRIENDS");
         headpage.add(header, java.awt.BorderLayout.CENTER);
+
+        options.setOpaque(false);
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         filter.setText("Filter by");

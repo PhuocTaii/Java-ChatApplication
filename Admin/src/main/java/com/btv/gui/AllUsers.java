@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -296,13 +297,15 @@ public class AllUsers extends javax.swing.JPanel {
 
         addUserDialog.getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
+        setOpaque(false);
         setPreferredSize(new java.awt.Dimension(1080, 768));
 
         title.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title.setText("ALL USERS");
         title.setMinimumSize(new java.awt.Dimension(900, 32));
-        title.setOpaque(true);
+
+        controlSection.setOpaque(false);
 
         filterLabel.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         filterLabel.setText("Filter by");
@@ -418,8 +421,10 @@ public class AllUsers extends javax.swing.JPanel {
         jScrollPane3.setViewportView(tableCustom1);
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
+        infoSection.setOpaque(false);
 
         infoFields.setMaximumSize(new java.awt.Dimension(32767, 310));
+        infoFields.setOpaque(false);
         infoFields.setLayout(new java.awt.GridLayout(8, 1, 0, 10));
 
         usernamePanel.setLayout(new java.awt.BorderLayout());
@@ -527,6 +532,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         actionPanel.setMaximumSize(new java.awt.Dimension(32767, 310));
         actionPanel.setMinimumSize(new java.awt.Dimension(160, 0));
+        actionPanel.setOpaque(false);
         actionPanel.setPreferredSize(new java.awt.Dimension(140, 310));
 
         updateButton.setBackground(new java.awt.Color(48, 162, 255));
@@ -555,7 +561,7 @@ public class AllUsers extends javax.swing.JPanel {
         });
         actionPanel.add(deleteButton);
 
-        lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
+        lockToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
         lockToggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lockToggleButtontoggleLockUser(evt);
@@ -563,6 +569,7 @@ public class AllUsers extends javax.swing.JPanel {
         });
         actionPanel.add(lockToggleButton);
 
+        loginHistoryPanel.setOpaque(false);
         loginHistoryPanel.setPreferredSize(new java.awt.Dimension(93, 310));
         loginHistoryPanel.setLayout(new java.awt.BorderLayout());
 
@@ -582,6 +589,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         loginHistoryPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
+        friendsPanel.setOpaque(false);
         friendsPanel.setPreferredSize(new java.awt.Dimension(93, 310));
         friendsPanel.setLayout(new java.awt.BorderLayout());
 
@@ -722,9 +730,9 @@ public class AllUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         isLocked = !isLocked;
         if(isLocked)
-        lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-fill.png"));
+        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
         else
-        lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
+        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
 
     }//GEN-LAST:event_lockToggleButtontoggleLockUser
 
