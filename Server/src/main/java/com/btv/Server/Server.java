@@ -3,6 +3,7 @@
  */
 
 package com.btv.Server;
+import com.mysql.cj.jdbc.Driver;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,12 +16,20 @@ public class Server {
         Connection connection = null;
 
         try {
+            // register driver
+            Driver myDriver = new com.mysql.cj.jdbc.Driver();
+            DriverManager.registerDriver(myDriver);
+            System.out.println("Connecting");
+            
             // Establish connection
             String url = "jdbc:mysql://chatchat-db.c0kjxptbsciv.ap-southeast-1.rds.amazonaws.com:3306/?user=admin";
-            String username = "admin";
-            String password = "asd12345";
+            String username = System.getenv("USERNAME_DB");
+            String password = System.getenv("PASS_DB");
             connection = DriverManager.getConnection(url, username, password);
             // Perform database operations here
+            if(connection != null){
+                System.out.println("connected");
+            }
         } catch (SQLException e) {
             System.err.println(e);
         } finally {
