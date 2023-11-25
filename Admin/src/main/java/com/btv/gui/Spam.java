@@ -1,14 +1,12 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package com.btv.gui;
 
 import com.btv.newSwing.ScrollBar;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -20,30 +18,13 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Vo Quoc Binh
  */
-public class Spams extends javax.swing.JFrame {
+public class Spam extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Spams
-     */
-    private int pX;
-    private int pY;
-    
-    private boolean isNavbarVisible = false;
-    
-    private int widthNavbar = 250;
-    
     String query = "";
     String queryOrder = "";
-    
-    public Spams() {
+
+    public Spam() {
         initComponents();
-        init();
-    }
-    
-    private void init() {
-        setIconImage(new ImageIcon(getClass().getResource("/com/btv/image"))
-                .getImage()
-                .getScaledInstance(hamSpams.getWidth(), hamSpams.getHeight(), Image.SCALE_SMOOTH));
         testData(tableSpams);
     }
 
@@ -58,41 +39,21 @@ public class Spams extends javax.swing.JFrame {
 
         backgroundSpams = new javax.swing.JPanel();
         titleSpams = new javax.swing.JLabel();
-        hamSpams = new javax.swing.JLabel();
         spamScrollPane = new javax.swing.JScrollPane();
         tableSpams = new com.btv.newSwing.TableCustom();
         jLabel2 = new javax.swing.JLabel();
         comboBoxSpams = new com.btv.newSwing.ComboboxCustom();
         comboBoxOrderSpams = new com.btv.newSwing.ComboboxCustom();
-        menuSpam = new com.btv.component.Menu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setResizable(false);
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                formMouseClicked(evt);
-            }
-        });
+        setOpaque(false);
 
         backgroundSpams.setBackground(new java.awt.Color(237, 237, 237));
+        backgroundSpams.setOpaque(false);
         backgroundSpams.setPreferredSize(new java.awt.Dimension(1080, 768));
-        backgroundSpams.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                backgroundSpamsMouseClicked(evt);
-            }
-        });
 
         titleSpams.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         titleSpams.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleSpams.setText("SPAMS");
-
-        hamSpams.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hamSpams.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/image/ham.png"))); // NOI18N
-        hamSpams.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                hamSpamsMouseClicked(evt);
-            }
-        });
 
         tableSpams.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -118,13 +79,6 @@ public class Spams extends javax.swing.JFrame {
             }
         });
         spamScrollPane.setViewportView(tableSpams);
-        if (tableSpams.getColumnModel().getColumnCount() > 0) {
-            tableSpams.getColumnModel().getColumn(0).setResizable(false);
-            tableSpams.getColumnModel().getColumn(1).setResizable(false);
-            tableSpams.getColumnModel().getColumn(2).setResizable(false);
-            tableSpams.getColumnModel().getColumn(3).setResizable(false);
-            tableSpams.getColumnModel().getColumn(4).setResizable(false);
-        }
 
         jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel2.setText("Filtered by");
@@ -161,7 +115,6 @@ public class Spams extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(backgroundSpamsLayout.createSequentialGroup()
-                        .addComponent(hamSpams)
                         .addGap(296, 296, 296)
                         .addComponent(titleSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -179,57 +132,39 @@ public class Spams extends javax.swing.JFrame {
         backgroundSpamsLayout.setVerticalGroup(
             backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundSpamsLayout.createSequentialGroup()
-                .addGroup(backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundSpamsLayout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(hamSpams)
-                        .addGap(53, 53, 53))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundSpamsLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(titleSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)))
+                .addGap(14, 14, 14)
+                .addComponent(titleSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(comboBoxSpams, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboBoxOrderSpams, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(spamScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(355, Short.MAX_VALUE))
+                .addContainerGap(379, Short.MAX_VALUE))
         );
 
-        menuSpam.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                menuSpamMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(menuSpam, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(backgroundSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 1082, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(menuSpam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(backgroundSpams, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backgroundSpams, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
-
-        pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void comboBoxSpamsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxSpamsItemStateChanged
         query = comboBoxSpams.getSelectedItem().toString();
         queryOrder = comboBoxOrderSpams.getSelectedItem().toString();
-        
+
         filter(query, queryOrder);
     }//GEN-LAST:event_comboBoxSpamsItemStateChanged
 
@@ -240,7 +175,7 @@ public class Spams extends javax.swing.JFrame {
     private void comboBoxOrderSpamsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxOrderSpamsItemStateChanged
         query = comboBoxSpams.getSelectedItem().toString();
         queryOrder = comboBoxOrderSpams.getSelectedItem().toString();
-        
+
         filter(query, queryOrder);
     }//GEN-LAST:event_comboBoxOrderSpamsItemStateChanged
 
@@ -248,38 +183,7 @@ public class Spams extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboBoxOrderSpamsActionPerformed
 
-    private void backgroundSpamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundSpamsMouseClicked
-        if (isNavbarVisible) {
-            menuSpam.closeNavbar();
-            setBackgroundVisible(true);
-            isNavbarVisible = false;
-        }
-    }//GEN-LAST:event_backgroundSpamsMouseClicked
-
-    private void hamSpamsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamSpamsMouseClicked
-        menuSpam.openNavbar();
-        setBackgroundVisible(false);
-        isNavbarVisible = true;
-    }//GEN-LAST:event_hamSpamsMouseClicked
-
-    private void menuSpamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSpamMouseClicked
-
-    }//GEN-LAST:event_menuSpamMouseClicked
-
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-//        if (menuSpam.isOpen == false) {
-        System.out.println(menuSpam.isOpen);
-        menuSpam.closeNavbar();
-        setBackgroundVisible(true);
-//        } else {
-//            setBackgroundVisible(true);
-//        }
-
-    }//GEN-LAST:event_formMouseClicked
-
-    /**
-     * @param args the command line arguments
-     */
+    
     private void testData(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         
@@ -366,18 +270,12 @@ public class Spams extends javax.swing.JFrame {
         
     }
     
-    private void setBackgroundVisible(boolean bl) {
-        backgroundSpams.setVisible(bl);
-    }
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundSpams;
     private com.btv.newSwing.ComboboxCustom comboBoxOrderSpams;
     private com.btv.newSwing.ComboboxCustom comboBoxSpams;
-    private javax.swing.JLabel hamSpams;
     private javax.swing.JLabel jLabel2;
-    private com.btv.component.Menu menuSpam;
     private javax.swing.JScrollPane spamScrollPane;
     private com.btv.newSwing.TableCustom tableSpams;
     private javax.swing.JLabel titleSpams;

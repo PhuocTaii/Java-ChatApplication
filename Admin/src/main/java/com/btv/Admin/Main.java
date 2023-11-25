@@ -4,7 +4,12 @@
  */
 package com.btv.Admin;
 
+import com.btv.event.EventMenuSelected;
+import com.btv.gui.AllGroup;
+import com.btv.gui.ListLogin;
+import com.btv.gui.Spam;
 import java.awt.Color;
+import javax.swing.JComponent;
 
 /**
  *
@@ -15,8 +20,47 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
+    private AllGroup group;
+    private Spam spam;
+    private ListLogin listLogin;
+
     public Main() {
         initComponents();
+
+        group = new AllGroup();
+        spam = new Spam();
+        listLogin = new ListLogin();
+
+        menu.addEventMenuSelected(new EventMenuSelected() {
+            @Override
+            public void selected(int index) {
+                System.out.println(index);
+                if (index == 0) {
+
+                } else if (index == 1) {
+                    setForm(listLogin);
+                } else if (index == 2) {
+                    setForm(group);
+                } else if (index == 3) {
+                    setForm(spam);
+                } else if (index == 4) {
+
+                } else if (index == 5) {
+
+                } else {
+
+                }
+            }
+        });
+        
+        setForm(listLogin);
+    }
+
+    private void setForm(JComponent com) {
+        mainContent.add(com);
+        mainContent.repaint();
+        mainContent.revalidate();
+        mainContent.setVisible(true);
     }
 
     /**
@@ -29,26 +73,52 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         panelBorder1 = new com.btv.newSwing.PanelBorder();
-        menu1 = new com.btv.component.Menu();
+        menu = new com.btv.component.Menu();
+        hamButton = new javax.swing.JLabel();
+        mainContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panelBorder1.setBackground(new java.awt.Color(237, 237, 237));
+        panelBorder1.setOpaque(false);
         panelBorder1.setPreferredSize(new java.awt.Dimension(1080, 768));
+
+        hamButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        hamButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/images/ham.png"))); // NOI18N
+        hamButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                hamButtonMouseClicked(evt);
+            }
+        });
+
+        mainContent.setOpaque(false);
+        mainContent.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 830, Short.MAX_VALUE))
+                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(mainContent, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE))
+            .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
+                    .addContainerGap(14, Short.MAX_VALUE)
+                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(983, Short.MAX_VALUE)))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(mainContent, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(691, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -69,6 +139,11 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void hamButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_hamButtonMouseClicked
+        mainContent.setVisible(false);
+        menu.openNavbar();
+    }//GEN-LAST:event_hamButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -106,7 +181,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.btv.component.Menu menu1;
+    private javax.swing.JLabel hamButton;
+    private javax.swing.JPanel mainContent;
+    private com.btv.component.Menu menu;
     private com.btv.newSwing.PanelBorder panelBorder1;
     // End of variables declaration//GEN-END:variables
 }

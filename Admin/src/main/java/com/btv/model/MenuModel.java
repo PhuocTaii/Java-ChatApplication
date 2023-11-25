@@ -5,15 +5,11 @@ import javax.swing.ImageIcon;
 
 public class MenuModel {
 
-    public MenuModel(String icon, String name, MenuType type) {
+    public MenuModel(String icon, String name) {
         this.icon = icon;
         this.name = name;
-        this.type = type;
     }
 
-    public static enum MenuType {
-        TITLE, MENU, EMPTY
-    }
 
     public String getIcon() {
         return icon;
@@ -31,19 +27,11 @@ public class MenuModel {
         this.name = name;
     }
 
-    public MenuType getType() {
-        return type;
-    }
-
-    public void setType(MenuType type) {
-        this.type = type;
-    }
 
     public Icon toIcon() {
-        return new ImageIcon(getClass().getResource("/com/btv/image/" + icon + ".png"));
+        return new ImageIcon(getClass().getResource("/com/btv/images/" + icon + ".png"));
     }
 
     String icon;
     String name;
-    MenuType type;
 }
