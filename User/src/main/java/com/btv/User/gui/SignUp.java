@@ -4,7 +4,7 @@
  */
 package com.btv.User.gui;
 
-import com.btv.User.utils.SignUpListener;
+import com.btv.User.helper.SignUpListener;
 
 /**
  *
