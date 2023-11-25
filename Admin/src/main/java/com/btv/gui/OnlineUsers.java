@@ -46,16 +46,20 @@ public class OnlineUsers extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableCustom1 = new com.btv.newSwing.TableCustom();
 
+        setOpaque(false);
+
         pageheader.setMaximumSize(new java.awt.Dimension(121, 32));
         pageheader.setMinimumSize(new java.awt.Dimension(121, 32));
+        pageheader.setOpaque(false);
         pageheader.setPreferredSize(new java.awt.Dimension(121, 32));
         pageheader.setLayout(new java.awt.BorderLayout());
 
         header.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         header.setText(" ONLINE USERS");
-        header.setOpaque(true);
         pageheader.add(header, java.awt.BorderLayout.CENTER);
+
+        options.setOpaque(false);
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         filter.setText("Filter by");
@@ -133,6 +137,7 @@ public class OnlineUsers extends javax.swing.JPanel {
         );
 
         statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        statisticzone.setOpaque(false);
 
         zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

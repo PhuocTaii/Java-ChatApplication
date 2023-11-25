@@ -46,8 +46,10 @@ public class NewUsers extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableCustom1 = new com.btv.newSwing.TableCustom();
 
+        setOpaque(false);
         setPreferredSize(new java.awt.Dimension(1060, 768));
 
+        pageHeader.setOpaque(false);
         pageHeader.setPreferredSize(new java.awt.Dimension(100, 45));
         pageHeader.setLayout(new java.awt.BorderLayout());
 
@@ -56,6 +58,8 @@ public class NewUsers extends javax.swing.JPanel {
         Tittle.setText("NEW USERS");
         Tittle.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         pageHeader.add(Tittle, java.awt.BorderLayout.CENTER);
+
+        options.setOpaque(false);
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         filter.setText("Filter by");
@@ -133,6 +137,7 @@ public class NewUsers extends javax.swing.JPanel {
         );
 
         statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        statisticzone.setOpaque(false);
 
         zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
