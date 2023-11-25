@@ -9,8 +9,8 @@ import com.btv.User.gui.SignUp;
 import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.btv.User.utils.LoginListener;
-import com.btv.User.utils.SignUpListener;
+import com.btv.User.helper.LoginListener;
+import com.btv.User.helper.SignUpListener;
 
 /**
  *
