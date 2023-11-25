@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin.Features;
+package com.btv.gui;
 
 import javax.swing.JComboBox;
 
@@ -28,6 +28,8 @@ public class UserFriends extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        friendTable = new javax.swing.JTable();
         headpage = new javax.swing.JPanel();
         header = new javax.swing.JLabel();
         options = new javax.swing.JPanel();
@@ -36,15 +38,37 @@ public class UserFriends extends javax.swing.JPanel {
         searchButton = new javax.swing.JButton();
         numberOptions = new javax.swing.JComboBox<>();
         filterOptions = new javax.swing.JComboBox<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        friendTable = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableCustom1 = new com.btv.newSwing.TableCustom();
+
+        friendTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"text", "text", "text", "text", "text"},
+                {"text", "text", "text", "text", "text"},
+                {"text", "text", "text", "text", "text"},
+                {"text", "text", "text", "text", "text"},
+                {"text", "text", "text", "text", "text"}
+            },
+            new String [] {
+                "ID", "Username", "Time create", "Direct friends", "Indirect friends"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(friendTable);
 
         headpage.setMaximumSize(new java.awt.Dimension(121, 32));
         headpage.setMinimumSize(new java.awt.Dimension(121, 32));
         headpage.setPreferredSize(new java.awt.Dimension(121, 32));
         headpage.setLayout(new java.awt.BorderLayout());
 
-        header.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        header.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         header.setText("FRIENDS");
         headpage.add(header, java.awt.BorderLayout.CENTER);
@@ -86,7 +110,7 @@ public class UserFriends extends javax.swing.JPanel {
                 .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(searchButton)
-                .addContainerGap(593, Short.MAX_VALUE))
+                .addContainerGap(479, Short.MAX_VALUE))
         );
         optionsLayout.setVerticalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,48 +128,40 @@ public class UserFriends extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        friendTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text"}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "Username", "Time create", "Direct friends", "Indirect friends"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(friendTable);
+        ));
+        jScrollPane2.setViewportView(tableCustom1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(headpage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(options, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(headpage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(headpage, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(143, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -187,8 +203,10 @@ public class UserFriends extends javax.swing.JPanel {
     private javax.swing.JLabel header;
     private javax.swing.JPanel headpage;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JComboBox<String> numberOptions;
     private javax.swing.JPanel options;
     private javax.swing.JButton searchButton;
+    private com.btv.newSwing.TableCustom tableCustom1;
     // End of variables declaration//GEN-END:variables
 }

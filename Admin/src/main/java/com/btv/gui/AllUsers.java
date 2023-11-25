@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin.Features;
+package com.btv.gui;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,8 +80,8 @@ public class AllUsers extends javax.swing.JPanel {
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         addBtn = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
-        tablePanel = new javax.swing.JScrollPane();
-        userTable = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableCustom1 = new com.btv.newSwing.TableCustom();
         infoSection = new javax.swing.JPanel();
         infoFields = new javax.swing.JPanel();
         usernamePanel = new javax.swing.JPanel();
@@ -298,11 +298,11 @@ public class AllUsers extends javax.swing.JPanel {
 
         setPreferredSize(new java.awt.Dimension(1080, 768));
 
-        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        title.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title.setText("ALL USERS");
         title.setMinimumSize(new java.awt.Dimension(900, 32));
-        title.setPreferredSize(new java.awt.Dimension(1080, 32));
+        title.setOpaque(true);
 
         filterLabel.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         filterLabel.setText("Filter by");
@@ -396,51 +396,30 @@ public class AllUsers extends javax.swing.JPanel {
         filterTextField.setVisible(false);
         searchButton.setVisible(false);
 
-        userTable.setModel(new javax.swing.table.DefaultTableModel(
+        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { Integer.valueOf(1), "vanvan", "Thanh Vân", "123 Vườn Lài", "26-08-2003", "Female", "van@gmail.com", "19-10-2023", "Offline", "thanhvan123"},
-                { Integer.valueOf(2), "haha", "Thanh Hà", "123 Vườn Lài", "26-08-2003", "Female", "ha@mail.com", "17-11-2023", "Lock", "thanhha456"},
-                { Integer.valueOf(3), "duck", "Nguyên Đức", "456 Vườn Lài", "26-08-2003", "Male", "duc@mail.com", "18-11-2023", "Online", "duck123"}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Username", "Name", "Address", "Date of birth", "Gender", "Email", "Time create", "Status", "Password"
+                "ID", "Username", "Name", "Address", "Date of birth", "Gender", "Email", "Time create"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        //TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(userTable.getModel());
-        //userTable.setRowSorter(sorter);
-        userTable.setRowSorter(new TableRowSorter<TableModel>(userTable.getModel()));
-        userTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        userTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        userTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                userTableMouseClicked(evt);
-            }
-        });
-        tablePanel.setViewportView(userTable);
-        if (userTable.getColumnModel().getColumnCount() > 0) {
-            userTable.getColumnModel().getColumn(0).setResizable(false);
-            userTable.getColumnModel().getColumn(0).setPreferredWidth(3);
-            userTable.getColumnModel().getColumn(9).setResizable(false);
-        }
-        userTable.getColumnModel().getColumn(9).setMinWidth(0);
-        userTable.getColumnModel().getColumn(9).setMaxWidth(0);
-        userTable.getColumnModel().getColumn(9).setWidth(0);
+        jScrollPane3.setViewportView(tableCustom1);
 
+        infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
+
+        infoFields.setMaximumSize(new java.awt.Dimension(32767, 310));
         infoFields.setLayout(new java.awt.GridLayout(8, 1, 0, 10));
 
         usernamePanel.setLayout(new java.awt.BorderLayout());
@@ -546,7 +525,9 @@ public class AllUsers extends javax.swing.JPanel {
 
         infoFields.add(passwordPanel);
 
+        actionPanel.setMaximumSize(new java.awt.Dimension(32767, 310));
         actionPanel.setMinimumSize(new java.awt.Dimension(160, 0));
+        actionPanel.setPreferredSize(new java.awt.Dimension(140, 310));
 
         updateButton.setBackground(new java.awt.Color(48, 162, 255));
         updateButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -582,6 +563,7 @@ public class AllUsers extends javax.swing.JPanel {
         });
         actionPanel.add(lockToggleButton);
 
+        loginHistoryPanel.setPreferredSize(new java.awt.Dimension(93, 310));
         loginHistoryPanel.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -600,6 +582,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         loginHistoryPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
+        friendsPanel.setPreferredSize(new java.awt.Dimension(93, 310));
         friendsPanel.setLayout(new java.awt.BorderLayout());
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -626,21 +609,24 @@ public class AllUsers extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(actionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(actionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(loginHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(loginHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                .addContainerGap())
         );
         infoSectionLayout.setVerticalGroup(
             infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoSectionLayout.createSequentialGroup()
-                .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(loginHistoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(friendsPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(actionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(infoFields, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
+                .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(actionPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                    .addComponent(infoFields, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, infoSectionLayout.createSequentialGroup()
+                        .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(friendsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(loginHistoryPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -648,27 +634,30 @@ public class AllUsers extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(463, 463, 463))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(40, 40, 40)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tablePanel)
-                    .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(controlSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(controlSection, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addGap(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -710,40 +699,6 @@ public class AllUsers extends javax.swing.JPanel {
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_searchButtonActionPerformed
-
-    private void userTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userTableMouseClicked
-        // TODO add your handling code here:
-        int viewRow = userTable.getSelectedRow();
-        int row = userTable.convertRowIndexToModel(viewRow);
-        DefaultTableModel model = (DefaultTableModel)userTable.getModel();
-
-        usernameField.setText(model.getValueAt(row, 1).toString());
-        nameField.setText(model.getValueAt(row, 2).toString());
-        addressField.setText(model.getValueAt(row, 3).toString());
-        String birthDate = model.getValueAt(row, 4).toString();
-        try {
-            Date date = new SimpleDateFormat("dd-MM-yyyy").parse(birthDate);
-            birthChooser.setDate(date);
-        } catch (ParseException ex) {
-            Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        String gender = model.getValueAt(row, 5).toString();
-        if ("Male".equals(gender)) {
-            maleRadioButton.setSelected(true);
-        }
-        else {
-            femaleRadioButton.setSelected(true);
-        }
-        emailField.setText(model.getValueAt(row, 6).toString());
-        String status = model.getValueAt(row, 8).toString();
-        if("Lock".equalsIgnoreCase(status)) {
-            lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-fill.png"));
-        }
-        else {
-            lockToggleButton.setIcon(new javax.swing.ImageIcon(System.getProperty("user.dir") + "/src/main/java/com/btv/resources/images/lock-unlock-fill.png"));
-        }
-        passwordField.setText(model.getValueAt(row, 9).toString());
-    }//GEN-LAST:event_userTableMouseClicked
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
@@ -854,6 +809,7 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToggleButton lockToggleButton;
     private javax.swing.JPanel loginHistoryPanel;
     private javax.swing.JList<String> loginList;
@@ -870,11 +826,10 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> statusOptions;
-    private javax.swing.JScrollPane tablePanel;
+    private com.btv.newSwing.TableCustom tableCustom1;
     private javax.swing.JLabel title;
     private javax.swing.JLabel titleAddDialg;
     private javax.swing.JButton updateButton;
-    private javax.swing.JTable userTable;
     private javax.swing.JTextField usernameAddField;
     private javax.swing.JLabel usernameAddLabel;
     private javax.swing.JTextField usernameField;

@@ -9,14 +9,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
-        <!--<exec.mainClass>com.btv.Admin.Admin</exec.mainClass>-->
         <exec.mainClass>com.btv.Admin.Main</exec.mainClass>
     </properties>
     <build>
         <resources>
             <resource>
-                <!--/com/btv/resources-->
-                <directory>src/main/java</directory>
+                <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.Admin.Features;
+package com.btv.gui;
 
 import javax.swing.JComboBox;
 
@@ -39,21 +39,22 @@ public class OnlineUsers extends javax.swing.JPanel {
         startDate = new com.toedter.calendar.JDateChooser();
         connector = new javax.swing.JLabel();
         endDate = new com.toedter.calendar.JDateChooser();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         statisticzone = new javax.swing.JPanel();
         zoneName = new javax.swing.JLabel();
         year = new javax.swing.JLabel();
         yearchooser = new com.toedter.calendar.JYearChooser();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableCustom1 = new com.btv.newSwing.TableCustom();
 
         pageheader.setMaximumSize(new java.awt.Dimension(121, 32));
         pageheader.setMinimumSize(new java.awt.Dimension(121, 32));
         pageheader.setPreferredSize(new java.awt.Dimension(121, 32));
         pageheader.setLayout(new java.awt.BorderLayout());
 
-        header.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        header.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         header.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         header.setText(" ONLINE USERS");
+        header.setOpaque(true);
         pageheader.add(header, java.awt.BorderLayout.CENTER);
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -131,28 +132,6 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"text", "text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text", "text"},
-                {"text", "text", "text", "text", "text", "text"}
-            },
-            new String [] {
-                "ID", "Username", "Time create", "Times open app", "No. users chat with", "No. groups chat with"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
         statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -176,7 +155,7 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addComponent(year)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(yearchooser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(412, Short.MAX_VALUE))
         );
         statisticzoneLayout.setVerticalGroup(
             statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,33 +166,54 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(yearchooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(year, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(304, Short.MAX_VALUE))
+                .addContainerGap(250, Short.MAX_VALUE))
         );
+
+        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Username", "Time create", "Time open app", "No. users chat with", "No. groups chat with"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tableCustom1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pageheader, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE)
-            .addComponent(options, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pageheader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(options, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(statisticzone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGap(40, 40, 40))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pageheader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pageheader, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -250,13 +250,13 @@ public class OnlineUsers extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> filterOptions;
     private javax.swing.JLabel header;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPanel options;
     private javax.swing.JPanel pageheader;
     private javax.swing.JButton searchButton;
     private com.toedter.calendar.JDateChooser startDate;
     private javax.swing.JPanel statisticzone;
+    private com.btv.newSwing.TableCustom tableCustom1;
     private javax.swing.JLabel year;
     private com.toedter.calendar.JYearChooser yearchooser;
     private javax.swing.JLabel zoneName;

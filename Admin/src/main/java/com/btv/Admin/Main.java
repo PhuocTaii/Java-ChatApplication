@@ -6,9 +6,13 @@ package com.btv.Admin;
 
 import com.btv.event.EventMenuSelected;
 import com.btv.gui.AllGroup;
+import com.btv.gui.AllUsers;
 import com.btv.gui.ListLogin;
+import com.btv.gui.NewUsers;
+import com.btv.gui.OnlineUsers;
 import com.btv.gui.Spam;
-import java.awt.Color;
+import com.btv.gui.UserFriends;
+import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JComponent;
 
 /**
@@ -20,23 +24,32 @@ public class Main extends javax.swing.JFrame {
     /**
      * Creates new form Main
      */
+    private AllUsers users;
+    private NewUsers newUsers;
+    private UserFriends userFriends;
+    private OnlineUsers onlineUsers;
     private AllGroup group;
     private Spam spam;
     private ListLogin listLogin;
 
     public Main() {
         initComponents();
-
+        
+        users = new AllUsers();
+        newUsers = new NewUsers();
+        userFriends = new UserFriends();
+        onlineUsers = new OnlineUsers();
         group = new AllGroup();
         spam = new Spam();
         listLogin = new ListLogin();
+        
 
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
                 System.out.println(index);
                 if (index == 0) {
-
+                    setForm(users);
                 } else if (index == 1) {
                     setForm(listLogin);
                 } else if (index == 2) {
@@ -44,11 +57,11 @@ public class Main extends javax.swing.JFrame {
                 } else if (index == 3) {
                     setForm(spam);
                 } else if (index == 4) {
-
+                    setForm(newUsers);
                 } else if (index == 5) {
-
+                    setForm(userFriends);
                 } else {
-
+                    setForm(onlineUsers);
                 }
             }
         });
@@ -85,6 +98,7 @@ public class Main extends javax.swing.JFrame {
 
         hamButton.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         hamButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/images/ham.png"))); // NOI18N
+        hamButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         hamButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 hamButtonMouseClicked(evt);
@@ -103,10 +117,10 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(mainContent, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE))
             .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
-                    .addContainerGap(14, Short.MAX_VALUE)
-                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(983, Short.MAX_VALUE)))
+                .addGroup(panelBorder1Layout.createSequentialGroup()
+                    .addGap(33, 33, 33)
+                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(1014, Short.MAX_VALUE)))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,10 +129,10 @@ public class Main extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(mainContent, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBorder1Layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(691, Short.MAX_VALUE)))
+                .addGroup(panelBorder1Layout.createSequentialGroup()
+                    .addGap(30, 30, 30)
+                    .addComponent(hamButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(712, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -149,28 +163,7 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        FlatLightLaf.setup();
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

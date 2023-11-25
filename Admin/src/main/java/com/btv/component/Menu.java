@@ -60,6 +60,7 @@ public class Menu extends javax.swing.JPanel {
         jLabel1.setText("CHAT CHAT");
 
         hamButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/btv/images/ham-white.png"))); // NOI18N
+        hamButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         hamButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 hamButtonMouseClicked(evt);

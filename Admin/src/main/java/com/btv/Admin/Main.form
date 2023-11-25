@@ -59,10 +59,10 @@
                   <Component id="mainContent" pref="1080" max="32767" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="14" max="32767" attributes="0"/>
-                      <Component id="hamButton" min="-2" pref="83" max="-2" attributes="0"/>
-                      <EmptySpace pref="983" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="hamButton" min="-2" pref="33" max="-2" attributes="0"/>
+                      <EmptySpace pref="1014" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -75,10 +75,10 @@
               </Group>
               <Component id="mainContent" alignment="1" max="32767" attributes="0"/>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="hamButton" min="-2" pref="77" max="-2" attributes="0"/>
-                      <EmptySpace pref="691" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                      <Component id="hamButton" min="-2" pref="32" max="-2" attributes="0"/>
+                      <EmptySpace pref="712" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -92,6 +92,9 @@
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/com/btv/images/ham.png"/>
+            </Property>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
             </Property>
           </Properties>
           <Events>
