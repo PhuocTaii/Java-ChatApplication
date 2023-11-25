@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.btv.User.LayoutComponents;
+package com.btv.User.components;
 
+import com.btv.User.gui.Chat;
+import com.btv.User.gui.Search;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
@@ -16,10 +18,20 @@ public class Layout extends javax.swing.JFrame {
     /**
      * Creates new form Layout
      */
+    private Chat chatPanel;
+    private Search searchPanel;
     public Layout() {
         initComponents();
         chatItem.setBackground(new Color(6, 20, 133));
         searchItem.setBackground(new Color(48, 162, 255));
+        chatPanel = new Chat();
+        searchPanel = new Search();
+        chatPanel.setVisible(true);
+        searchPanel.setVisible(false);
+        contentPage.add(chatPanel);
+        contentPage.add(searchPanel);
+        chatPanel.setSize(contentPage.getSize());
+        searchPanel.setSize(contentPage.getSize());
     }
 
     /**
@@ -118,11 +130,15 @@ public class Layout extends javax.swing.JFrame {
             chatItem.setBackground(new Color(6, 20, 133));
             searchItem.setBackground(new Color(48, 162, 255));
             // show chat frame
+            chatPanel.setVisible(true);
+            searchPanel.setVisible(false);
         }
         else {
             chatItem.setBackground(new Color(48, 162, 255));
             searchItem.setBackground(new Color(6, 20, 133));
             // show search frame
+            chatPanel.setVisible(false);
+            searchPanel.setVisible(true);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

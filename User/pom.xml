@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
-        <exec.mainClass>com.btv.User.User</exec.mainClass>
+        <exec.mainClass>com.btv.User.MainApp</exec.mainClass>
     </properties>
     <build>
         <resources>

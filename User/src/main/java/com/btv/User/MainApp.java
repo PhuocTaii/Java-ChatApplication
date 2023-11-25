@@ -3,25 +3,25 @@
  */
 
 package com.btv.User;
-import com.btv.User.LayoutComponents.Layout;
-import com.btv.User.Features.Login;
-import com.btv.User.Features.SignUp;
+import com.btv.User.components.Layout;
+import com.btv.User.gui.Login;
+import com.btv.User.gui.SignUp;
 import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.btv.User.Utils.LoginListener;
-import com.btv.User.Utils.SignUpListener;
+import com.btv.User.utils.LoginListener;
+import com.btv.User.utils.SignUpListener;
 
 /**
  *
  * @author taing
  */
-public class User {
+public class MainApp {
     private Login logInForm;
     private SignUp signUpForm;
     private Layout mainLayout;
 
-    public User() {
+    public MainApp() {
         mainLayout = new Layout();
         
         logInForm = new Login(new LoginListener() {
@@ -57,7 +57,7 @@ public class User {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new User();
+                new MainApp();
             }
         });
     }
