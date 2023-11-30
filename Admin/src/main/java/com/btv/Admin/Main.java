@@ -166,7 +166,8 @@ public class Main extends javax.swing.JFrame {
     public static void main(String args[]) {
         FlatLightLaf.setup();
         
-        ClientSocket clientSocket = ClientSocket.getDBInstance();
+        // init instance to send role
+        ClientSocket.getInstance();
         
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {

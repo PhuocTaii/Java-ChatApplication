@@ -42,7 +42,7 @@ public class ClientSocket {
         }
     }
     
-    public static ClientSocket getDBInstance() {
+    public static ClientSocket getInstance() {
         if(clientInstance == null) {
             clientInstance = new ClientSocket();
         }
