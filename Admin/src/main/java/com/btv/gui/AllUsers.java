@@ -4,17 +4,11 @@
  */
 package com.btv.gui;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.btv.service.UserService;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -22,11 +16,24 @@ import javax.swing.table.TableRowSorter;
  */
 public class AllUsers extends javax.swing.JPanel {
     boolean isLocked = false; // temp
+    private DefaultTableModel tableModel;
+    private String[][] userList;
+    private UserService userService;
+    
     /**
      * Creates new form AllUser
      */
     public AllUsers() {
         initComponents();
+        
+        userService = new UserService();
+        userList = userService.getAllUsers();
+        
+        tableModel = (DefaultTableModel)tableUsers.getModel();
+        tableModel.setRowCount(0);
+        for(Object[] row : userList) {
+            tableModel.addRow(row);
+        }
     }
 
     /**
@@ -82,7 +89,7 @@ public class AllUsers extends javax.swing.JPanel {
         addBtn = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableCustom1 = new com.btv.newSwing.TableCustom();
+        tableUsers = new com.btv.newSwing.TableCustom();
         infoSection = new javax.swing.JPanel();
         infoFields = new javax.swing.JPanel();
         usernamePanel = new javax.swing.JPanel();
@@ -399,26 +406,23 @@ public class AllUsers extends javax.swing.JPanel {
         filterTextField.setVisible(false);
         searchButton.setVisible(false);
 
-        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
+        tableUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "ID", "Username", "Name", "Address", "Date of birth", "Gender", "Email", "Time create"
+                "ID", "Username", "Name", "Address", "Date of birth", "Gender", "Email", "Time create", "Status", "Password"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(tableCustom1);
+        jScrollPane3.setViewportView(tableUsers);
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
         infoSection.setOpaque(false);
@@ -834,7 +838,7 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> statusOptions;
-    private com.btv.newSwing.TableCustom tableCustom1;
+    private com.btv.newSwing.TableCustom tableUsers;
     private javax.swing.JLabel title;
     private javax.swing.JLabel titleAddDialg;
     private javax.swing.JButton updateButton;
