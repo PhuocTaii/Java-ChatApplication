@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.btv.User.components;
+package com.btv.User.gui.layouts;
 
 import com.btv.User.gui.Chat;
 import com.btv.User.gui.Search;
