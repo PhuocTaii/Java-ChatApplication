@@ -28,7 +28,6 @@ public class AdminHandler extends ClientHandler{
         while(clientSocket.isConnected()){
             try{
                 messageFromClient = dataIn.readLine();
-                System.out.println(messageFromClient);
                 handleMessage(messageFromClient);
             } catch(IOException e){
                 System.err.println(e);
@@ -44,6 +43,29 @@ public class AdminHandler extends ClientHandler{
         ChatDB db = ChatDB.getDBInstance();
         switch (mess) {
             case VIEW_USERS:
+                ArrayList<User> allUsers = db.getAllUsers();
+                try {
+                    // send number of users
+                    dataOut.write(allUsers.size());
+                    
+                    // send data of all users
+                    for(User user : allUsers) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getUsername() + "|");
+                        dataOut.write(user.getName() + "|");
+                        dataOut.write(user.getAddress() + "|");
+                        dataOut.write(user.getBirthday().toString() + "|");
+                        dataOut.write(user.getGender() + "|");
+                        dataOut.write(user.getEmail() + "|");
+                        dataOut.write(user.getTimeCreate()+ "|");
+                        dataOut.write(user.getStatus() + "|");
+                        dataOut.write(user.getPassword() + "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
                 break;
             default:
                 System.out.println("Invalid message");

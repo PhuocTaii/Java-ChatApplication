@@ -72,4 +72,34 @@ public class ChatDB { // Singleton
         return dbInstance;
     }
     
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM User";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                User tempUser = new User();
+                tempUser.setId(rs.getInt("u_id"));
+                tempUser.setUsername(rs.getString("username"));
+                tempUser.setName(rs.getString("u_name"));
+                tempUser.setAddress(rs.getString("address"));
+                tempUser.setBirthday(rs.getDate("birthday"));
+                tempUser.setEmail(rs.getString("email"));
+                tempUser.setGender(rs.getBoolean("gender"));
+                tempUser.setStatus(rs.getString("u_status"));
+                tempUser.setPassword(rs.getString("u_password"));
+//                tempUser.setPassword(rs.getString("u_password"));
+                resList.add(tempUser);
+            }
+
+            stmt.close();
+        
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        return resList;
+    }
 }
