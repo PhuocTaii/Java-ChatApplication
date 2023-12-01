@@ -6,7 +6,6 @@ package com.btv.User.gui.layouts;
 
 import com.btv.User.gui.Chat;
 import com.btv.User.gui.Search;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
