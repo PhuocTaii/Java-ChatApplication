@@ -21,23 +21,6 @@ public class AdminHandler extends ClientHandler{
         super(clientSocket);
     }
 
-    @Override
-    public void run() {
-        String messageFromClient;
-
-        while(clientSocket.isConnected()){
-            try{
-                messageFromClient = dataIn.readLine();
-                handleMessage(messageFromClient);
-            } catch(IOException e){
-                System.err.println(e);
-                break;
-            }
-        }
-
-        closeClientSocket();
-    }
-
     public void handleMessage(String messStr) {
         AdminMessage mess =  AdminMessage.valueOf(messStr);
         ChatDB db = ChatDB.getDBInstance();

@@ -6,6 +6,7 @@ package com.btv.Server;
 import com.btv.Server.service.ClientHandler;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.service.AdminHandler;
+import com.btv.Server.service.UserHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +41,7 @@ public class Main {
                 }
                 else {
                     System.out.println("role: user");
-                    clientHandler = new AdminHandler(client);
+                    clientHandler = new UserHandler(client);
                 }
                 
                 // create thread

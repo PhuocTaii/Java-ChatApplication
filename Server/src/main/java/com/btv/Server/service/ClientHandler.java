@@ -30,6 +30,25 @@ public abstract class ClientHandler implements Runnable{
         }
     }
     
+    @Override
+    final public void run() {
+        String messageFromClient;
+
+        while(clientSocket.isConnected()){
+            try{
+                messageFromClient = dataIn.readLine();
+                handleMessage(messageFromClient);
+            } catch(IOException e){
+                System.err.println(e);
+                break;
+            }
+        }
+
+        closeClientSocket();
+    }
+    
+    public abstract void handleMessage(String messStr);
+    
     public void closeClientSocket() {
         try {
             if(clientSocket != null && clientSocket.isConnected()) {
