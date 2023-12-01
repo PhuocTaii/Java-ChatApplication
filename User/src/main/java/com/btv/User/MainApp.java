@@ -4,6 +4,7 @@
 package com.btv.User;
 
 import com.btv.User.components.Layout;
+import com.btv.User.gui.layouts.Layout;
 import com.btv.User.gui.Login;
 import com.btv.User.gui.Search;
 import com.btv.User.gui.SignUp;
@@ -14,6 +15,8 @@ import com.btv.User.helper.LoginListener;
 import com.btv.User.helper.SignUpListener;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+import com.btv.User.gui.interfaces.LoginListener;
+import com.btv.User.gui.interfaces.SignUpListener;
 
 /**
  *
@@ -58,6 +61,10 @@ public class MainApp {
 
     public static void main(String args[]) {
         FlatLightLaf.setup();
+        
+        // init instance to send role
+        ClientSocket.getInstance();
+        
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {
             @Override

@@ -4,7 +4,7 @@
  */
 package com.btv.Admin;
 
-import com.btv.event.EventMenuSelected;
+import com.btv.helper.EventMenuSelected;
 import com.btv.gui.AllGroup;
 import com.btv.gui.AllUsers;
 import com.btv.gui.ListLogin;
@@ -14,6 +14,7 @@ import com.btv.gui.Spam;
 import com.btv.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -66,7 +67,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
         
-        setForm(listLogin);
+        setForm(users);
     }
 
     private void setForm(JComponent com) {
@@ -164,11 +165,15 @@ public class Main extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         FlatLightLaf.setup();
-
+        
+        // init instance to send role
+        ClientSocket.getInstance();
+        
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                Main mainClient = new Main();
+                mainClient.setVisible(true);
             }
         });
     }
