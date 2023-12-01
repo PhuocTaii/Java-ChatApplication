@@ -1,7 +1,6 @@
-package com.btv.component;
+package com.btv.Admin.gui.components;
 
-import com.btv.model.MenuModel;
-import com.btv.helper.EventMenuSelected;
+import com.btv.Admin.gui.interfaces.EventMenuSelected;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -38,7 +37,7 @@ public class Menu extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        menuList = new com.btv.component.MenuList<>();
+        menuList = new com.btv.Admin.gui.components.MenuList<>();
         labelTitle = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         testIcon = new javax.swing.JLabel();
@@ -157,7 +156,7 @@ public class Menu extends javax.swing.JPanel {
     private javax.swing.JLabel hamButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel labelTitle;
-    private com.btv.component.MenuList<String> menuList;
+    private com.btv.Admin.gui.components.MenuList<String> menuList;
     private javax.swing.JLabel testIcon;
     // End of variables declaration//GEN-END:variables
 }

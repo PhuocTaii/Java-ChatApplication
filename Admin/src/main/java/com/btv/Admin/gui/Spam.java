@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.gui;
+package com.btv.Admin.gui;
 
-import com.btv.newSwing.ScrollBar;
+import com.btv.Admin.gui.components.ScrollBar;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
@@ -40,10 +40,10 @@ public class Spam extends javax.swing.JPanel {
         backgroundSpams = new javax.swing.JPanel();
         titleSpams = new javax.swing.JLabel();
         spamScrollPane = new javax.swing.JScrollPane();
-        tableSpams = new com.btv.newSwing.TableCustom();
+        tableSpams = new com.btv.Admin.gui.components.TableCustom();
         jLabel2 = new javax.swing.JLabel();
-        comboBoxSpams = new com.btv.newSwing.ComboboxCustom();
-        comboBoxOrderSpams = new com.btv.newSwing.ComboboxCustom();
+        comboBoxSpams = new com.btv.Admin.gui.components.ComboboxCustom();
+        comboBoxOrderSpams = new com.btv.Admin.gui.components.ComboboxCustom();
 
         setOpaque(false);
 
@@ -273,11 +273,11 @@ public class Spam extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundSpams;
-    private com.btv.newSwing.ComboboxCustom comboBoxOrderSpams;
-    private com.btv.newSwing.ComboboxCustom comboBoxSpams;
+    private com.btv.Admin.gui.components.ComboboxCustom comboBoxOrderSpams;
+    private com.btv.Admin.gui.components.ComboboxCustom comboBoxSpams;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane spamScrollPane;
-    private com.btv.newSwing.TableCustom tableSpams;
+    private com.btv.Admin.gui.components.TableCustom tableSpams;
     private javax.swing.JLabel titleSpams;
     // End of variables declaration//GEN-END:variables
 }

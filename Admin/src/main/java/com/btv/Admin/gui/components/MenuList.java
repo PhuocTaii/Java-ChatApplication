@@ -1,7 +1,6 @@
-package com.btv.component;
+package com.btv.Admin.gui.components;
 
-import com.btv.model.MenuModel;
-import com.btv.helper.EventMenuSelected;
+import com.btv.Admin.gui.interfaces.EventMenuSelected;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

@@ -1,4 +1,4 @@
-package com.btv.model;
+package com.btv.Admin.gui.components;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

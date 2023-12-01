@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.gui;
+package com.btv.Admin.gui;
 
 import javax.swing.JComboBox;
 
@@ -39,7 +39,7 @@ public class UserFriends extends javax.swing.JPanel {
         numberOptions = new javax.swing.JComboBox<>();
         filterOptions = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tableCustom1 = new com.btv.newSwing.TableCustom();
+        tableCustom1 = new com.btv.Admin.gui.components.TableCustom();
 
         friendTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -212,6 +212,6 @@ public class UserFriends extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> numberOptions;
     private javax.swing.JPanel options;
     private javax.swing.JButton searchButton;
-    private com.btv.newSwing.TableCustom tableCustom1;
+    private com.btv.Admin.gui.components.TableCustom tableCustom1;
     // End of variables declaration//GEN-END:variables
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.gui;
+package com.btv.Admin.gui;
 
 import com.btv.service.UserService;
 import javax.swing.ImageIcon;
@@ -89,7 +89,7 @@ public class AllUsers extends javax.swing.JPanel {
         addBtn = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        tableUsers = new com.btv.newSwing.TableCustom();
+        tableUsers = new com.btv.Admin.gui.components.TableCustom();
         infoSection = new javax.swing.JPanel();
         infoFields = new javax.swing.JPanel();
         usernamePanel = new javax.swing.JPanel();
@@ -838,7 +838,7 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> statusOptions;
-    private com.btv.newSwing.TableCustom tableUsers;
+    private com.btv.Admin.gui.components.TableCustom tableUsers;
     private javax.swing.JLabel title;
     private javax.swing.JLabel titleAddDialg;
     private javax.swing.JButton updateButton;

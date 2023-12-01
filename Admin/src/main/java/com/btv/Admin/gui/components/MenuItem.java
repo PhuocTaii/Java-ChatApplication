@@ -1,6 +1,5 @@
-package com.btv.component;
+package com.btv.Admin.gui.components;
 
-import com.btv.model.MenuModel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

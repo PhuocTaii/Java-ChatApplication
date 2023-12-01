@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.gui;
+package com.btv.Admin.gui;
 
-import com.btv.newSwing.ScrollBar;
+import com.btv.Admin.gui.components.ScrollBar;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
@@ -115,11 +115,11 @@ public class AllGroup extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        comboBoxOrder = new com.btv.newSwing.ComboboxCustom();
-        comboBox = new com.btv.newSwing.ComboboxCustom();
+        comboBoxOrder = new com.btv.Admin.gui.components.ComboboxCustom();
+        comboBox = new com.btv.Admin.gui.components.ComboboxCustom();
         jLabel1 = new javax.swing.JLabel();
         loginScollPane = new javax.swing.JScrollPane();
-        tableGroups = new com.btv.newSwing.TableCustom();
+        tableGroups = new com.btv.Admin.gui.components.TableCustom();
 
         setMaximumSize(new java.awt.Dimension(1080, 768));
         setOpaque(false);
@@ -234,11 +234,11 @@ public class AllGroup extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.btv.newSwing.ComboboxCustom comboBox;
-    private com.btv.newSwing.ComboboxCustom comboBoxOrder;
+    private com.btv.Admin.gui.components.ComboboxCustom comboBox;
+    private com.btv.Admin.gui.components.ComboboxCustom comboBoxOrder;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane loginScollPane;
-    private com.btv.newSwing.TableCustom tableGroups;
+    private com.btv.Admin.gui.components.TableCustom tableGroups;
     // End of variables declaration//GEN-END:variables
 }

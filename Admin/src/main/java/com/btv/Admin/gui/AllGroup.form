@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[1080, 768]"/>
@@ -73,7 +73,7 @@
         <Property name="text" type="java.lang.String" value="Filtered by"/>
       </Properties>
     </Component>
-    <Component class="com.btv.newSwing.ComboboxCustom" name="comboBoxOrder">
+    <Component class="com.btv.Admin.gui.components.ComboboxCustom" name="comboBoxOrder">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
@@ -87,7 +87,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboBoxOrderActionPerformed"/>
       </Events>
     </Component>
-    <Component class="com.btv.newSwing.ComboboxCustom" name="comboBox">
+    <Component class="com.btv.Admin.gui.components.ComboboxCustom" name="comboBox">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
@@ -118,7 +118,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="com.btv.newSwing.TableCustom" name="tableGroups">
+        <Component class="com.btv.Admin.gui.components.TableCustom" name="tableGroups">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="0">

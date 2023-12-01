@@ -4,14 +4,14 @@
  */
 package com.btv.Admin;
 
-import com.btv.helper.EventMenuSelected;
-import com.btv.gui.AllGroup;
-import com.btv.gui.AllUsers;
-import com.btv.gui.ListLogin;
-import com.btv.gui.NewUsers;
-import com.btv.gui.OnlineUsers;
-import com.btv.gui.Spam;
-import com.btv.gui.UserFriends;
+import com.btv.Admin.gui.interfaces.EventMenuSelected;
+import com.btv.Admin.gui.AllGroup;
+import com.btv.Admin.gui.AllUsers;
+import com.btv.Admin.gui.ListLogin;
+import com.btv.Admin.gui.NewUsers;
+import com.btv.Admin.gui.OnlineUsers;
+import com.btv.Admin.gui.Spam;
+import com.btv.Admin.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -86,8 +86,8 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelBorder1 = new com.btv.newSwing.PanelBorder();
-        menu = new com.btv.component.Menu();
+        panelBorder1 = new com.btv.Admin.gui.components.PanelBorder();
+        menu = new com.btv.Admin.gui.components.Menu();
         hamButton = new javax.swing.JLabel();
         mainContent = new javax.swing.JPanel();
 
@@ -181,7 +181,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel hamButton;
     private javax.swing.JPanel mainContent;
-    private com.btv.component.Menu menu;
-    private com.btv.newSwing.PanelBorder panelBorder1;
+    private com.btv.Admin.gui.components.Menu menu;
+    private com.btv.Admin.gui.components.PanelBorder panelBorder1;
     // End of variables declaration//GEN-END:variables
 }

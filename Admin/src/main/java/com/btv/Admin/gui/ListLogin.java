@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.gui;
+package com.btv.Admin.gui;
 
-import com.btv.newSwing.ScrollBar;
+import com.btv.Admin.gui.components.ScrollBar;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,7 +34,7 @@ public class ListLogin extends javax.swing.JPanel {
         background = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         loginScollPane = new javax.swing.JScrollPane();
-        tableLogin = new com.btv.newSwing.TableCustom();
+        tableLogin = new com.btv.Admin.gui.components.TableCustom();
 
         setOpaque(false);
 
@@ -162,6 +162,6 @@ public class ListLogin extends javax.swing.JPanel {
     private javax.swing.JPanel background;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane loginScollPane;
-    private com.btv.newSwing.TableCustom tableLogin;
+    private com.btv.Admin.gui.components.TableCustom tableLogin;
     // End of variables declaration//GEN-END:variables
 }
