@@ -16,9 +16,12 @@ import java.util.ArrayList;
  * @author tvan
  */
 public class UserHandler extends ClientHandler{
-
+    public static ArrayList<UserHandler> userHandlers = new ArrayList<>();
+    
+    private String username;
     public UserHandler(Socket clientSocket) {
         super(clientSocket);
+        userHandlers.add(this);
     }
 
     public void handleMessage(String messStr) {
@@ -31,5 +34,9 @@ public class UserHandler extends ClientHandler{
             default:
                 System.out.println("Invalid message");
         }
+    }
+    
+    protected void removeClientFromList() {
+        userHandlers.remove(this);
     }
 }
