@@ -13,11 +13,9 @@ import java.util.ArrayList;
  *
  * @author tvan
  */
-public class UserService {
-    private ClientSocket clientSocket;
-    
+public class UserService {    
     public String[][] getAllUsers() {
-        clientSocket = ClientSocket.getInstance();
+        ClientSocket clientSocket = ClientSocket.getInstance();
         try {
             // send request to view all users
             clientSocket.dataOut.write(MessageType.VIEW_USERS.toString());

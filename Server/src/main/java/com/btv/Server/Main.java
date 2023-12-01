@@ -3,10 +3,10 @@
  */
 
 package com.btv.Server;
-import com.btv.Server.service.ClientHandler;
+import com.btv.Server.socket.ClientHandler;
 import com.btv.Server.database.ChatDB;
-import com.btv.Server.service.AdminHandler;
-import com.btv.Server.service.UserHandler;
+import com.btv.Server.socket.AdminHandler;
+import com.btv.Server.socket.UserHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
