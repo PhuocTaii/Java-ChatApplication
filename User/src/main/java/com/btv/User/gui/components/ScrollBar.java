@@ -1,5 +1,6 @@
-package com.btv.User.newSwing;
+package com.btv.User.gui.components;
 
+import com.btv.User.gui.components.ModernScrollBarUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JScrollBar;

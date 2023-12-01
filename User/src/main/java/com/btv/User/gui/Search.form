@@ -110,7 +110,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="com.btv.User.newSwing.TableCustom" name="tableUserSearch">
+            <Component class="com.btv.User.gui.components.TableCustom" name="tableUserSearch">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="5">
@@ -165,7 +165,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="textFieldSearchMessageActionPerformed"/>
           </Events>
         </Component>
-        <Component class="com.btv.User.newSwing.ComboboxCustom" name="comboboxSearch">
+        <Component class="com.btv.User.gui.components.ComboboxCustom" name="comboboxSearch">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">

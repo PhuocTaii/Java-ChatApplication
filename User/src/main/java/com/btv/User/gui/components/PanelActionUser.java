@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package com.btv.User;
+package com.btv.User.gui.components;
 
 /**
  *
@@ -26,9 +26,9 @@ public class PanelActionUser extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        chatButton = new com.btv.User.newSwing.ActionButton();
-        addFriendButton = new com.btv.User.newSwing.ActionButton();
-        blockButton = new com.btv.User.newSwing.ActionButton();
+        chatButton = new com.btv.User.gui.components.ActionButton();
+        addFriendButton = new com.btv.User.gui.components.ActionButton();
+        blockButton = new com.btv.User.gui.components.ActionButton();
 
         setOpaque(false);
 
@@ -80,8 +80,8 @@ public class PanelActionUser extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.btv.User.newSwing.ActionButton addFriendButton;
-    private com.btv.User.newSwing.ActionButton blockButton;
-    private com.btv.User.newSwing.ActionButton chatButton;
+    private com.btv.User.gui.components.ActionButton addFriendButton;
+    private com.btv.User.gui.components.ActionButton blockButton;
+    private com.btv.User.gui.components.ActionButton chatButton;
     // End of variables declaration//GEN-END:variables
 }

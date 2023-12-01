@@ -4,7 +4,7 @@
  */
 package com.btv.User.gui;
 
-import com.btv.User.gui.model.Message;
+import com.btv.User.gui.components.Message;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
