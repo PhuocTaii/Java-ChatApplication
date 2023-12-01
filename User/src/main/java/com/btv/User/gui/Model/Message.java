@@ -2,19 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.btv.User.gui.Model;
+package com.btv.User.gui.model;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.TextArea;
 import javax.swing.BoxLayout;
-import static javax.swing.GroupLayout.Alignment.CENTER;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import static javax.swing.SwingConstants.RIGHT;
 
 /**
  *
@@ -28,28 +24,29 @@ public class Message extends JPanel {
 
     public Message(String content, String name, Boolean type) {
         super();
-        setSize(660, 70);
-        setPreferredSize(new Dimension(660, 70));
-        setMaximumSize(new Dimension(660, 70));
-        setMinimumSize(new Dimension(660, 70));
+        setSize(788, 70);
+        setPreferredSize(new Dimension(788, 70));
+        setMaximumSize(new Dimension(788, 70));
+        setMinimumSize(new Dimension(788, 70));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel nameLabel = new JLabel();
         nameLabel.setText(name);
         nameLabel.setVerticalAlignment(JLabel.CENTER);
-
-        nameLabel.setPreferredSize(new Dimension(320, 30));
-        nameLabel.setMaximumSize(new Dimension(320, 30));
-        nameLabel.setMinimumSize(new Dimension(320, 30));
+        
+        int messWidth = this.getSize().width/2-10;
+        nameLabel.setPreferredSize(new Dimension(messWidth, 30));
+        nameLabel.setMaximumSize(new Dimension(messWidth, 30));
+        nameLabel.setMinimumSize(new Dimension(messWidth, 30));
         nameLabel.setOpaque(true);
         nameLabel.setBackground(new Color(242, 242, 242));
         
         
         JScrollPane TextPanel = new JScrollPane();
-        TextPanel.setSize(320, 40);
-        TextPanel.setPreferredSize(new Dimension(320, 40));
-        TextPanel.setMinimumSize(new Dimension(320, 40));
-        TextPanel.setMaximumSize(new Dimension(320, 40));
+        TextPanel.setSize(messWidth, 40);
+        TextPanel.setPreferredSize(new Dimension(messWidth, 40));
+        TextPanel.setMinimumSize(new Dimension(messWidth, 40));
+        TextPanel.setMaximumSize(new Dimension(messWidth, 40));
 
         JTextArea contentArea = new JTextArea(content);
         contentArea.setLineWrap(true);

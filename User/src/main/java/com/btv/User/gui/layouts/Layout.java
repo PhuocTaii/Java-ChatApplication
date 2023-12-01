@@ -6,6 +6,7 @@ package com.btv.User.gui.layouts;
 
 import com.btv.User.gui.Chat;
 import com.btv.User.gui.Search;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.ImageIcon;
 
@@ -24,10 +25,12 @@ public class Layout extends javax.swing.JFrame {
         initComponents();
         chatItem.setBackground(new Color(6, 20, 133));
         searchItem.setBackground(new Color(48, 162, 255));
+        
         chatPanel = new Chat();
         searchPanel = new Search();
         chatPanel.setVisible(true);
         searchPanel.setVisible(false);
+        
         contentPage.add(chatPanel);
         contentPage.add(searchPanel);
         chatPanel.setSize(contentPage.getSize());
