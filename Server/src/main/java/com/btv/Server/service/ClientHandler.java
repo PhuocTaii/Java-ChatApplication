@@ -30,10 +30,30 @@ public abstract class ClientHandler implements Runnable{
         }
     }
     
+    @Override
+    final public void run() {
+        String messageFromClient;
+
+        while(clientSocket.isConnected()){
+            try{
+                messageFromClient = dataIn.readLine();
+                handleMessage(messageFromClient);
+            } catch(IOException e){
+                System.err.println(e);
+                break;
+            }
+        }
+
+        closeClientSocket();
+    }
+    
+    public abstract void handleMessage(String messStr);
+    
     public void closeClientSocket() {
         try {
             if(clientSocket != null && clientSocket.isConnected()) {
-                System.out.println("client closed");
+                System.out.println("Client closed");
+                removeClientFromList();
                 clientSocket.close();
             }
             if(dataIn != null)
@@ -44,4 +64,6 @@ public abstract class ClientHandler implements Runnable{
             System.err.println(e);
         }
     }
+    
+    protected abstract void removeClientFromList();
 }

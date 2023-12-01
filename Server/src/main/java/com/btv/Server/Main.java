@@ -6,6 +6,7 @@ package com.btv.Server;
 import com.btv.Server.service.ClientHandler;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.service.AdminHandler;
+import com.btv.Server.service.UserHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +18,7 @@ import java.net.Socket;
  * @author taing
  */
 public class Main {
-    private static ServerSocket serverSocket; 
+    private static ServerSocket serverSocket;
     
     public static void main(String[] args) {
         ChatDB db = ChatDB.getDBInstance();
@@ -35,15 +36,15 @@ public class Main {
                 String role = dataIn.readLine();
                 ClientHandler clientHandler;
                 if(role.equalsIgnoreCase("admin")) {
-                    System.out.println("role: admin");
+                    System.out.println("Role: admin");
                     clientHandler = new AdminHandler(client);
                 }
                 else {
-                    System.out.println("role: user");
-                    clientHandler = new AdminHandler(client);
+                    System.out.println("Role: user");
+                    clientHandler = new UserHandler(client);
                 }
                 
-                // create thread
+                // create and start thread
                 Thread clientThread = new Thread(clientHandler);
                 clientThread.start();
             }
