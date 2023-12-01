@@ -4,6 +4,8 @@
  */
 package com.btv.User.gui;
 
+import com.btv.User.gui.components.TableActionCellRender;
+
 /**
  *
  * @author tvan
@@ -15,6 +17,7 @@ public class Search extends javax.swing.JPanel {
      */
     public Search() {
         initComponents();
+        tableUserSearch.getColumnModel().getColumn(2).setCellRenderer(new TableActionCellRender());
     }
 
     /**
@@ -26,19 +29,192 @@ public class Search extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        backgroundSearch = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableUserSearch = new com.btv.User.gui.components.TableCustom();
+        buttonSearchUser = new javax.swing.JButton();
+        textFieldSearchMessage = new javax.swing.JTextField();
+        comboboxSearch = new com.btv.User.gui.components.ComboboxCustom();
+        jLabel1 = new javax.swing.JLabel();
+        textFieldSearchName = new javax.swing.JTextField();
+        buttonSearchMessage = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        labelChoosenPerson = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+
+        backgroundSearch.setPreferredSize(new java.awt.Dimension(1080, 768));
+
+        tableUserSearch.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Username", "Name", "Action"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tableUserSearch);
+        if (tableUserSearch.getColumnModel().getColumnCount() > 0) {
+            tableUserSearch.getColumnModel().getColumn(0).setResizable(false);
+            tableUserSearch.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tableUserSearch.getColumnModel().getColumn(1).setResizable(false);
+            tableUserSearch.getColumnModel().getColumn(1).setPreferredWidth(50);
+            tableUserSearch.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        buttonSearchUser.setBackground(new java.awt.Color(48, 162, 255));
+        buttonSearchUser.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        buttonSearchUser.setForeground(new java.awt.Color(255, 255, 255));
+        buttonSearchUser.setText("Search");
+        buttonSearchUser.setAutoscrolls(true);
+
+        textFieldSearchMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldSearchMessageActionPerformed(evt);
+            }
+        });
+
+        comboboxSearch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Username", "Name" }));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setText("Search by");
+
+        textFieldSearchName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldSearchNameActionPerformed(evt);
+            }
+        });
+
+        buttonSearchMessage.setBackground(new java.awt.Color(48, 162, 255));
+        buttonSearchMessage.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        buttonSearchMessage.setForeground(new java.awt.Color(255, 255, 255));
+        buttonSearchMessage.setText("Search");
+        buttonSearchMessage.setBorderPainted(false);
+        buttonSearchMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSearchMessageActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setText("Chat with:");
+
+        labelChoosenPerson.setBackground(new java.awt.Color(255, 255, 255));
+        labelChoosenPerson.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelChoosenPerson.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelChoosenPerson.setText("Binh");
+        labelChoosenPerson.setOpaque(true);
+
+        jScrollPane2.setViewportView(jList1);
+
+        javax.swing.GroupLayout backgroundSearchLayout = new javax.swing.GroupLayout(backgroundSearch);
+        backgroundSearch.setLayout(backgroundSearchLayout);
+        backgroundSearchLayout.setHorizontalGroup(
+            backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundSearchLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1068, Short.MAX_VALUE)
+                    .addGroup(backgroundSearchLayout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundSearchLayout.createSequentialGroup()
+                                .addComponent(textFieldSearchMessage)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(buttonSearchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(backgroundSearchLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(labelChoosenPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundSearchLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboboxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(textFieldSearchName)
+                                .addGap(12, 12, 12)
+                                .addComponent(buttonSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2))))
+                .addContainerGap())
+        );
+        backgroundSearchLayout.setVerticalGroup(
+            backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(backgroundSearchLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonSearchUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboboxSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
+                    .addComponent(textFieldSearchName, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textFieldSearchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonSearchMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                    .addComponent(labelChoosenPerson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(161, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1080, Short.MAX_VALUE)
+            .addComponent(backgroundSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 768, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(backgroundSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void textFieldSearchMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchMessageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldSearchMessageActionPerformed
+
+    private void textFieldSearchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textFieldSearchNameActionPerformed
+
+    private void buttonSearchMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchMessageActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonSearchMessageActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel backgroundSearch;
+    private javax.swing.JButton buttonSearchMessage;
+    private javax.swing.JButton buttonSearchUser;
+    private com.btv.User.gui.components.ComboboxCustom comboboxSearch;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JList<String> jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelChoosenPerson;
+    private com.btv.User.gui.components.TableCustom tableUserSearch;
+    private javax.swing.JTextField textFieldSearchMessage;
+    private javax.swing.JTextField textFieldSearchName;
     // End of variables declaration//GEN-END:variables
 }
