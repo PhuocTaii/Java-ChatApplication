@@ -16,7 +16,7 @@ import java.net.Socket;
  *
  * @author tvan
  */
-public class ClientSocket {
+public class ClientSocket { // signleton
     private static ClientSocket clientInstance = null;
     
     private Socket socket;
