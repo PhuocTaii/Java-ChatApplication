@@ -90,7 +90,6 @@ public class ChatDB { // Singleton
                 tempUser.setGender(rs.getBoolean("gender"));
                 tempUser.setStatus(rs.getString("u_status"));
                 tempUser.setPassword(rs.getString("u_password"));
-//                tempUser.setPassword(rs.getString("u_password"));
                 resList.add(tempUser);
             }
 

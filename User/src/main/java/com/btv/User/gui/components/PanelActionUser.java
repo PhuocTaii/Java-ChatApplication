@@ -52,6 +52,8 @@ public class PanelActionUser extends javax.swing.JPanel {
         addFriendButton = new com.btv.User.gui.components.ActionButton();
         blockButton = new com.btv.User.gui.components.ActionButton();
 
+        setOpaque(false);
+
         chatButton.setBackground(new java.awt.Color(48, 162, 255));
         chatButton.setForeground(new java.awt.Color(255, 255, 255));
         chatButton.setText("Chat");

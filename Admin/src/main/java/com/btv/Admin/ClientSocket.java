@@ -4,7 +4,7 @@
  */
 package com.btv.Admin;
 
-import com.btv.helper.MessageType;
+import com.btv.Admin.helper.MessageType;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.net.Socket;
  *
  * @author tvan
  */
-public class ClientSocket {
+public class ClientSocket { // signleton
     private static ClientSocket clientInstance = null;
     
     private Socket socket;
