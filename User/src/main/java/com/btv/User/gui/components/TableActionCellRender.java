@@ -1,4 +1,4 @@
-package com.btv.User.newSwing;
+package com.btv.User.gui.components;
 
 import java.awt.Component;
 import javax.swing.JTable;

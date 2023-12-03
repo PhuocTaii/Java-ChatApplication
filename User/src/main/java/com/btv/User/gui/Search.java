@@ -5,8 +5,8 @@
 package com.btv.User.gui;
 
 import com.btv.User.helper.TableActionEvent;
-import com.btv.User.newSwing.TableActionCellEditor;
-import com.btv.User.newSwing.TableActionCellRender;
+import com.btv.User.gui.components.TableActionCellEditor;
+import com.btv.User.gui.components.TableActionCellRender;
 import javax.swing.table.TableCellEditor;
 
 /**
@@ -52,10 +52,10 @@ public class Search extends javax.swing.JPanel {
 
         backgroundSearch = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableUserSearch = new com.btv.User.newSwing.TableCustom();
+        tableUserSearch = new com.btv.User.gui.components.TableCustom();
         buttonSearchUser = new javax.swing.JButton();
         textFieldSearchMessage = new javax.swing.JTextField();
-        comboboxSearch = new com.btv.User.newSwing.ComboboxCustom();
+        comboboxSearch = new com.btv.User.gui.components.ComboboxCustom();
         jLabel1 = new javax.swing.JLabel();
         textFieldSearchName = new javax.swing.JTextField();
         buttonSearchMessage = new javax.swing.JButton();
@@ -225,14 +225,14 @@ public class Search extends javax.swing.JPanel {
     private javax.swing.JPanel backgroundSearch;
     private javax.swing.JButton buttonSearchMessage;
     private javax.swing.JButton buttonSearchUser;
-    private com.btv.User.newSwing.ComboboxCustom comboboxSearch;
+    private com.btv.User.gui.components.ComboboxCustom comboboxSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelChoosenPerson;
-    private com.btv.User.newSwing.TableCustom tableUserSearch;
+    private com.btv.User.gui.components.TableCustom tableUserSearch;
     private javax.swing.JTextField textFieldSearchMessage;
     private javax.swing.JTextField textFieldSearchName;
     // End of variables declaration//GEN-END:variables

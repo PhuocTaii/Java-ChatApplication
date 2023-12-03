@@ -42,7 +42,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="com.btv.User.newSwing.ActionButton" name="chatButton">
+    <Component class="com.btv.User.gui.components.ActionButton" name="chatButton">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="a2" red="30" type="rgb"/>
@@ -53,7 +53,7 @@
         <Property name="text" type="java.lang.String" value="Chat"/>
       </Properties>
     </Component>
-    <Component class="com.btv.User.newSwing.ActionButton" name="addFriendButton">
+    <Component class="com.btv.User.gui.components.ActionButton" name="addFriendButton">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="a2" red="30" type="rgb"/>
@@ -64,7 +64,7 @@
         <Property name="text" type="java.lang.String" value="Block"/>
       </Properties>
     </Component>
-    <Component class="com.btv.User.newSwing.ActionButton" name="blockButton">
+    <Component class="com.btv.User.gui.components.ActionButton" name="blockButton">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="a2" red="30" type="rgb"/>
