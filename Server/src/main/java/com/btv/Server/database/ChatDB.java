@@ -55,7 +55,7 @@ public class ChatDB { // Singleton
             // Perform database operations here
             Statement stmt = connection.createStatement();
             String sql;
-            sql = "USE chatchat";
+            sql = "use chatchat_db";
             stmt.execute(sql);
 
             stmt.close();
@@ -87,9 +87,11 @@ public class ChatDB { // Singleton
                 tempUser.setAddress(rs.getString("address"));
                 tempUser.setBirthday(rs.getDate("birthday"));
                 tempUser.setEmail(rs.getString("email"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
                 tempUser.setGender(rs.getBoolean("gender"));
                 tempUser.setStatus(rs.getString("u_status"));
                 tempUser.setPassword(rs.getString("u_password"));
+
                 resList.add(tempUser);
             }
 
@@ -101,4 +103,31 @@ public class ChatDB { // Singleton
         }
         return resList;
     }
+    
+    public ArrayList<User> GetAllNewUsers(){
+        ArrayList<User> resList = new ArrayList<>();
+        try{
+            Statement stmt = connection.createStatement();
+            
+            String sql = "select u_id, username, u_name, time_create from User order by time_create desc";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                User tempUser = new User();
+                tempUser.setId(rs.getInt("u_id"));
+                tempUser.setUsername(rs.getString("username"));
+                tempUser.setName(rs.getString("u_name"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
+
+                resList.add(tempUser);
+            }
+            
+            stmt.close();
+            
+        } catch(SQLException e){
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+
 }

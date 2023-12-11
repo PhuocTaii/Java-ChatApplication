@@ -52,6 +52,25 @@ public class AdminHandler extends ClientHandler{
                     System.out.println(e);
                 }
                 break;
+            case VIEW_NEW_USERS:
+                ArrayList<User> allNewUsers = db.GetAllNewUsers();
+                try {
+                    // send number of users
+                    dataOut.write(allNewUsers.size());
+                    
+                    // send data of all users
+                    for(User user : allNewUsers) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getUsername() + "|");
+                        dataOut.write(user.getName() + "|");
+                        dataOut.write(user.getTimeCreate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
             default:
                 System.out.println("Invalid message");
         }
