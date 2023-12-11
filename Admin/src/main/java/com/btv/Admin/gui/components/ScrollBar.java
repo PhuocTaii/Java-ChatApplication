@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:User/src/main/java/com/btv/User/gui/components/ScrollBar.java
-package com.btv.User.gui.components;
-========
 package com.btv.Admin.gui.components;
->>>>>>>> master:Admin/src/main/java/com/btv/Admin/gui/components/ScrollBar.java
 
 import java.awt.Color;
 import java.awt.Dimension;

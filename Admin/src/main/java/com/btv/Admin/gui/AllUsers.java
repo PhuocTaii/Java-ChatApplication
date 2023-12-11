@@ -9,29 +9,31 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author Admin
  */
 public class AllUsers extends javax.swing.JPanel {
+
     boolean isLocked = false; // temp
     private DefaultTableModel tableModel;
     private String[][] userList;
     private UserService userService;
-    
+
     /**
      * Creates new form AllUser
      */
     public AllUsers() {
         initComponents();
-        
+
         userService = new UserService();
         userList = userService.getAllUsers();
-        
-        tableModel = (DefaultTableModel)tableUsers.getModel();
+
+        tableModel = (DefaultTableModel) tableUsers.getModel();
         tableModel.setRowCount(0);
-        for(Object[] row : userList) {
+        for (Object[] row : userList) {
             tableModel.addRow(row);
         }
     }
@@ -675,24 +677,23 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void filterOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOptionsActionPerformed
         // TODO add your handling code here:
-        JComboBox cb = (JComboBox)evt.getSource();
-        String optionChosen = (String)cb.getSelectedItem();
+        JComboBox cb = (JComboBox) evt.getSource();
+        String optionChosen = (String) cb.getSelectedItem();
         if ("None".equals(optionChosen)) {
             filterTextField.setVisible(false);
             statusOptions.setVisible(false);
             searchButton.setVisible(false);
             // Show all data
-        }
-        else if ("Status".equals(optionChosen)) {
+        } else if ("Status".equals(optionChosen)) {
             filterTextField.setVisible(false);
             statusOptions.setVisible(true);
             searchButton.setVisible(true);
-        }
-        else {
+        } else {
             filterTextField.setVisible(true);
             statusOptions.setVisible(false);
             searchButton.setVisible(true);
         }
+        userService.filterByField(tableUsers, "", optionChosen);
     }//GEN-LAST:event_filterOptionsActionPerformed
 
     private void filterTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterTextFieldActionPerformed
@@ -710,13 +711,20 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
+        String searchString = filterTextField.getText();
+        String searchOption = filterOptions.getSelectedItem().toString();
+        if (searchOption.equals("Status")) {
+            searchString = statusOptions.getSelectedItem().toString();
+        }
+        userService.filterByField(tableUsers, searchOption, searchString);
+        filterTextField.setText("");
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
         int res = JOptionPane.showConfirmDialog(this,
-            "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
-        if(res == JOptionPane.YES_OPTION) {
+                "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
             // handle update here
         }
     }//GEN-LAST:event_updateButtonActionPerformed
@@ -724,8 +732,8 @@ public class AllUsers extends javax.swing.JPanel {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
         int res = JOptionPane.showConfirmDialog(this,
-            "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if(res == JOptionPane.YES_OPTION) {
+                "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (res == JOptionPane.YES_OPTION) {
             // handle update here
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
@@ -733,10 +741,11 @@ public class AllUsers extends javax.swing.JPanel {
     private void lockToggleButtontoggleLockUser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockToggleButtontoggleLockUser
         // TODO add your handling code here:
         isLocked = !isLocked;
-        if(isLocked)
-        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
-        else
-        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+        if (isLocked) {
+            lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
+        } else {
+            lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+        }
 
     }//GEN-LAST:event_lockToggleButtontoggleLockUser
 

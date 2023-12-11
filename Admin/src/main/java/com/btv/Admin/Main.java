@@ -169,6 +169,8 @@ public class Main extends javax.swing.JFrame {
         // init instance to send role
         ClientSocket.getInstance();
         
+//        System.out.println("------------------------");
+        
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
