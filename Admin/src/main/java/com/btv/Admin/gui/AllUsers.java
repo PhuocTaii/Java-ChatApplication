@@ -38,13 +38,8 @@ public class AllUsers extends javax.swing.JPanel {
         initComponents();
         selectedUser = new User();
         userService = new UserService();
-        userList = userService.getAllUsers();
 
-        tableModel = (DefaultTableModel) tableUsers.getModel();
-        tableModel.setRowCount(0);
-        for (Object[] row : userList) {
-            tableModel.addRow(row);
-        }
+        updateTable();
         addUserDialog.setLocationRelativeTo(null);
 
         tableUsers.getSelectionModel().addListSelectionListener(e -> {
@@ -144,7 +139,16 @@ public class AllUsers extends javax.swing.JPanel {
 
     }
 
-    private void getModifyUser() {
+    public void updateTable() {
+        userList = userService.getAllUsers();
+        tableModel = (DefaultTableModel) tableUsers.getModel();
+        tableModel.setRowCount(0);
+        for (Object[] row : userList) {
+            tableModel.addRow(row);
+        }
+    }
+
+    private void getUserField() {
         selectedUser.setUsername(usernameField.getText());
         selectedUser.setName(nameField.getText());
         selectedUser.setAddress(addressField.getText());
@@ -936,20 +940,18 @@ public class AllUsers extends javax.swing.JPanel {
                 "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
 
         if (res == JOptionPane.YES_OPTION) {
-            getModifyUser();
+            getUserField();
             String message = userService.validateUser(selectedUser);
             System.out.println(message);
-            
-//            System.out.println(selectedUser.getUsername());
 
+//            System.out.println(selectedUser.getUsername());
             if (message.equals("valid")) {
                 userService.modifyUser(selectedUser);
                 clearField();
+                updateTable();
             } else {
                 messageField.setText(message);
-//                messageField.setForeground(Color.red);
             }
-
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
@@ -957,8 +959,14 @@ public class AllUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         int res = JOptionPane.showConfirmDialog(this,
                 "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (usernameField.getText().equals("")) {
+            return;
+        }
+
         if (res == JOptionPane.YES_OPTION) {
-            // handle update here
+            userService.deleteUser(selectedUser);
+            updateTable();
+            clearField();
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -1034,7 +1042,7 @@ public class AllUsers extends javax.swing.JPanel {
             nameAddField.setText("");
             passwordAddField.setText("");
             usernameAddField.setText("");
-
+            updateTable();
         } else {
             messageAddLabel.setText(validMessage);
             messageAddLabel.setForeground(Color.red);

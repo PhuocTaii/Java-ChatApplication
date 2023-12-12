@@ -153,4 +153,21 @@ public class UserService {
             System.err.println(e);
         }
     }
+        public void deleteUser(User user) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.DELETE_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(user.getId()+ "|");
+            clientSocket.dataOut.newLine();
+
+            clientSocket.dataOut.flush();
+
+            // read number of users
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
+    
 }

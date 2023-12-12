@@ -158,7 +158,18 @@ public class ChatDB { // Singleton
         preparedStatement.setString(7, split[8]);
         //u_id
         preparedStatement.setString(8, split[9]);
-        
+
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public void deleteUser(String[] u_id) throws SQLException {
+        String query = "DELETE FROM User WHERE u_id = ?;";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        //u_id
+        preparedStatement.setString(1, u_id[0]);
+
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }

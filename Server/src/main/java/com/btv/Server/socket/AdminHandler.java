@@ -6,6 +6,7 @@ package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
+import static com.btv.Server.helpers.AdminMessage.UPDATE_USER;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
@@ -78,6 +79,18 @@ public class AdminHandler extends ClientHandler {
                     String[] split = userData.split("\\|");
                     db.modifyUser(split);
 
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case DELETE_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+                    db.deleteUser(split);
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
