@@ -4,7 +4,15 @@
  */
 package com.btv.Admin.gui;
 
+import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
+import java.awt.Color;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -36,6 +44,58 @@ public class AllUsers extends javax.swing.JPanel {
         for (Object[] row : userList) {
             tableModel.addRow(row);
         }
+        addUserDialog.setLocationRelativeTo(null);
+
+        tableUsers.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tableUsers.getSelectedRow();
+                if (selectedRow != -1) {
+                    for (int i = 0; i < tableUsers.getColumnCount(); i++) {
+                        switch (i) {
+                            case 1:
+                                usernameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 2:
+                                nameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 3:
+                                addressField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 4:
+                                String dateString = tableUsers.getValueAt(selectedRow, i).toString();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                try {
+                                    birthChooser.setDate(dateFormat.parse(dateString));
+                                } catch (ParseException ex) {
+                                    Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+
+                                break;
+
+                            case 5:
+                                String male = tableUsers.getValueAt(selectedRow, i).toString();
+                                if (male.equals("true")) {
+                                    maleRadioButton.setSelected(true);
+                                } else {
+                                    femaleRadioButton.setSelected(true);
+                                }
+                                break;
+                            case 6:
+                                emailField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 9:
+                                passwordField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    System.out.println(); // New line for next row
+                }
+            }
+        });
+
     }
 
     /**
@@ -55,16 +115,26 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         usernameAddLabel = new javax.swing.JLabel();
         usernameAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        javax.swing.Box.Filler filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        jPanel10 = new javax.swing.JPanel();
+        passwordAddLabel = new javax.swing.JLabel();
+        passwordAddField = new javax.swing.JTextField();
+        javax.swing.Box.Filler filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         jPanel5 = new javax.swing.JPanel();
         emailAddLabel = new javax.swing.JLabel();
         emailAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        jPanel9 = new javax.swing.JPanel();
+        genderAddLabel = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        maleRadioButtonAdd = new javax.swing.JRadioButton();
+        femaleRadioButtonAdd = new javax.swing.JRadioButton();
+        javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        addFieldsPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         nameAddLabel = new javax.swing.JLabel();
         nameAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        addFieldsPanel1 = new javax.swing.JPanel();
+        javax.swing.Box.Filler filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         jPanel7 = new javax.swing.JPanel();
         addressAddLabel = new javax.swing.JLabel();
         addressAddField = new javax.swing.JTextField();
@@ -73,13 +143,10 @@ public class AllUsers extends javax.swing.JPanel {
         birthAddLabel = new javax.swing.JLabel();
         birthDateChooserAdd = new com.toedter.calendar.JDateChooser();
         javax.swing.Box.Filler filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel9 = new javax.swing.JPanel();
-        genderAddLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        maleRadioButtonAdd = new javax.swing.JRadioButton();
-        femaleRadioButtonAdd = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
+        messageAddLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
+        messageAddLabel1 = new javax.swing.JLabel();
         genderAddbuttonGroup = new javax.swing.ButtonGroup();
         title = new javax.swing.JLabel();
         controlSection = new javax.swing.JPanel();
@@ -131,11 +198,11 @@ public class AllUsers extends javax.swing.JPanel {
         friendList = new javax.swing.JList<>();
 
         addUserDialog.setTitle("Add New User");
+        addUserDialog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addUserDialog.setMinimumSize(new java.awt.Dimension(860, 295));
         addUserDialog.setModal(true);
         addUserDialog.setResizable(false);
-        addUserDialog.setSize(new java.awt.Dimension(900, 320));
-        addUserDialog.getContentPane().setLayout(new java.awt.BorderLayout(0, 20));
+        addUserDialog.setSize(new java.awt.Dimension(900, 620));
 
         titleAddDialg.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         titleAddDialg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -144,10 +211,10 @@ public class AllUsers extends javax.swing.JPanel {
         addUserDialog.getContentPane().add(titleAddDialg, java.awt.BorderLayout.NORTH);
 
         inputPanel.setPreferredSize(new java.awt.Dimension(900, 500));
-        inputPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 5));
+        inputPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 0));
 
         addFieldsPanel.setMinimumSize(new java.awt.Dimension(300, 183));
-        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 200));
+        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 300));
         addFieldsPanel.setLayout(new javax.swing.BoxLayout(addFieldsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel4.setMaximumSize(new java.awt.Dimension(2147483647, 42));
@@ -165,7 +232,23 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel4.add(usernameAddField, java.awt.BorderLayout.SOUTH);
 
         addFieldsPanel.add(jPanel4);
-        addFieldsPanel.add(filler1);
+        addFieldsPanel.add(filler9);
+
+        jPanel10.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel10.setLayout(new java.awt.BorderLayout(0, 2));
+
+        passwordAddLabel.setText("Password");
+        jPanel10.add(passwordAddLabel, java.awt.BorderLayout.NORTH);
+
+        passwordAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel10.add(passwordAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel.add(jPanel10);
+        addFieldsPanel.add(filler12);
 
         jPanel5.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel5.setLayout(new java.awt.BorderLayout(0, 2));
@@ -181,57 +264,7 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel5.add(emailAddField, java.awt.BorderLayout.SOUTH);
 
         addFieldsPanel.add(jPanel5);
-        addFieldsPanel.add(filler3);
-
-        jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel6.setLayout(new java.awt.BorderLayout(0, 2));
-
-        nameAddLabel.setText("Full name");
-        jPanel6.add(nameAddLabel, java.awt.BorderLayout.NORTH);
-
-        nameAddField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameAddFieldActionPerformed(evt);
-            }
-        });
-        jPanel6.add(nameAddField, java.awt.BorderLayout.SOUTH);
-
-        addFieldsPanel.add(jPanel6);
-        addFieldsPanel.add(filler4);
-
-        inputPanel.add(addFieldsPanel);
-
-        addFieldsPanel1.setMinimumSize(new java.awt.Dimension(300, 183));
-        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 200));
-        addFieldsPanel1.setLayout(new javax.swing.BoxLayout(addFieldsPanel1, javax.swing.BoxLayout.Y_AXIS));
-
-        jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel7.setLayout(new java.awt.BorderLayout(0, 2));
-
-        addressAddLabel.setText("Address");
-        jPanel7.add(addressAddLabel, java.awt.BorderLayout.PAGE_START);
-
-        addressAddField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressAddFieldActionPerformed(evt);
-            }
-        });
-        jPanel7.add(addressAddField, java.awt.BorderLayout.SOUTH);
-
-        addFieldsPanel1.add(jPanel7);
-        addFieldsPanel1.add(filler6);
-
-        jPanel8.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel8.setLayout(new java.awt.BorderLayout(0, 2));
-
-        birthAddLabel.setText("Date of birth");
-        jPanel8.add(birthAddLabel, java.awt.BorderLayout.CENTER);
-
-        birthDateChooserAdd.setDateFormatString("dd-MM-yyyy");
-        jPanel8.add(birthDateChooserAdd, java.awt.BorderLayout.PAGE_END);
-
-        addFieldsPanel1.add(jPanel8);
-        addFieldsPanel1.add(filler5);
+        addFieldsPanel.add(filler10);
 
         jPanel9.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel9.setLayout(new java.awt.BorderLayout(0, 2));
@@ -263,10 +296,10 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(maleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(maleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(femaleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +312,58 @@ public class AllUsers extends javax.swing.JPanel {
 
         jPanel9.add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        addFieldsPanel1.add(jPanel9);
+        addFieldsPanel.add(jPanel9);
+        addFieldsPanel.add(filler11);
+
+        inputPanel.add(addFieldsPanel);
+
+        addFieldsPanel1.setMinimumSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel1.setLayout(new javax.swing.BoxLayout(addFieldsPanel1, javax.swing.BoxLayout.Y_AXIS));
+
+        jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel6.setLayout(new java.awt.BorderLayout(0, 2));
+
+        nameAddLabel.setText("Full name");
+        jPanel6.add(nameAddLabel, java.awt.BorderLayout.NORTH);
+
+        nameAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(nameAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel1.add(jPanel6);
+        addFieldsPanel1.add(filler7);
+
+        jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel7.setLayout(new java.awt.BorderLayout(0, 2));
+
+        addressAddLabel.setText("Address");
+        jPanel7.add(addressAddLabel, java.awt.BorderLayout.PAGE_START);
+
+        addressAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addressAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel7.add(addressAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel1.add(jPanel7);
+        addFieldsPanel1.add(filler6);
+
+        jPanel8.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel8.setLayout(new java.awt.BorderLayout(0, 2));
+
+        birthAddLabel.setText("Date of birth");
+        jPanel8.add(birthAddLabel, java.awt.BorderLayout.CENTER);
+
+        birthDateChooserAdd.setDateFormatString("dd-MM-yyyy");
+        jPanel8.add(birthDateChooserAdd, java.awt.BorderLayout.PAGE_END);
+
+        addFieldsPanel1.add(jPanel8);
+        addFieldsPanel1.add(filler5);
 
         inputPanel.add(addFieldsPanel1);
 
@@ -287,7 +371,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
         jPanel3.setMinimumSize(new java.awt.Dimension(110, 30));
-        jPanel3.setPreferredSize(new java.awt.Dimension(500, 50));
+        jPanel3.setPreferredSize(new java.awt.Dimension(500, 80));
 
         saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveButton.setText("SAVE");
@@ -302,7 +386,36 @@ public class AllUsers extends javax.swing.JPanel {
                 saveButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(saveButton);
+
+        messageAddLabel1.setText("Message: ");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(238, 238, 238)
+                .addComponent(messageAddLabel1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(messageAddLabel)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(messageAddLabel)
+                    .addComponent(messageAddLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
+        );
 
         addUserDialog.getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
@@ -774,8 +887,52 @@ public class AllUsers extends javax.swing.JPanel {
     }//GEN-LAST:event_femaleRadioButtonAddActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
+
+        String address, email, name, password, status, username;
+        Date birthday, timeCreate;
+        int gender;
+        address = addressAddField.getText();
+        email = emailAddField.getText();
+        name = nameAddField.getText();
+        password = passwordAddField.getText();
+        status = "OFFLINE";
+        username = usernameAddField.getText();
+
+        if (birthDateChooserAdd.getDate() != null) {
+            birthday = new Date(birthDateChooserAdd.getDate().getTime());
+        } else {
+            birthday = null;
+        }
+
+        timeCreate = java.sql.Date.valueOf(LocalDate.now());
+        if (genderAddbuttonGroup.getSelection().toString() == "Male") {
+            gender = 1;
+        } else {
+            gender = 0;
+        }
+
+        User newUser = new User(username, name, address, birthday, gender, email, timeCreate, status, password);
+
+        String validMessage = userService.validateNewUser(newUser);
+        if (validMessage.equals("valid")) {
+            userService.addNewUser(newUser);
+            addUserDialog.setVisible(false);
+
+            addressAddField.setText("");
+            emailAddField.setText("");
+            nameAddField.setText("");
+            passwordAddField.setText("");
+            usernameAddField.setText("");
+
+        } else {
+            messageAddLabel.setText(validMessage);
+            messageAddLabel.setForeground(Color.red);
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void passwordAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordAddFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordAddFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -820,6 +977,7 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JPanel inputPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -836,11 +994,15 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JList<String> loginList;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JRadioButton maleRadioButtonAdd;
+    private javax.swing.JLabel messageAddLabel;
+    private javax.swing.JLabel messageAddLabel1;
     private javax.swing.JTextField nameAddField;
     private javax.swing.JLabel nameAddLabel;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel namePanel;
+    private javax.swing.JTextField passwordAddField;
+    private javax.swing.JLabel passwordAddLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JPanel passwordPanel;

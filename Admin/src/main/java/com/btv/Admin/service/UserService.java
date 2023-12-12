@@ -6,8 +6,12 @@ package com.btv.Admin.service;
 
 import com.btv.Admin.ClientSocket;
 import com.btv.Admin.helper.MessageType;
+import com.btv.Admin.model.User;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -59,5 +63,68 @@ public class UserService {
 
             }
         }
+    }
+
+    public void addNewUser(User newUser) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.ADD_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(newUser.getUsername() + "|");
+            clientSocket.dataOut.write(newUser.getName() + "|");
+            clientSocket.dataOut.write(newUser.getAddress() + "|");
+            clientSocket.dataOut.write(newUser.getBirthday().toString() + "|");
+            clientSocket.dataOut.write(newUser.getEmail() + "|");
+            clientSocket.dataOut.write(newUser.getGender() + "|");
+            clientSocket.dataOut.write(newUser.getTimeCreate() + "|");
+            clientSocket.dataOut.write(newUser.getStatus() + "|");
+            clientSocket.dataOut.write(newUser.getPassword() + "|");
+            clientSocket.dataOut.newLine();
+
+            clientSocket.dataOut.flush();
+
+            // read number of users
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
+
+    public String validateNewUser(User newUser) {
+        if (!isValidUsername(newUser.getUsername())) {
+            return "Username is not valide.";
+        } else if (!isValidPassword(newUser.getPassword())) {
+            return "Password at least 6 characters.";
+        } else if (!isValidEmail(newUser.getEmail())) {
+            return "Email is not valid.";
+        } else if (!isValidBirthday(newUser.getBirthday())) {
+            return "Birthday is not allowed empty.";
+        }
+
+        return "valid";
+    }
+
+    public static boolean isValidUsername(String username) {
+        String regex = "^[a-zA-Z0-9_]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(username);
+
+        return matcher.matches();
+    }
+
+    public static boolean isValidBirthday(Date birthdate) {
+        return birthdate != null;
+    }
+
+    public static boolean isValidEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    public static boolean isValidPassword(String password) {
+        return password.length() >= 6;
     }
 }

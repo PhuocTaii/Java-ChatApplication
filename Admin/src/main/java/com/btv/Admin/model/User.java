@@ -1,24 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.btv.Server.model;
+package com.btv.Admin.model;
 
 import java.sql.Date;
 
-/**
- *
- * @author tvan
- */
-public class User {
 
+public class User {
     private String address, email, name, password, status, username;
     private Date birthday, timeCreate;
     private int id;
-    private boolean gender;
+    private int gender;
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public User(String username,String name,String address,Date birthday, int gender,String email, Date timeCreate, String status, String password) {
+        this.address = address;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.status = status;
+        this.username = username;
+        this.birthday = birthday;
+        this.timeCreate = timeCreate;
+        this.gender = gender;
     }
 
     public void setEmail(String email) {
@@ -49,7 +53,7 @@ public class User {
         this.id = id;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -89,12 +93,12 @@ public class User {
         return id;
     }
 
-    public boolean getGender() {
+    public int getGender() {
         return gender;
     }
 
     public Date getTimeCreate() {
         return timeCreate;
     }
-
+    
 }
