@@ -108,24 +108,57 @@ public class ChatDB { // Singleton
     }
 
     public void addUser(String[] split) throws SQLException {
-
-//        Statement stmt = connection.createStatement();
         String query = """
                        INSERT INTO User (username, u_name, address, birthday, email, gender, time_create, u_status, u_password)
                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);""";
 
         PreparedStatement preparedStatement = connection.prepareStatement(query);
 
+        //username
         preparedStatement.setString(1, split[0]);
+        //name
         preparedStatement.setString(2, split[1]);
+        //address
         preparedStatement.setString(3, split[2]);
+        //birthday
         preparedStatement.setString(4, split[3]);
+        //email,
         preparedStatement.setString(5, split[4]);
+        //gender
         preparedStatement.setString(6, split[5]);
+        //time_create
         preparedStatement.setString(7, split[6]);
+        //u_status
         preparedStatement.setString(8, split[7]);
+        //u_password
         preparedStatement.setString(9, split[8]);
 
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+    }
+
+    public void modifyUser(String[] split) throws SQLException {
+        String query = "UPDATE User SET username = ?, u_name = ?, address = ?, birthday = ?, email = ?, gender = ?, u_password = ? WHERE u_id = ?";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        //username
+        preparedStatement.setString(1, split[0]);
+        //name
+        preparedStatement.setString(2, split[1]);
+        //address
+        preparedStatement.setString(3, split[2]);
+        //birthday
+        preparedStatement.setString(4, split[3]);
+        //email,
+        preparedStatement.setString(5, split[4]);
+        //gender
+        preparedStatement.setString(6, split[5]);
+        //u_password
+        preparedStatement.setString(7, split[8]);
+        //u_id
+        preparedStatement.setString(8, split[9]);
+        
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }

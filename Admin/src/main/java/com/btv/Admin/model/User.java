@@ -9,6 +9,13 @@ public class User {
     private int id;
     private int gender;
 
+    public User() {
+    }
+
+    public User(User user){
+        
+    }
+    
     public void setAddress(String address) {
         this.address = address;
     }

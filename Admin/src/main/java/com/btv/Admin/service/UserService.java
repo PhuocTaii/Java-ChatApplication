@@ -90,14 +90,14 @@ public class UserService {
         }
     }
 
-    public String validateNewUser(User newUser) {
-        if (!isValidUsername(newUser.getUsername())) {
+    public String validateUser(User user) {
+        if (!isValidUsername(user.getUsername())) {
             return "Username is not valide.";
-        } else if (!isValidPassword(newUser.getPassword())) {
+        } else if (!isValidPassword(user.getPassword())) {
             return "Password at least 6 characters.";
-        } else if (!isValidEmail(newUser.getEmail())) {
+        } else if (!isValidEmail(user.getEmail())) {
             return "Email is not valid.";
-        } else if (!isValidBirthday(newUser.getBirthday())) {
+        } else if (!isValidBirthday(user.getBirthday())) {
             return "Birthday is not allowed empty.";
         }
 
@@ -126,5 +126,31 @@ public class UserService {
 
     public static boolean isValidPassword(String password) {
         return password.length() >= 6;
+    }
+
+    public void modifyUser(User user) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.UPDATE_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(user.getUsername() + "|");
+            clientSocket.dataOut.write(user.getName() + "|");
+            clientSocket.dataOut.write(user.getAddress() + "|");
+            clientSocket.dataOut.write(user.getBirthday().toString() + "|");
+            clientSocket.dataOut.write(user.getEmail() + "|");
+            clientSocket.dataOut.write(user.getGender() + "|");
+            clientSocket.dataOut.write(user.getTimeCreate() + "|");
+            clientSocket.dataOut.write(user.getStatus() + "|");
+            clientSocket.dataOut.write(user.getPassword() + "|");
+            clientSocket.dataOut.write(user.getId()+ "|");
+            clientSocket.dataOut.newLine();
+
+            clientSocket.dataOut.flush();
+
+            // read number of users
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
 }

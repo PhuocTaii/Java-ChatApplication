@@ -29,13 +29,14 @@ public class AllUsers extends javax.swing.JPanel {
     private DefaultTableModel tableModel;
     private String[][] userList;
     private UserService userService;
+    private User selectedUser;
 
     /**
      * Creates new form AllUser
      */
     public AllUsers() {
         initComponents();
-
+        selectedUser = new User();
         userService = new UserService();
         userList = userService.getAllUsers();
 
@@ -52,13 +53,19 @@ public class AllUsers extends javax.swing.JPanel {
                 if (selectedRow != -1) {
                     for (int i = 0; i < tableUsers.getColumnCount(); i++) {
                         switch (i) {
+                            case 0:
+                                selectedUser.setId(Integer.parseInt(tableUsers.getValueAt(selectedRow, i).toString()));
                             case 1:
+                                selectedUser.setUsername((String) tableUsers.getValueAt(selectedRow, i));
                                 usernameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
                                 break;
                             case 2:
+                                selectedUser.setName((String) tableUsers.getValueAt(selectedRow, i));
                                 nameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
                                 break;
                             case 3:
+                                selectedUser.setAddress((String) tableUsers.getValueAt(selectedRow, i));
+
                                 addressField.setText(tableUsers.getValueAt(selectedRow, i).toString());
                                 break;
                             case 4:
@@ -66,27 +73,66 @@ public class AllUsers extends javax.swing.JPanel {
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
                                 try {
-                                    birthChooser.setDate(dateFormat.parse(dateString));
-                                } catch (ParseException ex) {
+                                    // Parsing the date string to verify its correctness
+                                    Date parsedDate = Date.valueOf(dateString);
+                                    selectedUser.setBirthday(parsedDate);
+
+                                    // Setting the date in the JDateChooser
+                                    birthChooser.setDate(parsedDate);
+                                } catch (IllegalArgumentException ex) {
+                                    // Handle incorrect date format or parsing issues
                                     Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-
                                 break;
 
                             case 5:
+
                                 String male = tableUsers.getValueAt(selectedRow, i).toString();
                                 if (male.equals("true")) {
                                     maleRadioButton.setSelected(true);
+                                    selectedUser.setGender(1);
+
                                 } else {
                                     femaleRadioButton.setSelected(true);
+                                    selectedUser.setGender(0);
+
                                 }
                                 break;
                             case 6:
+                                selectedUser.setEmail((String) tableUsers.getValueAt(selectedRow, i));
+
                                 emailField.setText(tableUsers.getValueAt(selectedRow, i).toString());
                                 break;
+                            case 7:
+                                String timeCreateString = tableUsers.getValueAt(selectedRow, i).toString();
+
+                                if (!timeCreateString.isEmpty() && !timeCreateString.equals("null")) { // Check for non-empty and non-null values
+                                    try {
+                                        // Debug print the string content
+                                        System.out.println("TimeCreate String: " + timeCreateString);
+
+                                        // Convert the string to a java.sql.Date object
+                                        Date timeCreateDate = Date.valueOf(timeCreateString);
+                                        selectedUser.setTimeCreate(timeCreateDate);
+                                    } catch (IllegalArgumentException ex) {
+                                        // Handle incorrect date format or parsing issues
+                                        Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    // Handle empty or null values in the table cell
+                                    // This could be setting a default date or displaying a message
+                                    System.out.println("Empty or null value encountered");
+                                }
+                                break;
+
+                            case 8:
+                                selectedUser.setStatus((String) tableUsers.getValueAt(selectedRow, i));
+
                             case 9:
+                                selectedUser.setPassword((String) tableUsers.getValueAt(selectedRow, i));
                                 passwordField.setText(tableUsers.getValueAt(selectedRow, i).toString());
                                 break;
+
                             default:
                                 break;
                         }
@@ -96,6 +142,33 @@ public class AllUsers extends javax.swing.JPanel {
             }
         });
 
+    }
+
+    private void getModifyUser() {
+        selectedUser.setUsername(usernameField.getText());
+        selectedUser.setName(nameField.getText());
+        selectedUser.setAddress(addressField.getText());
+        selectedUser.setBirthday(new Date(birthChooser.getDate().getTime()));
+
+        if (maleRadioButton.isSelected()) {
+            selectedUser.setGender(1);
+
+        } else {
+            selectedUser.setGender(0);
+        }
+        selectedUser.setEmail(emailField.getText());
+        selectedUser.setPassword(new String(passwordField.getPassword()));
+
+    }
+
+    private void clearField() {
+        usernameField.setText("");
+        nameField.setText("");
+        addressField.setText("");
+        birthChooser.setDate(null);
+        genderBtnGroup.setSelected(null, isLocked);
+        emailField.setText("");
+        passwordField.setText("");
     }
 
     /**
@@ -184,6 +257,9 @@ public class AllUsers extends javax.swing.JPanel {
         passwordPanel = new javax.swing.JPanel();
         passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
+        messagePanel = new javax.swing.JPanel();
+        messageLabel1 = new javax.swing.JLabel();
+        messageField = new javax.swing.JTextField();
         actionPanel = new javax.swing.JPanel();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
@@ -649,6 +725,23 @@ public class AllUsers extends javax.swing.JPanel {
 
         infoFields.add(passwordPanel);
 
+        messagePanel.setLayout(new java.awt.BorderLayout());
+
+        messageLabel1.setText("Message:");
+        messageLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        messagePanel.add(messageLabel1, java.awt.BorderLayout.CENTER);
+
+        messageField.setEditable(false);
+        messageField.setBackground(new java.awt.Color(240, 240, 240));
+        messageField.setForeground(new java.awt.Color(255, 51, 51));
+        messageField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        messageField.setBorder(null);
+        messageField.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        messageField.setPreferredSize(new java.awt.Dimension(200, 30));
+        messagePanel.add(messageField, java.awt.BorderLayout.EAST);
+
+        infoFields.add(messagePanel);
+
         actionPanel.setMaximumSize(new java.awt.Dimension(32767, 310));
         actionPanel.setMinimumSize(new java.awt.Dimension(160, 0));
         actionPanel.setOpaque(false);
@@ -835,10 +928,28 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
+        if (usernameField.getText().equals("")) {
+            return;
+        }
+
         int res = JOptionPane.showConfirmDialog(this,
                 "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
+
         if (res == JOptionPane.YES_OPTION) {
-            // handle update here
+            getModifyUser();
+            String message = userService.validateUser(selectedUser);
+            System.out.println(message);
+            
+//            System.out.println(selectedUser.getUsername());
+
+            if (message.equals("valid")) {
+                userService.modifyUser(selectedUser);
+                clearField();
+            } else {
+                messageField.setText(message);
+//                messageField.setForeground(Color.red);
+            }
+
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
@@ -905,7 +1016,7 @@ public class AllUsers extends javax.swing.JPanel {
         }
 
         timeCreate = java.sql.Date.valueOf(LocalDate.now());
-        if (genderAddbuttonGroup.getSelection().toString() == "Male") {
+        if (maleRadioButtonAdd.isSelected()) {
             gender = 1;
         } else {
             gender = 0;
@@ -913,7 +1024,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         User newUser = new User(username, name, address, birthday, gender, email, timeCreate, status, password);
 
-        String validMessage = userService.validateNewUser(newUser);
+        String validMessage = userService.validateUser(newUser);
         if (validMessage.equals("valid")) {
             userService.addNewUser(newUser);
             addUserDialog.setVisible(false);
@@ -996,6 +1107,9 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JRadioButton maleRadioButtonAdd;
     private javax.swing.JLabel messageAddLabel;
     private javax.swing.JLabel messageAddLabel1;
+    private javax.swing.JTextField messageField;
+    private javax.swing.JLabel messageLabel1;
+    private javax.swing.JPanel messagePanel;
     private javax.swing.JTextField nameAddField;
     private javax.swing.JLabel nameAddLabel;
     private javax.swing.JTextField nameField;

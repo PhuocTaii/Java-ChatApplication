@@ -60,7 +60,6 @@ public class AdminHandler extends ClientHandler {
             case ADD_USER: {
                 try {
                     String userData = dataIn.readLine();
-                    System.out.println(userData);
 
                     String[] split = userData.split("\\|");
                     db.addUser(split);
@@ -70,10 +69,22 @@ public class AdminHandler extends ClientHandler {
                 } catch (SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                break;
             }
+            case UPDATE_USER: {
+                try {
+                    String userData = dataIn.readLine();
 
-            break;
+                    String[] split = userData.split("\\|");
+                    db.modifyUser(split);
 
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
             default:
                 System.out.println("Invalid message");
         }
