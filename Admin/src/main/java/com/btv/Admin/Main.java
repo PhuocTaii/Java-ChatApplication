@@ -5,7 +5,7 @@
 package com.btv.Admin;
 
 import com.btv.Admin.gui.interfaces.EventMenuSelected;
-import com.btv.Admin.gui.AllGroup;
+import com.btv.Admin.gui.AllGroups;
 import com.btv.Admin.gui.AllUsers;
 import com.btv.Admin.gui.ListLogin;
 import com.btv.Admin.gui.NewUsers;
@@ -29,7 +29,7 @@ public class Main extends javax.swing.JFrame {
     private NewUsers newUsers;
     private UserFriends userFriends;
     private OnlineUsers onlineUsers;
-    private AllGroup group;
+    private AllGroups group;
     private Spam spam;
     private ListLogin listLogin;
 
@@ -40,7 +40,7 @@ public class Main extends javax.swing.JFrame {
         newUsers = new NewUsers();
         userFriends = new UserFriends();
         onlineUsers = new OnlineUsers();
-        group = new AllGroup();
+        group = new AllGroups();
         spam = new Spam();
         listLogin = new ListLogin();
         

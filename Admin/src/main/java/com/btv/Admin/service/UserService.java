@@ -143,7 +143,7 @@ public class UserService {
             clientSocket.dataOut.write(user.getTimeCreate() + "|");
             clientSocket.dataOut.write(user.getStatus() + "|");
             clientSocket.dataOut.write(user.getPassword() + "|");
-            clientSocket.dataOut.write(user.getId()+ "|");
+            clientSocket.dataOut.write(user.getId() + "|");
             clientSocket.dataOut.newLine();
 
             clientSocket.dataOut.flush();
@@ -153,13 +153,14 @@ public class UserService {
             System.err.println(e);
         }
     }
-        public void deleteUser(User user) {
+
+    public void deleteUser(User user) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
             // send request to view all users
             clientSocket.dataOut.write(MessageType.DELETE_USER.toString());
             clientSocket.dataOut.newLine();
-            clientSocket.dataOut.write(user.getId()+ "|");
+            clientSocket.dataOut.write(user.getId() + "|");
             clientSocket.dataOut.newLine();
 
             clientSocket.dataOut.flush();
@@ -169,5 +170,32 @@ public class UserService {
             System.err.println(e);
         }
     }
-    
+
+    public String[] getLoginTime(User user) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.VIEW_LOGIN_BY_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(user.getId() + "|");
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+
+            // read number of users
+            int numLoginTime = clientSocket.dataIn.read();
+
+            ArrayList<String> loginTime = new ArrayList<>();
+            for (int i = 0; i < numLoginTime; i++) {
+                String userData = clientSocket.dataIn.readLine().trim();
+                loginTime.add(userData);
+            }
+            String[] usersArray = new String[loginTime.size()];
+            return loginTime.toArray(usersArray);
+        } catch (IOException e) {
+            System.err.println(e);
+            return null;
+        }
+
+    }
+
 }

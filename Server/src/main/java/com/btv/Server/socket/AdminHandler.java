@@ -6,7 +6,6 @@ package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
-import static com.btv.Server.helpers.AdminMessage.UPDATE_USER;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
@@ -90,7 +89,49 @@ public class AdminHandler extends ClientHandler {
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
-                    db.deleteUser(split);
+                    System.out.println(split[0]);
+                    db.deleteUser(split[0]);
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_LOGIN_BY_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+//                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
+
+                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
+                    dataOut.write(allLoginTime.size());
+                    for (Date loginTime : allLoginTime) {
+                        dataOut.write(loginTime.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_FRIENDS_BY_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> allFriendName = db.getFriendName(split[0]);
+                    dataOut.write(allFriendName.size());
+                    for (String name : allFriendName) {
+                        dataOut.write(name.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {

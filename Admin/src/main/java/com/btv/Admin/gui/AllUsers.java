@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -122,7 +123,15 @@ public class AllUsers extends javax.swing.JPanel {
 
                             case 8:
                                 selectedUser.setStatus((String) tableUsers.getValueAt(selectedRow, i));
-
+                                String status = selectedUser.getStatus();
+                                System.out.println(status);
+                                if (status.equals("LOCKED")) {
+                                    isLocked = true;
+                                    lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
+                                } else {
+                                    isLocked = false;
+                                    lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+                                }
                             case 9:
                                 selectedUser.setPassword((String) tableUsers.getValueAt(selectedRow, i));
                                 passwordField.setText(tableUsers.getValueAt(selectedRow, i).toString());
@@ -133,6 +142,7 @@ public class AllUsers extends javax.swing.JPanel {
                         }
                     }
                     System.out.println(); // New line for next row
+                    getLoginListByUser(selectedUser);
                 }
             }
         });
@@ -156,12 +166,17 @@ public class AllUsers extends javax.swing.JPanel {
 
         if (maleRadioButton.isSelected()) {
             selectedUser.setGender(1);
-
         } else {
             selectedUser.setGender(0);
         }
         selectedUser.setEmail(emailField.getText());
         selectedUser.setPassword(new String(passwordField.getPassword()));
+
+        if (isLocked) {
+            selectedUser.setStatus("LOCKED");
+        } else {
+            selectedUser.setStatus("OFFLINE");
+        }
 
     }
 
@@ -173,6 +188,18 @@ public class AllUsers extends javax.swing.JPanel {
         genderBtnGroup.setSelected(null, isLocked);
         emailField.setText("");
         passwordField.setText("");
+        messageField.setText("");
+    }
+
+    private void getLoginListByUser(User user) {
+        String[] loginListString = userService.getLoginTime(user);
+
+        DefaultListModel<String> modelLoginList = new DefaultListModel<>();
+        for (String login : loginListString) {
+            modelLoginList.addElement(login);
+        }
+
+        loginList.setModel(modelLoginList);
     }
 
     /**
@@ -270,7 +297,7 @@ public class AllUsers extends javax.swing.JPanel {
         lockToggleButton = new javax.swing.JToggleButton();
         loginHistoryPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        loginScrollPane = new javax.swing.JScrollPane();
         loginList = new javax.swing.JList<>();
         friendsPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -795,15 +822,10 @@ public class AllUsers extends javax.swing.JPanel {
         jLabel1.setPreferredSize(new java.awt.Dimension(93, 30));
         loginHistoryPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
 
-        loginList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         loginList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(loginList);
+        loginScrollPane.setViewportView(loginList);
 
-        loginHistoryPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        loginHistoryPanel.add(loginScrollPane, java.awt.BorderLayout.CENTER);
 
         friendsPanel.setOpaque(false);
         friendsPanel.setPreferredSize(new java.awt.Dimension(93, 310));
@@ -815,11 +837,6 @@ public class AllUsers extends javax.swing.JPanel {
         jLabel2.setPreferredSize(new java.awt.Dimension(93, 30));
         friendsPanel.add(jLabel2, java.awt.BorderLayout.NORTH);
 
-        friendList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         friendList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(friendList);
 
@@ -942,7 +959,7 @@ public class AllUsers extends javax.swing.JPanel {
         if (res == JOptionPane.YES_OPTION) {
             getUserField();
             String message = userService.validateUser(selectedUser);
-            System.out.println(message);
+            System.out.println(selectedUser.getStatus());
 
 //            System.out.println(selectedUser.getUsername());
             if (message.equals("valid")) {
@@ -1105,12 +1122,12 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToggleButton lockToggleButton;
     private javax.swing.JPanel loginHistoryPanel;
     private javax.swing.JList<String> loginList;
+    private javax.swing.JScrollPane loginScrollPane;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JRadioButton maleRadioButtonAdd;
     private javax.swing.JLabel messageAddLabel;

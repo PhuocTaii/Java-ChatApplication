@@ -18,12 +18,12 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Vo Quoc Binh
  */
-public class AllGroup extends javax.swing.JPanel {
+public class AllGroups extends javax.swing.JPanel {
 
     String query = "";
     String queryOrder = "";
 
-    public AllGroup() {
+    public AllGroups() {
         initComponents();
         testData(tableGroups);
     }

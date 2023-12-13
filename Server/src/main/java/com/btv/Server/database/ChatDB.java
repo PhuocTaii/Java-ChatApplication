@@ -7,6 +7,7 @@ package com.btv.Server.database;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -138,7 +139,7 @@ public class ChatDB { // Singleton
     }
 
     public void modifyUser(String[] split) throws SQLException {
-        String query = "UPDATE User SET username = ?, u_name = ?, address = ?, birthday = ?, email = ?, gender = ?, u_password = ? WHERE u_id = ?";
+        String query = "UPDATE User SET username = ?, u_name = ?, address = ?, birthday = ?, email = ?, gender = ?, u_status = ?, u_password = ? WHERE u_id = ?";
 
         PreparedStatement preparedStatement = connection.prepareStatement(query);
 
@@ -154,23 +155,73 @@ public class ChatDB { // Singleton
         preparedStatement.setString(5, split[4]);
         //gender
         preparedStatement.setString(6, split[5]);
+        //u_status
+        preparedStatement.setString(7, split[7]);
         //u_password
-        preparedStatement.setString(7, split[8]);
+        preparedStatement.setString(8, split[8]);
         //u_id
-        preparedStatement.setString(8, split[9]);
+        preparedStatement.setString(9, split[9]);
 
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
 
-    public void deleteUser(String[] u_id) throws SQLException {
+    public void deleteUser(String u_id) throws SQLException {
         String query = "DELETE FROM User WHERE u_id = ?;";
-
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         //u_id
-        preparedStatement.setString(1, u_id[0]);
+        preparedStatement.setString(1, u_id);
 
         preparedStatement.executeUpdate();
         preparedStatement.close();
     }
+
+    public ArrayList<Date> getLoginTime(String userId) throws SQLException {
+        String query = "SELECT login_time FROM Logins WHERE u_id = ?";
+        ArrayList<Date> loginTimeList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, userId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    Date date = rs.getDate("login_time");
+                    loginTimeList.add(date);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle the exception or throw it to the calling method
+            System.err.println(e);
+            throw e; // or handle it according to your application's logic
+        }
+
+        return loginTimeList;
+    }
+
+    public ArrayList<String> getFriendName(String userId) throws SQLException {
+        String query = """
+                       SELECT u2.u_name AS friend_name
+                       FROM friend f
+                       INNER JOIN User u1 ON f.u_id1 = u1.u_id
+                       INNER JOIN User u2 ON f.u_id2 = u2.u_id
+                       WHERE u1.u_id = ?
+                       """;
+        ArrayList<String> nameList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, userId);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("u2.u_name");
+                    nameList.add(name);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle the exception or throw it to the calling method
+            System.err.println(e);
+            throw e; // or handle it according to your application's logic
+        }
+
+        return nameList;
+    }
+
 }
