@@ -143,6 +143,7 @@ public class AllUsers extends javax.swing.JPanel {
                     }
                     System.out.println(); // New line for next row
                     getLoginListByUser(selectedUser);
+                    getFriendListByUser(selectedUser);
                 }
             }
         });
@@ -200,6 +201,17 @@ public class AllUsers extends javax.swing.JPanel {
         }
 
         loginList.setModel(modelLoginList);
+    }
+    
+    private void getFriendListByUser(User user) {
+        String[] friendListString = userService.getFriendName(user);
+
+        DefaultListModel<String> modelFriendList = new DefaultListModel<>();
+        for (String name : friendListString) {
+            modelFriendList.addElement(name);
+        }
+
+        friendList.setModel(modelFriendList);
     }
 
     /**

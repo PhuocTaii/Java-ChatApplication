@@ -197,5 +197,32 @@ public class UserService {
         }
 
     }
+    
+    public String[] getFriendName(User user) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.VIEW_FRIENDS_BY_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(user.getId() + "|");
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+
+            // read number of users
+            int numFriends = clientSocket.dataIn.read();
+
+            ArrayList<String> numFriendList = new ArrayList<>();
+            for (int i = 0; i < numFriends; i++) {
+                String userData = clientSocket.dataIn.readLine().trim();
+                numFriendList.add(userData);
+            }
+            String[] usersArray = new String[numFriendList.size()];
+            return numFriendList.toArray(usersArray);
+        } catch (IOException e) {
+            System.err.println(e);
+            return null;
+        }
+
+    }
 
 }

@@ -200,7 +200,7 @@ public class ChatDB { // Singleton
     public ArrayList<String> getFriendName(String userId) throws SQLException {
         String query = """
                        SELECT u2.u_name AS friend_name
-                       FROM friend f
+                       FROM Friends f
                        INNER JOIN User u1 ON f.u_id1 = u1.u_id
                        INNER JOIN User u2 ON f.u_id2 = u2.u_id
                        WHERE u1.u_id = ?
@@ -211,7 +211,7 @@ public class ChatDB { // Singleton
             preparedStatement.setString(1, userId);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
-                    String name = rs.getString("u2.u_name");
+                    String name = rs.getString("friend_name");
                     nameList.add(name);
                 }
             }
