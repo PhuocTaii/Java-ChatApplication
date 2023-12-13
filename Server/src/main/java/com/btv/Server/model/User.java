@@ -13,7 +13,15 @@ import java.sql.Date;
 public class User {
 
     private String address, email, name, password, status, username;
-    private Date birthday, timeCreate;
+    private Date birthday, timeCreate, loginDate;
+
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
     private int id;
     private boolean gender;
 

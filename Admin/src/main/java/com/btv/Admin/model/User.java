@@ -2,25 +2,26 @@ package com.btv.Admin.model;
 
 import java.sql.Date;
 
-
 public class User {
+
     private String address, email, name, password, status, username;
-    private Date birthday, timeCreate;
+    private Date birthday, timeCreate, loginDate;
+
     private int id;
     private int gender;
 
     public User() {
     }
 
-    public User(User user){
-        
+    public User(User user) {
+
     }
-    
+
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public User(String username,String name,String address,Date birthday, int gender,String email, Date timeCreate, String status, String password) {
+    public User(String username, String name, String address, Date birthday, int gender, String email, Date timeCreate, String status, String password) {
         this.address = address;
         this.email = email;
         this.name = name;
@@ -30,6 +31,14 @@ public class User {
         this.birthday = birthday;
         this.timeCreate = timeCreate;
         this.gender = gender;
+    }
+
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
     }
 
     public void setEmail(String email) {
@@ -107,5 +116,5 @@ public class User {
     public Date getTimeCreate() {
         return timeCreate;
     }
-    
+
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
@@ -33,7 +29,7 @@ public class AdminHandler extends ClientHandler {
         ChatDB db = ChatDB.getDBInstance();
         switch (mess) {
             case VIEW_USERS:
-                ArrayList<User> allUsers = db.getAllUsers();
+                ArrayList<User> allUsers = db.adminHandleDB.getAllUsers();
                 try {
                     // send number of users
                     dataOut.write(allUsers.size());
@@ -62,7 +58,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
 
                     String[] split = userData.split("\\|");
-                    db.addUser(split);
+                    db.adminHandleDB.addUser(split);
 
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,7 +72,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
 
                     String[] split = userData.split("\\|");
-                    db.modifyUser(split);
+                    db.adminHandleDB.modifyUser(split);
 
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,7 +86,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
                     System.out.println(split[0]);
-                    db.deleteUser(split[0]);
+                    db.adminHandleDB.deleteUser(split[0]);
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
@@ -104,7 +100,7 @@ public class AdminHandler extends ClientHandler {
                     String[] split = userData.split("\\|");
 //                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
 
-                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
+                    ArrayList<Date> allLoginTime = db.adminHandleDB.getLoginTime(split[0]);
                     dataOut.write(allLoginTime.size());
                     for (Date loginTime : allLoginTime) {
                         dataOut.write(loginTime.toString());
@@ -124,7 +120,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
 
-                    ArrayList<String> allFriendName = db.getFriendName(split[0]);
+                    ArrayList<String> allFriendName = db.adminHandleDB.getFriendName(split[0]);
                     dataOut.write(allFriendName.size());
                     for (String name : allFriendName) {
                         dataOut.write(name.toString());
@@ -136,6 +132,27 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_LOGINS: {
+                System.out.println("--------------------------");
+                ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
+                try {
+                    // send number of users
+                    dataOut.write(allUserLogin.size());
+
+                    // send data of all users
+                    for (User user : allUserLogin) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getUsername() + "|");
+                        dataOut.write(user.getName() + "|");
+                        dataOut.write(user.getLoginDate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
                 }
                 break;
             }
