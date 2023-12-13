@@ -9,10 +9,10 @@ import com.btv.Admin.helper.MessageType;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -60,28 +60,56 @@ public class NewUserService {
     }
     
     public void filterByDate(JTable table, Date StartDate, Date EndDate){
+
+
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
             
         table.setRowSorter(rowSorter);
         
-        RowFilter<DefaultTableModel, Integer> dateFilter = new RowFilter<DefaultTableModel, Integer>() {
+        if(StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(EndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())){
+            System.out.println(124);
+            RowFilter<DefaultTableModel, Integer> dateFilter = new RowFilter<DefaultTableModel, Integer>() {
             @Override
-            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
-                DefaultTableModel model = entry.getModel();
-                int row = entry.getIdentifier();
-                System.out.println(model.getValueAt(row, 3).getClass());
-                String dateString  = (String)model.getValueAt(row, 3);
-                try{
-                    Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                    return (!StartDate.after(creationTime) && !EndDate.before(creationTime));
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
-                    return false;
-                }
-            }            
-        };
-        
-        rowSorter.setRowFilter(dateFilter);
+                public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                    DefaultTableModel model = entry.getModel();
+                    int row = entry.getIdentifier();
+                    String dateString  = (String)model.getValueAt(row, 3);
+                    try{
+                        Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                        return (StartDate.before(creationTime) && EndDate.after(creationTime));
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                        return false;
+                    }
+                }            
+            };
+            System.out.println(dateFilter);
+            rowSorter.setRowFilter(dateFilter);
+        }
+        else if(StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(EndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())){
+            System.out.println(123);
+            RowFilter<DefaultTableModel, Integer> dateFilter = new RowFilter<DefaultTableModel, Integer>() {
+            @Override
+                public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                    DefaultTableModel model = entry.getModel();
+                    int row = entry.getIdentifier();
+                    String dateString  = (String)model.getValueAt(row, 3);
+                    try{
+                        Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                        return (StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(creationTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                        return false;
+                    }
+                }            
+            };
+            System.out.println(dateFilter);
+            rowSorter.setRowFilter(dateFilter);
+        }
+        else{
+            System.out.println("wrong condition");
+            rowSorter.setRowFilter(null);
+        }
     }
 }

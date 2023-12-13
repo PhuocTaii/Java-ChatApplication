@@ -6,6 +6,7 @@ package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
+import com.btv.Server.model.Friends;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
@@ -71,6 +72,23 @@ public class AdminHandler extends ClientHandler{
                     System.out.println(e);
                 }
                 break;
+            case VIEW_USER_FRIEND:
+                ArrayList<Friends> allUsersFriends = db.GetAllFriends();
+                try{
+                    dataOut.write(allUsersFriends.size());
+                    
+                    for(Friends friends : allUsersFriends){
+                        dataOut.write(friends.getId() + "|");
+                        dataOut.write(friends.getName()+ "|");
+                        dataOut.write(friends.getTimeCreate()+ "|");
+                        dataOut.write(friends.getDirectFriends()+ "|");
+                        dataOut.write(friends.getIndirectFriends()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e){
+                    System.out.println(e);
+                }
             default:
                 System.out.println("Invalid message");
         }

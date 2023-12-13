@@ -4,7 +4,10 @@
  */
 package com.btv.Admin.gui;
 
+import com.btv.Admin.service.FriendService;
+import java.io.IOException;
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,8 +18,19 @@ public class UserFriends extends javax.swing.JPanel {
     /**
      * Creates new form UserFriends
      */
+    private DefaultTableModel tableModel;
+    private String[][] friendList;
+    private FriendService friendService;
     public UserFriends() {
         initComponents();
+        
+        friendService = new FriendService();
+        friendList = friendService.getAllFriends();
+        tableModel = (DefaultTableModel)tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for(Object[] row : friendList) {
+            tableModel.addRow(row);
+        }
     }
 
     /**
@@ -100,10 +114,10 @@ public class UserFriends extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(405, Short.MAX_VALUE))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
         optionsLayout.setVerticalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,8 +132,6 @@ public class UserFriends extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        searchButton.setVisible(false);
-
         tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -128,9 +140,17 @@ public class UserFriends extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Username", "Time create", "Direct friends", "Indirect friends"
+                "ID", "Name", "Time create", "Direct friends", "Indirect friends"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tableCustom1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -164,22 +184,19 @@ public class UserFriends extends javax.swing.JPanel {
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);
-            searchButton.setVisible(false);
             // Show all data
         }
         else if ("Name".equals(optionChosen)) {
             Input.setVisible(true);
             numberOptions.setVisible(false);
-            searchButton.setVisible(true);
         }
         else {
             Input.setVisible(true);
             numberOptions.setVisible(true);
-            searchButton.setVisible(true);
         }
         
-        options.revalidate();
-        options.repaint();
+        filterOptions.revalidate();
+        filterOptions.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
 
     private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
@@ -188,6 +205,19 @@ public class UserFriends extends javax.swing.JPanel {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
+        if("None".equals(filterOptions.getSelectedItem())){
+            Input.setText("");
+        }
+        else if("Name".equals(filterOptions.getSelectedItem())){
+            String searchString = Input.getText();
+            friendService.filterByName(tableCustom1, searchString);
+            Input.setText("");
+        }
+        else{
+            String numString = Input.getText();
+            friendService.filterByNumber(tableCustom1, numString, numberOptions);
+            Input.setText("");
+        }
     }//GEN-LAST:event_searchButtonActionPerformed
 
 

@@ -40,9 +40,9 @@
               <Component id="pageHeader" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="options" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
               <Component id="jScrollPane3" pref="298" max="32767" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="statisticzone" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
           </Group>
@@ -179,7 +179,7 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="startDate">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="startDate.getDateEditor().addPropertyChangeListener(e -&gt; {&#xa;if (&quot;date&quot;.equals(e.getPropertyName())) {&#xa;    Date selectedDate = (Date) e.getNewValue();&#xa;    System.out.println(&quot;Selected Date: &quot; + selectedDate);&#xa;    }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="startDate.getDateEditor().addPropertyChangeListener(e -&gt; {&#xa;if (&quot;date&quot;.equals(e.getPropertyName())) {&#xa;    Date selectedDate = (Date) e.getNewValue();&#xa;    }&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="connector">
@@ -193,7 +193,7 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="endDate">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="endDate.getDateEditor().addPropertyChangeListener(e -&gt; {&#xa;if (&quot;date&quot;.equals(e.getPropertyName())) {&#xa;    Date selectedDate = (Date) e.getNewValue();&#xa;    if(startDate.getDate() != null){&#xa;        System.out.println(&quot;Selected Date: &quot; + selectedDate);&#xa;        newUserService.filterByDate(tableUsers, startDate.getDate(), endDate.getDate());&#xa;&#xa;    }&#xa;    else{&#xa;        System.out.println(&quot;Select start Date&quot;);&#xa;    }&#xa;}});"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="endDate.getDateEditor().addPropertyChangeListener(e -&gt; {&#xa;if (&quot;date&quot;.equals(e.getPropertyName())){&#xa;        Date selectedDate = (Date) e.getNewValue();&#xa;        if (startDate.getDate() != null){&#xa;            Timer timer = new Timer(500, new ActionListener() {&#xa;                @Override&#xa;                public void actionPerformed(ActionEvent arg0) {&#xa;                    newUserService.filterByDate(tableUsers, startDate.getDate(), endDate.getDate());&#xa;&#xa;                    startDate.setCalendar(null);&#xa;                    endDate.setCalendar(null);&#xa;                }&#xa;            });&#xa;            timer.setRepeats(false); // Set to false to run only once&#xa;            timer.start();&#xa;            }&#xa;    } &#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -242,17 +242,17 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="zoneName" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="432" max="32767" attributes="0"/>
                   <Component id="year" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jYearChooser1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="435" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="zoneName" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

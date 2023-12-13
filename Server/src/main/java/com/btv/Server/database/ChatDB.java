@@ -4,6 +4,7 @@
  */
 package com.btv.Server.database;
 
+import com.btv.Server.model.Friends;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
@@ -117,7 +118,7 @@ public class ChatDB { // Singleton
                 tempUser.setUsername(rs.getString("username"));
                 tempUser.setName(rs.getString("u_name"));
                 tempUser.setTimeCreate(rs.getDate("time_create"));
-
+                
                 resList.add(tempUser);
             }
             
@@ -129,5 +130,35 @@ public class ChatDB { // Singleton
         }
         return resList;
     }
+    
+    public ArrayList<Friends> GetAllFriends(){
+        ArrayList<Friends> resList = new ArrayList<>();
+        try{
+            Statement stmt = connection.createStatement();
 
+            String sql = "select u_id, u_name, time_create, count(distinct(f.u_id2)) as 'direct_friends', count(distinct(f2.u_id2)) as 'indirect_friends'\n" +
+                        "from User u \n" +
+                        "left join Friends f on u.u_id = f.u_id1 \n" +
+                        "left join Friends f2 on u.u_id = f2.u_id1 OR u.u_id = f2.u_id2\n" +
+                        "group by u.u_id, u.u_name\n" +
+                        "order by u.u_id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){   
+                Friends tempFriends = new Friends();
+                tempFriends.setId(rs.getInt("u_id"));
+                tempFriends.setName(rs.getString("u_name"));
+                tempFriends.setTimeCreate(rs.getDate("time_create"));
+                tempFriends.setDirectFriends(rs.getInt("direct_friends"));
+                tempFriends.setIndirectFriends(rs.getInt("indirect_friends"));
+                
+                resList.add(tempFriends);
+            }
+            
+            stmt.close();
+        } catch(SQLException e){
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
 }
