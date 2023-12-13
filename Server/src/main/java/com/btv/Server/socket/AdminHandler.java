@@ -2,6 +2,7 @@ package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
+import com.btv.Server.model.Group;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
@@ -136,7 +137,6 @@ public class AdminHandler extends ClientHandler {
                 break;
             }
             case VIEW_LOGINS: {
-                System.out.println("--------------------------");
                 ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
                 try {
                     // send number of users
@@ -148,6 +148,25 @@ public class AdminHandler extends ClientHandler {
                         dataOut.write(user.getUsername() + "|");
                         dataOut.write(user.getName() + "|");
                         dataOut.write(user.getLoginDate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+            }
+            case VIEW_GROUPS: {
+                ArrayList<Group> allGroups = db.adminHandleDB.getAllGroups();
+                try {
+                    // send number of users
+                    dataOut.write(allGroups.size());
+
+                    // send data of all users
+                    for (Group group : allGroups) {
+                        dataOut.write(group.getId() + "|");
+                        dataOut.write(group.getGroupName()+ "|");
+                        dataOut.write(group.getTimeCreate()+ "|");
                         dataOut.newLine();
                     }
                     dataOut.flush();

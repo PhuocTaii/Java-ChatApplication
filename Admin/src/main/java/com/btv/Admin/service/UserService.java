@@ -54,13 +54,12 @@ public class UserService {
         if (searchValue.trim().length() == 0) {
             rowSorter.setRowFilter(null);
         } else {
-            if (fieldName.equals("Username")) {
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
-            } else if (fieldName.equals("Name")) {
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
-            } else if (fieldName.equals("Status")) {
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
-
+            switch (fieldName) {
+                case "Username" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
+                case "Name" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
+                case "Status" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
+                default -> {
+                }
             }
         }
     }

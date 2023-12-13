@@ -1,5 +1,6 @@
 package com.btv.Server.database;
 
+import com.btv.Server.model.Group;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import java.sql.Date;
@@ -196,8 +197,32 @@ public class AdminHandleDB {
             return null;
         }
 
-        System.out.println("--------------------");
         return resList;
     }
 
+    public ArrayList<Group> getAllGroups() {
+        ArrayList<Group> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM ChatGroups";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Group tempUser = new Group();
+                tempUser.setId(rs.getInt("gr_id"));
+                tempUser.setGroupName(rs.getString("gr_name"));
+                tempUser.setTimeCreate(rs.getDate("created_time"));
+
+                resList.add(tempUser);
+            }
+
+            stmt.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+
+        return resList;
+    }
 }
