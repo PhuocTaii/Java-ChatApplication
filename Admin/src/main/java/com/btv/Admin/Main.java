@@ -5,12 +5,12 @@
 package com.btv.Admin;
 
 import com.btv.Admin.gui.interfaces.EventMenuSelected;
-import com.btv.Admin.gui.AllGroup;
+import com.btv.Admin.gui.AllGroups;
 import com.btv.Admin.gui.AllUsers;
 import com.btv.Admin.gui.ListLogin;
 import com.btv.Admin.gui.NewUsers;
 import com.btv.Admin.gui.OnlineUsers;
-import com.btv.Admin.gui.Spam;
+import com.btv.Admin.gui.AllSpams;
 import com.btv.Admin.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JComponent;
@@ -29,8 +29,8 @@ public class Main extends javax.swing.JFrame {
     private NewUsers newUsers;
     private UserFriends userFriends;
     private OnlineUsers onlineUsers;
-    private AllGroup group;
-    private Spam spam;
+    private AllGroups group;
+    private AllSpams spam;
     private ListLogin listLogin;
 
     public Main() {
@@ -40,11 +40,12 @@ public class Main extends javax.swing.JFrame {
         newUsers = new NewUsers();
         userFriends = new UserFriends();
         onlineUsers = new OnlineUsers();
-        group = new AllGroup();
-        spam = new Spam();
+        group = new AllGroups();
+        
+        spam = new AllSpams();
+        
         listLogin = new ListLogin();
         
-
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
@@ -168,6 +169,8 @@ public class Main extends javax.swing.JFrame {
         
         // init instance to send role
         ClientSocket.getInstance();
+        
+//        System.out.println("------------------------");
         
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {

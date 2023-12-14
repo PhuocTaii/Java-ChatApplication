@@ -1,21 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
+import com.btv.Server.model.Group;
+import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author tvan
  */
-public class AdminHandler extends ClientHandler{
+public class AdminHandler extends ClientHandler {
+
     public static ArrayList<AdminHandler> adminHandlers = new ArrayList<>();
 
     public AdminHandler(Socket clientSocket) {
@@ -24,17 +27,17 @@ public class AdminHandler extends ClientHandler{
     }
 
     public void handleMessage(String messStr) {
-        AdminMessage mess =  AdminMessage.valueOf(messStr);
+        AdminMessage mess = AdminMessage.valueOf(messStr);
         ChatDB db = ChatDB.getDBInstance();
         switch (mess) {
             case VIEW_USERS:
-                ArrayList<User> allUsers = db.getAllUsers();
+                ArrayList<User> allUsers = db.adminHandleDB.getAllUsers();
                 try {
                     // send number of users
                     dataOut.write(allUsers.size());
-                    
+
                     // send data of all users
-                    for(User user : allUsers) {
+                    for (User user : allUsers) {
                         dataOut.write(user.getId() + "|");
                         dataOut.write(user.getUsername() + "|");
                         dataOut.write(user.getName() + "|");
@@ -42,7 +45,7 @@ public class AdminHandler extends ClientHandler{
                         dataOut.write(user.getBirthday().toString() + "|");
                         dataOut.write(user.getGender() + "|");
                         dataOut.write(user.getEmail() + "|");
-                        dataOut.write(user.getTimeCreate()+ "|");
+                        dataOut.write(user.getTimeCreate() + "|");
                         dataOut.write(user.getStatus() + "|");
                         dataOut.write(user.getPassword() + "|");
                         dataOut.newLine();
@@ -52,11 +55,193 @@ public class AdminHandler extends ClientHandler{
                     System.out.println(e);
                 }
                 break;
+            case ADD_USER: {
+                try {
+                    String userData = dataIn.readLine();
+
+                    String[] split = userData.split("\\|");
+                    db.adminHandleDB.addUser(split);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case UPDATE_USER: {
+                try {
+                    String userData = dataIn.readLine();
+
+                    String[] split = userData.split("\\|");
+                    db.adminHandleDB.modifyUser(split);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case DELETE_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+                    System.out.println(split[0]);
+                    db.adminHandleDB.deleteUser(split[0]);
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_LOGIN_BY_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+//                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
+
+                    ArrayList<Date> allLoginTime = db.adminHandleDB.getLoginTime(split[0]);
+                    dataOut.write(allLoginTime.size());
+                    for (Date loginTime : allLoginTime) {
+                        dataOut.write(loginTime.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_FRIENDS_BY_USER: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> allFriendName = db.adminHandleDB.getFriendName(split[0]);
+                    dataOut.write(allFriendName.size());
+                    for (String name : allFriendName) {
+                        dataOut.write(name.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_LOGINS: {
+                ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
+                try {
+                    // send number of users
+                    dataOut.write(allUserLogin.size());
+
+                    // send data of all users
+                    for (User user : allUserLogin) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getUsername() + "|");
+                        dataOut.write(user.getName() + "|");
+                        dataOut.write(user.getLoginDate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+            }
+            case VIEW_GROUPS: {
+                ArrayList<Group> allGroups = db.adminHandleDB.getAllGroups();
+                try {
+                    // send number of users
+                    dataOut.write(allGroups.size());
+
+                    // send data of all users
+                    for (Group group : allGroups) {
+                        dataOut.write(group.getId() + "|");
+                        dataOut.write(group.getGroupName()+ "|");
+                        dataOut.write(group.getTimeCreate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+            }
+            case VIEW_MEMBERS_GROUP: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> groupMember = db.adminHandleDB.getGroupMember(split[0]);
+                    dataOut.write(groupMember.size());
+                    for (String member : groupMember) {
+                        dataOut.write(member.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_ADMINS_GROUP: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> groupAdmin = db.adminHandleDB.getGroupAdmin(split[0]);
+                    dataOut.write(groupAdmin.size());
+                    for (String admin : groupAdmin) {
+                        dataOut.write(admin.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_SPAMS: {
+                ArrayList<Spam> allSpams = db.adminHandleDB.getAllSpams();
+                try {
+                    // send number of users
+                    dataOut.write(allSpams.size());
+
+                    // send data of all users
+                    for (Spam spam : allSpams) {
+                        dataOut.write(spam.getSpamId()+ "|");
+                        dataOut.write(spam.getSpamUsername()+ "|");
+                        dataOut.write(spam.getSpamTime()+ "|");
+                        dataOut.write(spam.getSpamName()+ "|");
+
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+            }
             default:
                 System.out.println("Invalid message");
         }
     }
-    
+
     protected void removeClientFromList() {
         adminHandlers.remove(this);
     }

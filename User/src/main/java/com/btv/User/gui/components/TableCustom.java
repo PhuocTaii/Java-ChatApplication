@@ -31,7 +31,6 @@ public class TableCustom extends JTable {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 
                 Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                com.setBackground(Color.WHITE);
                 setBorder(noFocusBorder);
                 if (isSelected) {
                     com.setForeground(new Color(13, 113, 182));
@@ -43,7 +42,6 @@ public class TableCustom extends JTable {
             }
 
         });
-        this.setIntercellSpacing(new Dimension(40, 0));
         
     }
 
