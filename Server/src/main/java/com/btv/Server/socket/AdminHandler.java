@@ -3,6 +3,7 @@ package com.btv.Server.socket;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
 import com.btv.Server.model.Group;
+import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
 import java.io.IOException;
 import java.net.Socket;
@@ -212,6 +213,27 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_SPAMS: {
+                ArrayList<Spam> allSpams = db.adminHandleDB.getAllSpams();
+                try {
+                    // send number of users
+                    dataOut.write(allSpams.size());
+
+                    // send data of all users
+                    for (Spam spam : allSpams) {
+                        dataOut.write(spam.getSpamId()+ "|");
+                        dataOut.write(spam.getSpamUsername()+ "|");
+                        dataOut.write(spam.getSpamTime()+ "|");
+                        dataOut.write(spam.getSpamName()+ "|");
+
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
                 }
                 break;
             }

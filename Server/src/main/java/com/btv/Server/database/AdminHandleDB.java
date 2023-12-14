@@ -1,6 +1,7 @@
 package com.btv.Server.database;
 
 import com.btv.Server.model.Group;
+import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import java.sql.Date;
@@ -225,7 +226,7 @@ public class AdminHandleDB {
 
         return resList;
     }
-    
+
     public ArrayList<String> getGroupMember(String groupID) throws SQLException {
         String query = """
                        SELECT u_name
@@ -251,6 +252,7 @@ public class AdminHandleDB {
 
         return memberList;
     }
+
     public ArrayList<String> getGroupAdmin(String groupID) throws SQLException {
         String query = """
                        SELECT u_name
@@ -275,5 +277,36 @@ public class AdminHandleDB {
         }
 
         return adminList;
+    }
+
+    public ArrayList<Spam> getAllSpams() {
+        ArrayList<Spam> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            String sql = """
+                         SELECT spam_id, username, report_time, u_name
+                         FROM SpamList spam
+                         JOIN User user ON spam.reported_id = user.u_id
+            """;
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Spam tempSpam = new Spam();
+                tempSpam.setSpamId(rs.getInt("spam_id"));
+                tempSpam.setSpamUsername(rs.getString("username"));
+                tempSpam.setSpamTime(rs.getDate("report_time"));
+                tempSpam.setSpamName(rs.getString("u_name"));
+
+                resList.add(tempSpam);
+            }
+
+            stmt.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+
+        return resList;
     }
 }

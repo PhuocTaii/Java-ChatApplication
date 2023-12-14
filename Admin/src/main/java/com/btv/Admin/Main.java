@@ -10,7 +10,7 @@ import com.btv.Admin.gui.AllUsers;
 import com.btv.Admin.gui.ListLogin;
 import com.btv.Admin.gui.NewUsers;
 import com.btv.Admin.gui.OnlineUsers;
-import com.btv.Admin.gui.Spam;
+import com.btv.Admin.gui.AllSpams;
 import com.btv.Admin.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.JComponent;
@@ -30,7 +30,7 @@ public class Main extends javax.swing.JFrame {
     private UserFriends userFriends;
     private OnlineUsers onlineUsers;
     private AllGroups group;
-    private Spam spam;
+    private AllSpams spam;
     private ListLogin listLogin;
 
     public Main() {
@@ -41,10 +41,11 @@ public class Main extends javax.swing.JFrame {
         userFriends = new UserFriends();
         onlineUsers = new OnlineUsers();
         group = new AllGroups();
-        spam = new Spam();
+        
+        spam = new AllSpams();
+        
         listLogin = new ListLogin();
         
-
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
