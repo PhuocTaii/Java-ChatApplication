@@ -2,6 +2,7 @@ package com.btv.Admin.service;
 
 import com.btv.Admin.ClientSocket;
 import com.btv.Admin.helper.MessageType;
+import com.btv.Admin.model.Group;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,61 @@ public class GroupService {
         } else {
             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
 
+        }
+    }
+
+    public String[] getGroupMember(Group group) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.VIEW_MEMBERS_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(group.getId() + "|");
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+
+            // read number of users
+            int numMember = clientSocket.dataIn.read();
+
+            ArrayList<String> memberName = new ArrayList<>();
+            for (int i = 0; i < numMember; i++) {
+                String userData = clientSocket.dataIn.readLine();
+                memberName.add(userData);
+            }
+            String[] usersArray = new String[memberName.size()];
+
+            return memberName.toArray(usersArray);
+        } catch (IOException e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public String[] getGroupAdmin(Group group) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.VIEW_ADMINS_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(group.getId() + "|");
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+
+            // read number of users
+            int numMember = clientSocket.dataIn.read();
+
+            ArrayList<String> memberName = new ArrayList<>();
+            for (int i = 0; i < numMember; i++) {
+                String userData = clientSocket.dataIn.readLine();
+                memberName.add(userData);
+            }
+            String[] usersArray = new String[memberName.size()];
+
+            return memberName.toArray(usersArray);
+        } catch (IOException e) {
+            System.err.println(e);
+            return null;
         }
     }
 }

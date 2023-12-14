@@ -42,7 +42,10 @@ public class AllUsers extends javax.swing.JPanel {
 
         updateTable();
         addUserDialog.setLocationRelativeTo(null);
+        tableClickHandle();
+    }
 
+    public void tableClickHandle() {
         tableUsers.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = tableUsers.getSelectedRow();
@@ -147,7 +150,6 @@ public class AllUsers extends javax.swing.JPanel {
                 }
             }
         });
-
     }
 
     public void updateTable() {
@@ -202,7 +204,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         loginList.setModel(modelLoginList);
     }
-    
+
     private void getFriendListByUser(User user) {
         String[] friendListString = userService.getFriendName(user);
 

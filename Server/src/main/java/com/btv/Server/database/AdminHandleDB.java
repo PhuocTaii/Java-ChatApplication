@@ -225,4 +225,55 @@ public class AdminHandleDB {
 
         return resList;
     }
+    
+    public ArrayList<String> getGroupMember(String groupID) throws SQLException {
+        String query = """
+                       SELECT u_name
+                       FROM GroupMembers groupMem
+                       JOIN User user ON user.u_id = groupMem.u_id
+                       WHERE groupMem.gr_id = ?
+                       """;
+        ArrayList<String> memberList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, groupID);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("u_name");
+                    memberList.add(name);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle the exception or throw it to the calling method
+            System.err.println(e);
+            throw e; // or handle it according to your application's logic
+        }
+
+        return memberList;
+    }
+    public ArrayList<String> getGroupAdmin(String groupID) throws SQLException {
+        String query = """
+                       SELECT u_name
+                       FROM GroupMembers groupMem
+                       JOIN User user ON user.u_id = groupMem.u_id
+                       WHERE groupMem.gr_id = ? AND is_admin=1
+                       """;
+        ArrayList<String> adminList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, groupID);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    String name = rs.getString("u_name");
+                    adminList.add(name);
+                }
+            }
+        } catch (SQLException e) {
+            // Handle the exception or throw it to the calling method
+            System.err.println(e);
+            throw e; // or handle it according to your application's logic
+        }
+
+        return adminList;
+    }
 }

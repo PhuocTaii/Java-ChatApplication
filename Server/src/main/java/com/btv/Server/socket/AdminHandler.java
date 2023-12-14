@@ -175,6 +175,46 @@ public class AdminHandler extends ClientHandler {
                 }
                 break;
             }
+            case VIEW_MEMBERS_GROUP: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> groupMember = db.adminHandleDB.getGroupMember(split[0]);
+                    dataOut.write(groupMember.size());
+                    for (String member : groupMember) {
+                        dataOut.write(member.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
+            case VIEW_ADMINS_GROUP: {
+                try {
+                    String userData = dataIn.readLine();
+                    String[] split = userData.split("\\|");
+
+                    ArrayList<String> groupAdmin = db.adminHandleDB.getGroupAdmin(split[0]);
+                    dataOut.write(groupAdmin.size());
+                    for (String admin : groupAdmin) {
+                        dataOut.write(admin.toString());
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            }
             default:
                 System.out.println("Invalid message");
         }
