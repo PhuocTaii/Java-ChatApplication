@@ -5,22 +5,23 @@
 package com.btv.Admin.gui;
 
 //import com.btv.Admin.service.UserService;
+import com.btv.Admin.gui.components.GraphDrawer;
 import com.btv.Admin.service.NewUserService;
+import java.awt.BorderLayout;
+//import java.awt.BorderLayout;
+//import java.awt.Color;
+//import java.awt.Dimension;
+//import java.awt.Graphics;
+//import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.Calendar;
+
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComboBox;
+//import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
@@ -33,11 +34,14 @@ public class NewUsers extends javax.swing.JPanel {
     private DefaultTableModel tableModel;
     private String[][] userList;
     private NewUserService newUserService;
+    private GraphDrawer drawer;
     /**
      * Creates new form NewUsers
+     * @throws java.text.ParseException
      */
     public NewUsers() {
         initComponents();
+        
         newUserService = new NewUserService();
         userList = newUserService.getAllNewUsers();
         
@@ -46,6 +50,35 @@ public class NewUsers extends javax.swing.JPanel {
         for(Object[] row : userList) {
             tableModel.addRow(row);
         }
+        
+//        String[][] tmp = newUserService.getAllNewUsers();
+        
+//        int monthCnt[] = new int[12];
+//
+//        try{
+//            for(int i = 0; i < tmp.length; i++){
+//                Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(tmp[i][3]);
+//                
+//                Calendar cal = Calendar.getInstance();
+//                cal.setTime(creationTime);
+//                if(cal.get(Calendar.YEAR) == jYearChooser1.getYear()){
+//                    System.out.println(cal.get(Calendar.MONTH));
+//                    int idx = cal.get(Calendar.MONTH);
+//                    monthCnt[idx]++;
+//                }
+//            }
+//        } catch (ParseException e){
+//            e.printStackTrace();
+//        }
+        
+        int monthCnt[] = newUserService.MakeChart(userList, 2021);
+
+             
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
     }
 
     /**
@@ -72,6 +105,7 @@ public class NewUsers extends javax.swing.JPanel {
         zoneName = new javax.swing.JLabel();
         year = new javax.swing.JLabel();
         jYearChooser1 = new com.toedter.calendar.JYearChooser();
+        statistic = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableUsers = new com.btv.Admin.gui.components.TableCustom();
 
@@ -137,7 +171,7 @@ public class NewUsers extends javax.swing.JPanel {
                 .addComponent(connector, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addComponent(filter)
                 .addGap(18, 18, 18)
                 .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,20 +245,41 @@ public class NewUsers extends javax.swing.JPanel {
         year.setText("Year:");
         year.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        jYearChooser1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jYearChooser1PropertyChange(evt);
+            }
+        });
+
+        javax.swing.GroupLayout statisticLayout = new javax.swing.GroupLayout(statistic);
+        statistic.setLayout(statisticLayout);
+        statisticLayout.setHorizontalGroup(
+            statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        statisticLayout.setVerticalGroup(
+            statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 234, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout statisticzoneLayout = new javax.swing.GroupLayout(statisticzone);
         statisticzone.setLayout(statisticzoneLayout);
         statisticzoneLayout.setHorizontalGroup(
             statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
-                .addContainerGap(432, Short.MAX_VALUE)
-                .addComponent(year)
-                .addGap(18, 18, 18)
-                .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(435, 435, 435))
             .addGroup(statisticzoneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
+                        .addGap(0, 426, Short.MAX_VALUE)
+                        .addComponent(year)
+                        .addGap(18, 18, 18)
+                        .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(435, 435, 435))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
+                        .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(statistic, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         statisticzoneLayout.setVerticalGroup(
             statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,7 +290,9 @@ public class NewUsers extends javax.swing.JPanel {
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(year, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         tableUsers.setModel(new javax.swing.table.DefaultTableModel(
@@ -254,6 +311,7 @@ public class NewUsers extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tableUsers.setPreferredSize(new java.awt.Dimension(300, 400));
         jScrollPane3.setViewportView(tableUsers);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -315,6 +373,25 @@ public class NewUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_InputActionPerformed
 
+    private void jYearChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jYearChooser1PropertyChange
+        // TODO add your handling code here:
+        int year = jYearChooser1.getYear();
+        statistic.remove(drawer);
+//        String[][] tmp = newUserService.getAllNewUsers(); 
+        int monthCnt[] = newUserService.MakeChart(userList, year);
+        
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
+        
+        
+        statistic.revalidate();
+        statistic.repaint();
+    }//GEN-LAST:event_jYearChooser1PropertyChange
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Input;
@@ -330,6 +407,7 @@ public class NewUsers extends javax.swing.JPanel {
     private javax.swing.JPanel pageHeader;
     private javax.swing.JButton searchButton;
     private com.toedter.calendar.JDateChooser startDate;
+    private javax.swing.JPanel statistic;
     private javax.swing.JPanel statisticzone;
     private com.btv.Admin.gui.components.TableCustom tableUsers;
     private javax.swing.JLabel year;

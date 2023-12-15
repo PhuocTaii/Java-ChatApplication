@@ -78,7 +78,7 @@ public class ChatDB { // Singleton
         try {
             Statement stmt = connection.createStatement();
 
-            String sql = "SELECT * FROM User";
+            String sql = "SELECT * FROM User order by id";
             ResultSet rs = stmt.executeQuery(sql);
             while(rs.next()) {
                 User tempUser = new User();

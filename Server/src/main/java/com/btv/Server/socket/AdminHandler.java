@@ -89,6 +89,8 @@ public class AdminHandler extends ClientHandler{
                 } catch (IOException e){
                     System.out.println(e);
                 }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }

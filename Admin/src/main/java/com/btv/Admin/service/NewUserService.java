@@ -6,12 +6,14 @@ package com.btv.Admin.service;
 
 import com.btv.Admin.ClientSocket;
 import com.btv.Admin.helper.MessageType;
+import java.awt.Panel;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -60,7 +62,6 @@ public class NewUserService {
     }
     
     public void filterByDate(JTable table, Date StartDate, Date EndDate){
-
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
@@ -112,4 +113,27 @@ public class NewUserService {
             rowSorter.setRowFilter(null);
         }
     }
+    
+    public int[] MakeChart(String[][]tmp, int year){
+        int monthCnt[] = new int[12];
+
+        try{
+            for(int i = 0; i < tmp.length; i++){
+                Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(tmp[i][3]);
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(creationTime);
+                if(cal.get(Calendar.YEAR) == year){
+                    System.out.println(cal.get(Calendar.MONTH));
+                    int idx = cal.get(Calendar.MONTH);
+                    monthCnt[idx]++;
+                }
+            }
+                return monthCnt;
+        } catch (ParseException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
+
