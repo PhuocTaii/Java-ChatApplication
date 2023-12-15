@@ -2,6 +2,7 @@ package com.btv.Server.socket;
 
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
+import com.btv.Server.model.Friends;
 import com.btv.Server.model.Group;
 import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
@@ -55,7 +56,26 @@ public class AdminHandler extends ClientHandler {
                     System.out.println(e);
                 }
                 break;
-            case ADD_USER: {
+            case VIEW_NEW_USERS:
+                ArrayList<User> allNewUsers = db.GetAllNewUsers();
+                try {
+                    // send number of users
+                    dataOut.write(allNewUsers.size());
+
+                    // send data of all users
+                    for(User user : allNewUsers) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getUsername() + "|");
+                        dataOut.write(user.getName() + "|");
+                        dataOut.write(user.getTimeCreate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+            case ADD_USER:
                 try {
                     String userData = dataIn.readLine();
 
@@ -68,8 +88,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case UPDATE_USER: {
+            case UPDATE_USER:
                 try {
                     String userData = dataIn.readLine();
 
@@ -82,8 +101,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case DELETE_USER: {
+            case DELETE_USER:
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
@@ -95,8 +113,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case VIEW_LOGIN_BY_USER: {
+            case VIEW_LOGIN_BY_USER:
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
@@ -116,8 +133,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case VIEW_FRIENDS_BY_USER: {
+            case VIEW_FRIENDS_BY_USER:
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
@@ -136,8 +152,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case VIEW_LOGINS: {
+            case VIEW_LOGINS:
                 ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
                 try {
                     // send number of users
@@ -156,8 +171,25 @@ public class AdminHandler extends ClientHandler {
                     System.out.println(e);
                 }
                 break;
-            }
-            case VIEW_GROUPS: {
+            case VIEW_USER_FRIEND:
+                ArrayList<Friends> allUsersFriends = db.GetAllFriends();
+                try{
+                    dataOut.write(allUsersFriends.size());
+                    
+                    for(Friends friends : allUsersFriends){
+                        dataOut.write(friends.getId() + "|");
+                        dataOut.write(friends.getName()+ "|");
+                        dataOut.write(friends.getTimeCreate()+ "|");
+                        dataOut.write(friends.getDirectFriends()+ "|");
+                        dataOut.write(friends.getIndirectFriends()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e){
+                    System.out.println(e);
+                }
+                break;
+            case VIEW_GROUPS:
                 ArrayList<Group> allGroups = db.adminHandleDB.getAllGroups();
                 try {
                     // send number of users
@@ -175,8 +207,7 @@ public class AdminHandler extends ClientHandler {
                     System.out.println(e);
                 }
                 break;
-            }
-            case VIEW_MEMBERS_GROUP: {
+            case VIEW_MEMBERS_GROUP:
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
@@ -195,8 +226,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case VIEW_ADMINS_GROUP: {
+            case VIEW_ADMINS_GROUP:
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
@@ -215,8 +245,7 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
-            }
-            case VIEW_SPAMS: {
+            case VIEW_SPAMS:
                 ArrayList<Spam> allSpams = db.adminHandleDB.getAllSpams();
                 try {
                     // send number of users
@@ -236,7 +265,7 @@ public class AdminHandler extends ClientHandler {
                     System.out.println(e);
                 }
                 break;
-            }
+
             default:
                 System.out.println("Invalid message");
         }

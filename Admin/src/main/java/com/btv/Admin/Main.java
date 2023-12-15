@@ -13,6 +13,7 @@ import com.btv.Admin.gui.OnlineUsers;
 import com.btv.Admin.gui.AllSpams;
 import com.btv.Admin.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.text.ParseException;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -33,7 +34,7 @@ public class Main extends javax.swing.JFrame {
     private AllSpams spam;
     private ListLogin listLogin;
 
-    public Main() {
+    public Main(){
         initComponents();
         
         users = new AllUsers();
@@ -50,20 +51,28 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void selected(int index) {
                 System.out.println(index);
-                if (index == 0) {
-                    setForm(users);
-                } else if (index == 1) {
-                    setForm(listLogin);
-                } else if (index == 2) {
-                    setForm(group);
-                } else if (index == 3) {
-                    setForm(spam);
-                } else if (index == 4) {
-                    setForm(newUsers);
-                } else if (index == 5) {
-                    setForm(userFriends);
-                } else {
-                    setForm(onlineUsers);
+                switch (index) {
+                    case 0:
+                        setForm(users);
+                        break;
+                    case 1:
+                        setForm(listLogin);
+                        break;
+                    case 2:
+                        setForm(group);
+                        break;
+                    case 3:
+                        setForm(spam);
+                        break;
+                    case 4:
+                        setForm(newUsers);
+                        break;
+                    case 5:
+                        setForm(userFriends);
+                        break;
+                    default:
+                        setForm(onlineUsers);
+                        break;
                 }
             }
         });

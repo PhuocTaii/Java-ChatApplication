@@ -4,6 +4,7 @@
  */
 package com.btv.Server.database;
 
+import com.btv.Server.model.Friends;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
@@ -62,6 +63,7 @@ public class ChatDB { // Singleton
             // Perform database operations here
             Statement stmt = connection.createStatement();
             String sql;
+
             sql = "USE chatchat_db";
             stmt.execute(sql);
             adminHandleDB = new AdminHandleDB(getConnection());
@@ -79,4 +81,92 @@ public class ChatDB { // Singleton
         return dbInstance;
     }
 
+    public ArrayList<User> getAllUsers() {
+        ArrayList<User> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM User order by id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()) {
+                User tempUser = new User();
+                tempUser.setId(rs.getInt("u_id"));
+                tempUser.setUsername(rs.getString("username"));
+                tempUser.setName(rs.getString("u_name"));
+                tempUser.setAddress(rs.getString("address"));
+                tempUser.setBirthday(rs.getDate("birthday"));
+                tempUser.setEmail(rs.getString("email"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
+                tempUser.setGender(rs.getBoolean("gender"));
+                tempUser.setStatus(rs.getString("u_status"));
+                tempUser.setPassword(rs.getString("u_password"));
+
+                resList.add(tempUser);
+            }
+
+            stmt.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList<User> GetAllNewUsers(){
+        ArrayList<User> resList = new ArrayList<>();
+        try{
+            Statement stmt = connection.createStatement();
+            
+            String sql = "select u_id, username, u_name, time_create from User order by time_create desc";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                User tempUser = new User();
+                tempUser.setId(rs.getInt("u_id"));
+                tempUser.setUsername(rs.getString("username"));
+                tempUser.setName(rs.getString("u_name"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
+                
+                resList.add(tempUser);
+            }
+            
+            stmt.close();
+            
+        } catch(SQLException e){
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList<Friends> GetAllFriends(){
+        ArrayList<Friends> resList = new ArrayList<>();
+        try{
+            Statement stmt = connection.createStatement();
+
+            String sql = "select u_id, u_name, time_create, count(distinct(f.u_id2)) as 'direct_friends', count(distinct(f2.u_id2)) as 'indirect_friends'\n" +
+                        "from User u \n" +
+                        "left join Friends f on u.u_id = f.u_id1 \n" +
+                        "left join Friends f2 on u.u_id = f2.u_id1 OR u.u_id = f2.u_id2\n" +
+                        "group by u.u_id, u.u_name\n" +
+                        "order by u.u_id";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){   
+                Friends tempFriends = new Friends();
+                tempFriends.setId(rs.getInt("u_id"));
+                tempFriends.setName(rs.getString("u_name"));
+                tempFriends.setTimeCreate(rs.getDate("time_create"));
+                tempFriends.setDirectFriends(rs.getInt("direct_friends"));
+                tempFriends.setIndirectFriends(rs.getInt("indirect_friends"));
+                
+                resList.add(tempFriends);
+            }
+            
+            stmt.close();
+        } catch(SQLException e){
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
 }

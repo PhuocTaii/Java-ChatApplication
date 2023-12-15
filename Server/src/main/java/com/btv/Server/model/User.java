@@ -5,6 +5,7 @@
 package com.btv.Server.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
@@ -104,5 +105,4 @@ public class User {
     public Date getTimeCreate() {
         return timeCreate;
     }
-
 }
