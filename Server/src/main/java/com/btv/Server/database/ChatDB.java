@@ -8,7 +8,9 @@ import com.btv.Server.model.Friends;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,20 +21,25 @@ import java.util.ArrayList;
  * @author tvan
  */
 public class ChatDB { // Singleton
+
     private static ChatDB dbInstance = null;
-    
+
     private static final String URL = "jdbc:mysql://chatchat-db.c0kjxptbsciv.ap-southeast-1.rds.amazonaws.com:3306/?user=admin";
-    private static final String USERNAME = System.getenv("USERNAME_DB");;
+    private static final String USERNAME = System.getenv("USERNAME_DB");
     private static final String PASSWORD = System.getenv("PASS_DB");
-    private static Connection connection;
+//    private static final String USERNAME = "admin";
+//    private static final String PASSWORD = "asd12345";
+    public  AdminHandleDB adminHandleDB = null;
     
+    private static Connection connection;
+
     public Connection getConnection() {
         return connection;
     }
-    
+
     public void closeConnection() {
         try {
-            if(connection != null) {
+            if (connection != null) {
                 connection.close();
                 System.out.println("Database close connection!");
             }
@@ -40,7 +47,7 @@ public class ChatDB { // Singleton
             System.err.println(e);
         }
     }
-    
+
     private ChatDB() {
         connection = null;
 
@@ -49,30 +56,31 @@ public class ChatDB { // Singleton
             Driver myDriver = new Driver();
             DriverManager.registerDriver(myDriver);
             System.out.println("Connecting to database...");
-            
+
             // Establish connection
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Database connected");
             // Perform database operations here
             Statement stmt = connection.createStatement();
             String sql;
-            sql = "use chatchat_db";
-            stmt.execute(sql);
 
+            sql = "USE chatchat_db";
+            stmt.execute(sql);
+            adminHandleDB = new AdminHandleDB(getConnection());
             stmt.close();
-            
+
         } catch (SQLException e) {
             System.err.println(e);
         }
     }
-    
+
     public static ChatDB getDBInstance() {
-        if(dbInstance == null) {
+        if (dbInstance == null) {
             dbInstance = new ChatDB();
         }
         return dbInstance;
     }
-    
+
     public ArrayList<User> getAllUsers() {
         ArrayList<User> resList = new ArrayList<>();
         try {
@@ -97,7 +105,7 @@ public class ChatDB { // Singleton
             }
 
             stmt.close();
-        
+
         } catch (SQLException e) {
             System.out.println(e);
             return null;

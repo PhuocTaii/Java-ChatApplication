@@ -4,7 +4,10 @@
  */
 package com.btv.User.gui;
 
+import com.btv.User.helper.TableActionEvent;
+import com.btv.User.gui.components.TableActionCellEditor;
 import com.btv.User.gui.components.TableActionCellRender;
+import javax.swing.table.TableCellEditor;
 
 /**
  *
@@ -17,7 +20,25 @@ public class Search extends javax.swing.JPanel {
      */
     public Search() {
         initComponents();
+        
+        TableActionEvent event = new TableActionEvent() {
+            @Override
+            public void onChat(int row) {
+                System.out.println("Chat row: " + row);
+            }
+
+            @Override
+            public void onAddFriend(int row) {
+                System.out.println("Add friend row: " + row);
+            }
+
+            @Override
+            public void onBlock(int row) {
+                System.out.println("Block row: " + row);
+            }
+        };
         tableUserSearch.getColumnModel().getColumn(2).setCellRenderer(new TableActionCellRender());
+        tableUserSearch.getColumnModel().getColumn(2).setCellEditor(new TableActionCellEditor(event));
     }
 
     /**
@@ -164,15 +185,15 @@ public class Search extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textFieldSearchMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonSearchMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE))
+                    .addComponent(buttonSearchMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                    .addComponent(textFieldSearchMessage))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                     .addComponent(labelChoosenPerson, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(40, 40, 40)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(268, 268, 268))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
