@@ -10,7 +10,7 @@ package com.btv.Server.helpers;
  */
 public enum UserMessage {
     REGISTER,
-    CREATE_PASSWORD,
+    FORGOT_PASSWORD,
     LOGIN,
     
     VIEW_ALL_FRIENDS,

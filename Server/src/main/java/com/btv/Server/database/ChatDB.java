@@ -5,13 +5,18 @@
 package com.btv.Server.database;
 
 import com.btv.Server.model.User;
+import com.btv.Server.service.MailService;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -55,7 +60,7 @@ public class ChatDB { // Singleton
             // Perform database operations here
             Statement stmt = connection.createStatement();
             String sql;
-            sql = "USE chatchat";
+            sql = "USE chatchat_db";
             stmt.execute(sql);
 
             stmt.close();
@@ -100,5 +105,73 @@ public class ChatDB { // Singleton
             return null;
         }
         return resList;
+    }
+    
+    public int checkIfExistsUsername(String username) {
+        try {
+            String sql = "SELECT * FROM User WHERE username = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+            
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                stmt.close();
+                return 1; // exists
+            }
+            stmt.close();
+            return 0; // not exist
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
+    public int signUp(User user) {
+        try {
+            connection.setAutoCommit(false);
+            String sql = "INSERT INTO User(address, birthday, email, gender, u_name, u_password, u_status, username, time_create) VALUES (?, ?, ?, ?, ?, ?, 'ONLINE', ?,  ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, user.getAddress());
+            stmt.setDate(2, user.getBirthday());
+            stmt.setString(3, user.getEmail());
+            stmt.setBoolean(4, user.getGender());
+            stmt.setString(5, user.getName());
+            stmt.setString(6, user.getPassword());
+            stmt.setString(7, user.getUsername());
+            stmt.setDate(8, new Date(new java.util.Date().getTime()));
+            stmt.executeUpdate();
+            
+            sql = "SELECT LAST_INSERT_ID()";
+            stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            int uid;
+            if(rs.next())
+                uid = rs.getInt(1);
+            else {
+                stmt.close();
+                return -1;
+            }
+            
+            // update login history
+            if(updateLoginTime(uid) != 1) {
+                stmt.close();
+                return -1;
+            }
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+            stmt.close();
+            return uid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+               ex.printStackTrace();
+            }
+            return -1;
+        }
     }
 }

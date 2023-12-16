@@ -11,6 +11,8 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.btv.User.gui.interfaces.LoginListener;
 import com.btv.User.gui.interfaces.SignUpListener;
+import com.btv.User.helper.MessageStatus;
+import com.btv.User.service.AuthService;
 
 /**
  *
@@ -21,9 +23,11 @@ public class MainApp {
     private Login logInForm;
     private SignUp signUpForm;
     private Layout mainLayout;
+    private AuthService authService;
 
     public MainApp() {
         mainLayout = new Layout();
+        authService = new AuthService();
 
         logInForm = new Login(new LoginListener() {
             @Override
@@ -46,6 +50,20 @@ public class MainApp {
             public void onLoginLinkClicked() {
                 logInForm.setVisible(true);
                 signUpForm.setVisible(false);
+            }
+            
+            @Override
+            public MessageStatus onSignUpButtonClicked() {
+                return authService.signup(signUpForm.username, signUpForm.email, signUpForm.password, signUpForm.name, signUpForm.address, signUpForm.birthDate, signUpForm.gender);
+            }
+            
+            @Override
+            public void onSignUpSuccess() {
+                logInForm.setVisible(false);
+                signUpForm.setVisible(false);
+
+                mainLayout.setVisible(true);
+                mainLayout.setTitle("ChatChat");
             }
         });
 
