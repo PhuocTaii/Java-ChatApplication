@@ -32,6 +32,15 @@ public class UserFriends extends javax.swing.JPanel {
             tableModel.addRow(row);
         }
     }
+    
+    public void updateTable(){
+        friendList = friendService.getAllFriends();
+        tableModel = (DefaultTableModel) tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for (Object[] row : friendList) {
+            tableModel.addRow(row);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -183,6 +183,9 @@
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="startDate">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="//startDate.getDateEditor().addPropertyChangeListener(e -&gt; {&#xa;//    System.out.println(startDate.getDate());&#xa;//});"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="connector">
           <Properties>
@@ -194,6 +197,9 @@
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="endDate">
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="endDatePropertyChange"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -211,16 +217,19 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="zoneName" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="475" max="-2" attributes="0"/>
                   <Component id="year" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="yearchooser" min="-2" pref="70" max="-2" attributes="0"/>
                   <EmptySpace pref="412" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="zoneName" alignment="0" max="32767" attributes="0"/>
+                      <Component id="statistic" alignment="0" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -234,7 +243,9 @@
                       <Component id="yearchooser" alignment="0" max="32767" attributes="0"/>
                       <Component id="year" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="250" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="statistic" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -259,7 +270,28 @@
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JYearChooser" name="yearchooser">
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="yearchooserPropertyChange"/>
+          </Events>
         </Component>
+        <Container class="javax.swing.JPanel" name="statistic">
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="statisticPropertyChange"/>
+          </Events>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace min="0" pref="234" max="32767" attributes="0"/>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+        </Container>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -274,11 +306,11 @@
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="4">
                 <Column editable="false" title="ID" type="java.lang.Object"/>
-                <Column editable="true" title="Username" type="java.lang.Object"/>
+                <Column editable="false" title="Username" type="java.lang.Object"/>
                 <Column editable="false" title="Time create" type="java.lang.Object"/>
                 <Column editable="false" title="Time open app" type="java.lang.Object"/>
                 <Column editable="false" title="No. users chat with" type="java.lang.Object"/>
-                <Column editable="true" title="No. groups chat with" type="java.lang.Object"/>
+                <Column editable="false" title="No. groups chat with" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

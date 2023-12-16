@@ -4,19 +4,47 @@
  */
 package com.btv.Admin.gui;
 
+import com.btv.Admin.gui.components.GraphDrawer;
+import com.btv.Admin.service.OnlineUsersService;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.swing.JComboBox;
+import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Admin
  */
 public class OnlineUsers extends javax.swing.JPanel {
-
+    private DefaultTableModel tableModel;
+    private String[][] onlineUsersList;
+    private String[][] loginLog;
+    private OnlineUsersService onlineUserService;
+    private GraphDrawer drawer;
     /**
      * Creates new form OnlineUsers
      */
     public OnlineUsers() {
         initComponents();
+        onlineUserService = new OnlineUsersService();
+
+        loginLog = onlineUserService.getAllLoginTimes();
+        
+        int year = yearchooser.getYear();
+ 
+        int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
+        
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
+        
     }
 
     /**
@@ -43,6 +71,7 @@ public class OnlineUsers extends javax.swing.JPanel {
         zoneName = new javax.swing.JLabel();
         year = new javax.swing.JLabel();
         yearchooser = new com.toedter.calendar.JYearChooser();
+        statistic = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableCustom1 = new com.btv.Admin.gui.components.TableCustom();
 
@@ -92,6 +121,12 @@ public class OnlineUsers extends javax.swing.JPanel {
         connector.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         connector.setText("-");
 
+        endDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                endDatePropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout optionsLayout = new javax.swing.GroupLayout(options);
         options.setLayout(optionsLayout);
         optionsLayout.setHorizontalGroup(
@@ -136,90 +171,121 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        statisticzone.setOpaque(false);
+        //startDate.getDateEditor().addPropertyChangeListener(e -> {
+            //    System.out.println(startDate.getDate());
+            //});
 
-        zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        zoneName.setText("STATISTIC");
+    statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+    statisticzone.setOpaque(false);
 
-        year.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        year.setText("Year:");
-        year.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+    zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    zoneName.setText("STATISTIC");
 
-        javax.swing.GroupLayout statisticzoneLayout = new javax.swing.GroupLayout(statisticzone);
-        statisticzone.setLayout(statisticzoneLayout);
-        statisticzoneLayout.setHorizontalGroup(
-            statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(statisticzoneLayout.createSequentialGroup()
-                .addContainerGap()
+    year.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+    year.setText("Year:");
+    year.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+    yearchooser.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        public void propertyChange(java.beans.PropertyChangeEvent evt) {
+            yearchooserPropertyChange(evt);
+        }
+    });
+
+    statistic.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+        public void propertyChange(java.beans.PropertyChangeEvent evt) {
+            statisticPropertyChange(evt);
+        }
+    });
+
+    javax.swing.GroupLayout statisticLayout = new javax.swing.GroupLayout(statistic);
+    statistic.setLayout(statisticLayout);
+    statisticLayout.setHorizontalGroup(
+        statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGap(0, 0, Short.MAX_VALUE)
+    );
+    statisticLayout.setVerticalGroup(
+        statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGap(0, 234, Short.MAX_VALUE)
+    );
+
+    javax.swing.GroupLayout statisticzoneLayout = new javax.swing.GroupLayout(statisticzone);
+    statisticzone.setLayout(statisticzoneLayout);
+    statisticzoneLayout.setHorizontalGroup(
+        statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(statisticzoneLayout.createSequentialGroup()
+            .addGap(475, 475, 475)
+            .addComponent(year)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(yearchooser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addContainerGap(412, Short.MAX_VALUE))
+        .addGroup(statisticzoneLayout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(statisticzoneLayout.createSequentialGroup()
-                .addGap(475, 475, 475)
-                .addComponent(year)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(yearchooser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(412, Short.MAX_VALUE))
-        );
-        statisticzoneLayout.setVerticalGroup(
-            statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(statisticzoneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(zoneName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(yearchooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(year, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(250, Short.MAX_VALUE))
-        );
+                .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap())
+    );
+    statisticzoneLayout.setVerticalGroup(
+        statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(statisticzoneLayout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(zoneName)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(yearchooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(year, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(10, 10, 10))
+    );
 
-        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Username", "Time create", "Time open app", "No. users chat with", "No. groups chat with"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, true
-            };
+    tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
+        new Object [][] {
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null},
+            {null, null, null, null, null, null}
+        },
+        new String [] {
+            "ID", "Username", "Time create", "Time open app", "No. users chat with", "No. groups chat with"
+        }
+    ) {
+        boolean[] canEdit = new boolean [] {
+            false, false, false, false, false, false
+        };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(tableCustom1);
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return canEdit [columnIndex];
+        }
+    });
+    jScrollPane2.setViewportView(tableCustom1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pageheader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(options, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(statisticzone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(40, 40, 40))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pageheader, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(30, 30, 30))
-        );
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGap(40, 40, 40)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(pageheader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(options, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(statisticzone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING))
+            .addGap(40, 40, 40))
+    );
+    layout.setVerticalGroup(
+        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(layout.createSequentialGroup()
+            .addComponent(pageheader, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGap(18, 18, 18)
+            .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(30, 30, 30))
+    );
     }// </editor-fold>//GEN-END:initComponents
 
     private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
@@ -246,6 +312,58 @@ public class OnlineUsers extends javax.swing.JPanel {
         options.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
 
+    private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
+        // TODO add your handling code here:
+        endDate.getDateEditor().addPropertyChangeListener(e -> {
+        if (startDate.getDate() != null){
+            Timer timer = new Timer(0, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    onlineUserService = new OnlineUsersService();
+
+
+                    LocalDate fromDate = startDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate toDate = endDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    
+
+                    onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
+                    tableModel = (DefaultTableModel)tableCustom1.getModel();
+                    tableModel.setRowCount(0);
+                    for(Object[] row : onlineUsersList) {
+                        tableModel.addRow(row);
+                    }
+
+                }
+            });
+            timer.setRepeats(false); // Set to false to run only once
+            timer.start();
+        }
+             
+        });
+    }//GEN-LAST:event_endDatePropertyChange
+
+    private void statisticPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_statisticPropertyChange
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_statisticPropertyChange
+
+    private void yearchooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_yearchooserPropertyChange
+        // TODO add your handling code here:
+        int year = yearchooser.getYear();
+        statistic.remove(drawer);
+        int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
+        
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
+        
+        
+        statistic.revalidate();
+        statistic.repaint();
+    }//GEN-LAST:event_yearchooserPropertyChange
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Input;
@@ -260,6 +378,7 @@ public class OnlineUsers extends javax.swing.JPanel {
     private javax.swing.JPanel pageheader;
     private javax.swing.JButton searchButton;
     private com.toedter.calendar.JDateChooser startDate;
+    private javax.swing.JPanel statistic;
     private javax.swing.JPanel statisticzone;
     private com.btv.Admin.gui.components.TableCustom tableCustom1;
     private javax.swing.JLabel year;

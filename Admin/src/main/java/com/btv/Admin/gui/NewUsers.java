@@ -15,9 +15,6 @@ import java.awt.BorderLayout;
 //import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import java.util.Date;
 import javax.swing.JComboBox;
@@ -39,6 +36,7 @@ public class NewUsers extends javax.swing.JPanel {
      * Creates new form NewUsers
      * @throws java.text.ParseException
      */
+    
     public NewUsers() {
         initComponents();
         
@@ -51,25 +49,27 @@ public class NewUsers extends javax.swing.JPanel {
             tableModel.addRow(row);
         }
         
-//        String[][] tmp = newUserService.getAllNewUsers();
+        int year = jYearChooser1.getYear();
+ 
+        int monthCnt[] = newUserService.MakeChart(userList, year);
+
+             
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
+    }
+    
+    public void updateTable() {
+        userList = newUserService.getAllNewUsers();
+        tableModel = (DefaultTableModel) tableUsers.getModel();
+        tableModel.setRowCount(0);
+        for (Object[] row : userList) {
+            tableModel.addRow(row);
+        }
         
-//        int monthCnt[] = new int[12];
-//
-//        try{
-//            for(int i = 0; i < tmp.length; i++){
-//                Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(tmp[i][3]);
-//                
-//                Calendar cal = Calendar.getInstance();
-//                cal.setTime(creationTime);
-//                if(cal.get(Calendar.YEAR) == jYearChooser1.getYear()){
-//                    System.out.println(cal.get(Calendar.MONTH));
-//                    int idx = cal.get(Calendar.MONTH);
-//                    monthCnt[idx]++;
-//                }
-//            }
-//        } catch (ParseException e){
-//            e.printStackTrace();
-//        }
+        statistic.remove(drawer);
         
         int monthCnt[] = newUserService.MakeChart(userList, 2021);
 
