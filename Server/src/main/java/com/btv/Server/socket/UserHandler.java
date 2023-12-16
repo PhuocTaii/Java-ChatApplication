@@ -135,6 +135,36 @@ public class UserHandler extends ClientHandler{
                 }
                 break;
                 
+            case FORGOT_PASSWORD:
+                try {
+                    String username = dataIn.readLine();
+                    
+                    if(db.checkIfExistsUsername(username) == 0) {
+                        dataOut.write(MessageStatus.FAIL.toString());
+                        dataOut.newLine();
+                        dataOut.write("Cannot find your username");
+                        dataOut.newLine();
+                        dataOut.flush();
+                        break;
+                    }
+                    
+                    String foundEmail = db.findEmailByUsername(username);
+                    if(foundEmail != null && db.forgotPassword(username, foundEmail) == 1) {
+                        dataOut.write(MessageStatus.SUCCESS.toString());
+                        dataOut.newLine();
+                        dataOut.write(foundEmail);
+                        dataOut.newLine();
+                    }
+                    else {
+                        dataOut.write(MessageStatus.FAIL.toString());
+                        dataOut.newLine();
+                        dataOut.write("System error");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                   e.printStackTrace();
+                }
                 
                 break;
             default:

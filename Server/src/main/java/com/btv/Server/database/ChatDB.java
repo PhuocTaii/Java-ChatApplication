@@ -225,6 +225,43 @@ public class ChatDB { // Singleton
         return email;
     }
     
+    public int forgotPassword(String username, String email) {
+        try {
+            // GENERATE RANDOM PASSWORD
+            int leftLimit = 48; // numeral '0'
+            int rightLimit = 122; // letter 'z'
+            Random random = new Random();
+
+            String newPassword = random.ints(leftLimit, rightLimit + 1)
+              .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+              .limit(10)
+              .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+              .toString();
+            
+            // SEND MAIL
+            MailService mailService = MailService.getMailInstance();
+            if(!mailService.sendMail(email, newPassword)) {
+                return 0;
+            }
+            
+            //UPDATE IN DB
+            String sql = "UPDATE User SET u_password = ? WHERE username = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, newPassword);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return 1;
+        } catch (SQLSyntaxErrorException e) {
+            e.printStackTrace();
+            return -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
     public int updateLoginTime(int userId) {
         try {
             String sql = "INSERT INTO Logins(u_id, login_time) VALUES(?, ?)";

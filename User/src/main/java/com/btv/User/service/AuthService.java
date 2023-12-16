@@ -81,3 +81,27 @@ public class AuthService {
             return MessageStatus.FAIL;
         }
     }
+    
+    public MessageStatus forgotPassword(String username) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            // send request to sign up
+            clientSocket.dataOut.write(MessageType.FORGOT_PASSWORD.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+                        
+            clientSocket.dataOut.write(username);
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            MessageStatus res = MessageStatus.valueOf(clientSocket.dataIn.readLine());
+            res.setMessage(clientSocket.dataIn.readLine());
+
+            return res;
+        } catch (IOException e) {
+            System.err.println(e);
+            return MessageStatus.FAIL;
+        }
+    }
+}
