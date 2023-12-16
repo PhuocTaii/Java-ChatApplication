@@ -174,4 +174,86 @@ public class ChatDB { // Singleton
             return -1;
         }
     }
+    
+    public int login(String username, String password) {
+        try {
+            String sql = "SELECT * FROM User WHERE username = ? AND u_password = ? ";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            
+            ResultSet rs = stmt.executeQuery();
+            if(!rs.next()) { // if incorrect info
+                stmt.close();
+                return 0;
+            }
+            
+            // check if account is locked
+            if(rs.getString("u_status").equalsIgnoreCase("LOCKED")) {
+                stmt.close();
+                return -2; // LOCKED
+            }
+            
+            // update login history
+            int uid = rs.getInt("u_id");
+            if(updateLoginTime(uid) != 1) {
+                stmt.close();
+                return -1;
+            }
+            stmt.close();
+            return uid;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
+    public String findEmailByUsername(String username) {
+        String email = null;
+        try {
+            String sql = "SELECT email FROM User WHERE username = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, username);
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+    
+    public int updateLoginTime(int userId) {
+        try {
+            String sql = "INSERT INTO Logins(u_id, login_time) VALUES(?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setDate(2, new Date(new java.util.Date().getTime()));
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return 1;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
+    public int updateAccountStatus(int userId, String status) {
+        try {
+            String sql = "UPDATE User SET u_status = ? WHERE u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return 1;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 }

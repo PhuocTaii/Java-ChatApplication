@@ -37,7 +37,17 @@ public class MainApp {
             }
 
             @Override
-            public void onLoginButtonClicked() {
+            public MessageStatus onLoginButtonClicked() {
+                return authService.login(logInForm.username, logInForm.password);
+            }
+            
+            @Override
+            public MessageStatus onForgotPassLinkClicked() {
+                return authService.forgotPassword(logInForm.username);
+            }
+            
+            @Override
+            public void onLoginSuccess() {
                 logInForm.setVisible(false);
                 signUpForm.setVisible(false);
 

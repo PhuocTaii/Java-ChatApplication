@@ -95,6 +95,46 @@ public class UserHandler extends ClientHandler{
                 }
                 break;
                 
+            case LOGIN:
+                messFail = "System error";
+                try {
+                    String username = dataIn.readLine();
+                    String password = dataIn.readLine();
+                    
+                    if(db.checkIfExistsUsername(username) == 0) {
+                        dataOut.write(MessageStatus.FAIL.toString());
+                        dataOut.newLine();
+                        dataOut.write("Username not exist");
+                        dataOut.newLine();
+                        dataOut.flush();
+                        break;
+                    }
+                    int uid = db.login(username, password);
+                    if(uid > 0) {
+                        this.userId = uid;
+                        db.updateAccountStatus(uid, "ONLINE");
+                        
+                        dataOut.write(MessageStatus.SUCCESS.toString());
+                        dataOut.newLine();
+                        dataOut.flush();
+                        break;
+                    }
+                    else if(uid == 0) {
+                        messFail = "Incorrect password";
+                    }
+                    else if(uid == -2) {
+                        messFail = "Your account is locked";
+                    }
+                    dataOut.write(MessageStatus.FAIL.toString());
+                    dataOut.newLine();
+                    dataOut.write(messFail);
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                   e.printStackTrace();
+                }
+                break;
+                
                 
                 break;
             default:
@@ -104,5 +144,7 @@ public class UserHandler extends ClientHandler{
     
     protected void removeClientFromList() {
         userHandlers.remove(this);
+        ChatDB db = ChatDB.getDBInstance();
+        db.updateAccountStatus(this.userId, "OFFLINE");
     }
 }
