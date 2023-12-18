@@ -10,8 +10,12 @@ import com.btv.Admin.service.SpamService;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -31,7 +35,7 @@ import javax.swing.table.TableRowSorter;
 public class AllSpams extends javax.swing.JPanel {
 
     private DefaultTableModel tableModel;
-    private String[][] userList;
+    private Object[][] userList;
     SpamService spamService;
     Spam selectedSpam;
 
@@ -40,10 +44,12 @@ public class AllSpams extends javax.swing.JPanel {
 
     public AllSpams() {
         initComponents();
+        selectedSpam = new Spam();
         spamService = new SpamService();
         selectedSpam = new Spam();
         updateTable();
         searchUsername();
+        tableClickHandle();
     }
 
     public void updateTable() {
@@ -53,6 +59,48 @@ public class AllSpams extends javax.swing.JPanel {
         for (Object[] row : userList) {
             tableModel.addRow(row);
         }
+    }
+
+    public void tableClickHandle() {
+        tableSpams.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tableSpams.getSelectedRow();
+                if (selectedRow != -1) {
+                    for (int i = 0; i < tableSpams.getColumnCount(); i++) {
+                        switch (i) {
+                            case 0:
+                                selectedSpam.setReportId(Integer.parseInt(tableSpams.getValueAt(selectedRow, i).toString()));
+                                break;
+                            case 1:
+                                selectedSpam.setSpamUsername(tableSpams.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 2:
+                                String dateString = tableSpams.getValueAt(selectedRow, i).toString();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date parsedDate = Date.valueOf(dateString);
+                                    selectedSpam.setSpamTime(parsedDate);
+                                } catch (IllegalArgumentException ex) {
+                                    // Handle incorrect date format or parsing issues
+                                    Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
+                            case 3:
+                                selectedSpam.setSpamName(tableSpams.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 4:
+                                Boolean blocked = Boolean.parseBoolean(tableSpams.getValueAt(selectedRow, i).toString());
+                                selectedSpam.setBlocked(blocked);
+                                spamService.blockUser(selectedSpam);
+                                updateTable();
+                            default:
+                                break;
+                        }
+                    }
+                    System.out.println();
+                }
+            }
+        });
     }
 
     /**

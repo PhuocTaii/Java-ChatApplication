@@ -30,6 +30,7 @@ public enum MessageType {
     VIEW_SPAMS,
     SORT_SPAMS,
     FILTER_SPAMS,
+    SPAM_USER,
     
     VIEW_NEW_USERS,
     SORT_NEW_USERS,

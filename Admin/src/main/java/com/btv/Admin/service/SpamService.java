@@ -2,6 +2,7 @@ package com.btv.Admin.service;
 
 import com.btv.Admin.ClientSocket;
 import com.btv.Admin.helper.MessageType;
+import com.btv.Admin.model.Spam;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +19,7 @@ import javax.swing.table.TableRowSorter;
 
 public class SpamService {
 
-    public String[][] getAllSpam() {
+    public Object[][] getAllSpam() {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
             clientSocket.dataOut.write(MessageType.VIEW_SPAMS.toString());
@@ -28,12 +29,21 @@ public class SpamService {
             // read number of users
             int numSpam = clientSocket.dataIn.read();
 
-            ArrayList<String[]> spams = new ArrayList<>();
+            ArrayList<Object[]> spams = new ArrayList<>();
             for (int i = 0; i < numSpam; i++) {
                 String userData = clientSocket.dataIn.readLine();
-                spams.add(userData.split("\\|"));
+                String[] rowData = userData.split("\\|");
+
+                Object[] processedRow = new Object[rowData.length];
+                for (int j = 0; j < rowData.length - 1; j++) {
+                    processedRow[j] = rowData[j];
+                }
+
+                processedRow[rowData.length - 1] = Boolean.parseBoolean(rowData[rowData.length - 1]);
+
+                spams.add(processedRow);
             }
-            String[][] spamArray = new String[spams.size()][];
+            Object[][] spamArray = new Object[spams.size()][];
             return spams.toArray(spamArray);
         } catch (IOException e) {
             System.err.println(e);
@@ -77,11 +87,9 @@ public class SpamService {
         }
     }
 
-    
-
     public void filterByDate(JTable table, Date StartDate, Date EndDate) {
         DefaultTableModel tableModel;
-        String[][] userList = getAllSpam();
+        Object[][] userList = getAllSpam();
         tableModel = (DefaultTableModel) table.getModel();
 
         tableModel.setRowCount(0);
@@ -105,6 +113,24 @@ public class SpamService {
             i++;
         }
 
+    }
+
+    public void blockUser(Spam spamUser) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            // send request to view all users
+            clientSocket.dataOut.write(MessageType.SPAM_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.write(spamUser.isBlocked() + "|");
+            clientSocket.dataOut.write(spamUser.getSpamUsername() + "|");
+            clientSocket.dataOut.newLine();
+
+            clientSocket.dataOut.flush();
+
+            // read number of users
+        } catch (IOException e) {
+            System.err.println(e);
+        }
     }
 
 }

@@ -3,11 +3,17 @@ package com.btv.Admin.model;
 import java.sql.Date;
 
 public class Spam {
+
     private String spamUsername, spamName;
     private Date spamTime;
     private int spamId, reportedId, reportId;
+    private boolean blocked;
 
     public Spam() {
+    }
+
+    public boolean isBlocked() {
+        return blocked;
     }
 
     public String getSpamName() {
@@ -52,6 +58,10 @@ public class Spam {
 
     public int getReportId() {
         return reportId;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
     public void setReportId(int reportId) {
