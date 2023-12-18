@@ -127,7 +127,6 @@ public class AllUsers extends javax.swing.JPanel {
                             case 8:
                                 selectedUser.setStatus((String) tableUsers.getValueAt(selectedRow, i));
                                 String status = selectedUser.getStatus();
-                                System.out.println(status);
                                 if (status.equals("LOCKED")) {
                                     isLocked = true;
                                     lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
@@ -973,7 +972,7 @@ public class AllUsers extends javax.swing.JPanel {
         if (res == JOptionPane.YES_OPTION) {
             getUserField();
             String message = userService.validateUser(selectedUser);
-            System.out.println(selectedUser.getStatus());
+//            System.out.println(selectedUser.getStatus());
 
 //            System.out.println(selectedUser.getUsername());
             if (message.equals("valid")) {

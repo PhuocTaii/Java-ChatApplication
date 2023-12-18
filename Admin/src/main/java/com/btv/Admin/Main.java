@@ -50,7 +50,6 @@ public class Main extends javax.swing.JFrame {
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
-                System.out.println(index);
                 switch (index) {
                     case 0:
                         setForm(users);
