@@ -7,6 +7,8 @@ package com.btv.Admin.gui;
 import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,7 +19,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -42,8 +47,11 @@ public class AllUsers extends javax.swing.JPanel {
 
         updateTable();
         addUserDialog.setLocationRelativeTo(null);
-        tableClickHandle();
+        tableClickHandle();        
+        userService.filterByField(tableUsers, "", "");
+
     }
+    
 
     public void tableClickHandle() {
         tableUsers.getSelectionModel().addListSelectionListener(e -> {
@@ -658,6 +666,11 @@ public class AllUsers extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableUsersMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tableUsers);
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
@@ -1040,7 +1053,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         String address, email, name, password, status, username;
         Date birthday, timeCreate;
-        int gender;
+        String gender;
         address = addressAddField.getText();
         email = emailAddField.getText();
         name = nameAddField.getText();
@@ -1056,9 +1069,9 @@ public class AllUsers extends javax.swing.JPanel {
 
         timeCreate = java.sql.Date.valueOf(LocalDate.now());
         if (maleRadioButtonAdd.isSelected()) {
-            gender = 1;
+            gender = "Male";
         } else {
-            gender = 0;
+            gender = "Female";
         }
 
         User newUser = new User(username, name, address, birthday, gender, email, timeCreate, status, password);
@@ -1083,6 +1096,26 @@ public class AllUsers extends javax.swing.JPanel {
     private void passwordAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordAddFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordAddFieldActionPerformed
+
+    private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUsersMouseClicked
+        // TODO add your handling code here
+//        DefaultTableModel model = (DefaultTableModel) tableUsers.getModel();
+//        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+//        tableUsers.setRowSorter(rowSorter);
+//        int columnIndex = tableUsers.columnAtPoint(evt.getPoint());
+//        System.out.println(columnIndex);
+//        switch (columnIndex) {
+//            case 1 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 1)); // Case-insensitive search
+//            case 2 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 2)); // Case-insensitive search
+//            case 8 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 8)); // Case-insensitive search
+//            default -> {
+//            }
+//        }
+////        userService.filterByField1(tableUsers);
+//        JTableHeader header = tableUsers.getTableHeader();
+//        int columnIndex = header.columnAtPoint(evt.getPoint());
+//        System.out.println(columnIndex);
+    }//GEN-LAST:event_tableUsersMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

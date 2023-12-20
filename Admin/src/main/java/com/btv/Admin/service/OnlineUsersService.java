@@ -14,6 +14,11 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -97,6 +102,54 @@ public class OnlineUsersService {
         } catch (ParseException e){
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public void filterByName(JTable table, String searchValue){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        
+        table.setRowSorter(rowSorter); 
+
+        
+        if (searchValue.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        }else
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
+    }
+    
+        public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        
+        table.setRowSorter(rowSorter); 
+        
+        if(numString.trim().length() == 0){
+            rowSorter.setRowFilter(null);
+        } else if (Integer.parseInt(numString) < 0) {
+            rowSorter.setRowFilter(null);
+        } else{
+            if("Equal".equals(numberOptions.getSelectedItem())){
+                rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + numString + ".*", 3));
+            }
+            else if("Greater".equals(numberOptions.getSelectedItem())){
+                RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
+                    public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
+                        int value1 = Integer.parseInt((String) entry.getValue(3)); // adjust these indices to match your table structure
+                        return value1 > Integer.parseInt(numString);
+                    }
+                };
+                rowSorter.setRowFilter(filter);
+            }
+            else{
+                RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
+                    public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
+                        int value1 = Integer.parseInt((String) entry.getValue(3)); // adjust these indices to match your table structure
+                        return value1 < Integer.parseInt(numString);
+                    }
+                };
+                rowSorter.setRowFilter(filter);
+            }
         }
     }
 }

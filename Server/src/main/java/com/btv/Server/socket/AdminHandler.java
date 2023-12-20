@@ -48,7 +48,7 @@ public class AdminHandler extends ClientHandler {
                         dataOut.write(user.getBirthday().toString() + "|");
                         dataOut.write(user.getGender() + "|");
                         dataOut.write(user.getEmail() + "|");
-                        dataOut.write(user.getTimeCreate() + "|");
+                        dataOut.write(user.getTimeCreate().toString() + "|");
                         dataOut.write(user.getStatus() + "|");
                         dataOut.write(user.getPassword() + "|");
                         dataOut.newLine();
@@ -274,6 +274,7 @@ public class AdminHandler extends ClientHandler {
                             dataOut.write(OnlineUser.getId() + "|");
                             dataOut.write(OnlineUser.getName()+ "|");
                             dataOut.write(OnlineUser.getUsername()+ "|");
+                            dataOut.write(OnlineUser.getLoginTime()+ "|");
                             dataOut.write(OnlineUser.getuserChatWith()+ "|");
                             dataOut.write(OnlineUser.getgroupChatWith()+ "|");
                             dataOut.newLine();

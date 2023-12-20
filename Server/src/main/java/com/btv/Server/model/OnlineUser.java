@@ -13,7 +13,6 @@ import java.util.Date;
  */
 public class OnlineUser extends User{
     private int loginTimes, userChatWith, groupChatWith;
-    private Date loginTime;
     
     public OnlineUser() {
         super();
@@ -28,8 +27,8 @@ public class OnlineUser extends User{
         return this.groupChatWith;
     }
     
-    public Date getLoginTime(){
-        return this.loginTime;
+    public int getLoginTime(){
+        return this.loginTimes;
     }
     
     public void setloginTimes(int n){

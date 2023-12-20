@@ -175,22 +175,22 @@ public class ChatDB { // Singleton
     
     public ArrayList<OnlineUser> GetAllOnlineUsers(String[] split){
         String query = """
-                       SELECT
+                        SELECT
                            U.u_id,
                            U.u_name,
                            U.username,
                            COUNT(DISTINCT L.id) AS app_open_count,
                            COUNT(DISTINCT C.receive_id) AS personal_chat_count,
-                           COUNT(DISTINCT CH.group_id) AS group_chat_count,
-                       FROM
+                           COUNT(DISTINCT CH.group_id) AS group_chat_count
+                        FROM
                            User U
-                       LEFT JOIN
+                        LEFT JOIN
                            Logins L ON U.u_id = L.u_id AND L.login_time BETWEEN ? AND ?
-                       LEFT JOIN
+                        LEFT JOIN
                            ChatHistory C ON U.u_id = C.receive_id AND C.sendtime BETWEEN ? AND ?
-                       LEFT JOIN
+                        LEFT JOIN
                            ChatHistory CH ON U.u_id = CH.send_id AND CH.sendtime BETWEEN ? AND ?
-                       GROUP BY
+                        GROUP BY
                            U.u_id, U.u_name, U.username;
                        """;
         

@@ -57,6 +57,8 @@ public class AllGroups extends javax.swing.JPanel {
             }
         });
         searchGroup();
+        groupService.filterByField(tableGroups, "", "");
+
         tableClickHandle();
     }
 

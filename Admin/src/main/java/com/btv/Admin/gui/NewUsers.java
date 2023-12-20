@@ -59,6 +59,8 @@ public class NewUsers extends javax.swing.JPanel {
         statistic.add(drawer, BorderLayout.CENTER);
         statistic.setPreferredSize(drawer.getPreferredSize());
         statistic.setMaximumSize(drawer.getPreferredSize());
+        newUserService.filterByName(tableUsers, "");
+
     }
     
     public void updateTable() {
@@ -145,6 +147,12 @@ public class NewUsers extends javax.swing.JPanel {
         connector.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         connector.setText("-");
 
+        endDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                endDatePropertyChange(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Period of time:");
 
@@ -178,7 +186,8 @@ public class NewUsers extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(optionsLayout.createSequentialGroup()
                     .addGap(16, 16, 16)
@@ -209,30 +218,6 @@ public class NewUsers extends javax.swing.JPanel {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-
-        startDate.getDateEditor().addPropertyChangeListener(e -> {
-            if ("date".equals(e.getPropertyName())) {
-                Date selectedDate = (Date) e.getNewValue();
-            }
-        });
-        endDate.getDateEditor().addPropertyChangeListener(e -> {
-            if ("date".equals(e.getPropertyName())){
-                Date selectedDate = (Date) e.getNewValue();
-                if (startDate.getDate() != null){
-                    Timer timer = new Timer(500, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            newUserService.filterByDate(tableUsers, startDate.getDate(), endDate.getDate());
-
-                            startDate.setCalendar(null);
-                            endDate.setCalendar(null);
-                        }
-                    });
-                    timer.setRepeats(false); // Set to false to run only once
-                    timer.start();
-                }
-            }
-        });
 
         statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         statisticzone.setOpaque(false);
@@ -270,7 +255,7 @@ public class NewUsers extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
-                        .addGap(0, 426, Short.MAX_VALUE)
+                        .addGap(0, 446, Short.MAX_VALUE)
                         .addComponent(year)
                         .addGap(18, 18, 18)
                         .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -390,6 +375,24 @@ public class NewUsers extends javax.swing.JPanel {
         statistic.revalidate();
         statistic.repaint();
     }//GEN-LAST:event_jYearChooser1PropertyChange
+
+    private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
+        // TODO add your handling code here:
+        endDate.getDateEditor().addPropertyChangeListener(e -> {
+        if ("date".equals(e.getPropertyName())){
+                if (startDate.getDate() != null){
+                    Timer timer = new Timer(500, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent arg0) {
+                            newUserService.filterByDate(tableUsers, startDate.getDate(), endDate.getDate());
+                        }
+                    });
+                timer.setRepeats(false); // Set to false to run only once
+                timer.start();
+                }
+            } 
+        });
+    }//GEN-LAST:event_endDatePropertyChange
     
     
 
