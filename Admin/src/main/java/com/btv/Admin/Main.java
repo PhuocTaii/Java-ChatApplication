@@ -74,6 +74,7 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 5:
                         setForm(userFriends);
+                        userFriends.updateTable();
                         break;
                     default:
                         setForm(onlineUsers);
