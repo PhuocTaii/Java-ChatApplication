@@ -13,7 +13,7 @@ import java.sql.Timestamp;
  */
 public class User {
 
-    private String address, email, name, password, status, username;
+    private String address, email, name, password, status, username, gender;
     private Date birthday, timeCreate, loginDate;
 
     public Date getLoginDate() {
@@ -24,7 +24,7 @@ public class User {
         this.loginDate = loginDate;
     }
     private int id;
-    private boolean gender;
+//    private boolean gender;
 
     public void setAddress(String address) {
         this.address = address;
@@ -59,7 +59,10 @@ public class User {
     }
 
     public void setGender(boolean gender) {
-        this.gender = gender;
+        if(gender){
+            this.gender = "Male";
+        }else
+            this.gender = "Female";
     }
 
     public void setTimeCreate(Date timeCreate) {
@@ -98,7 +101,7 @@ public class User {
         return id;
     }
 
-    public boolean getGender() {
+    public String getGender() {
         return gender;
     }
 

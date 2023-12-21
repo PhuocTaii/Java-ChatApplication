@@ -20,6 +20,7 @@ public enum MessageType {
     VIEW_FRIENDS_BY_USER,
     
     VIEW_LOGINS,
+    VIEW_LOGINS_LOG,
     
     VIEW_GROUPS,
     SORT_GROUPS,

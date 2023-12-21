@@ -31,6 +31,16 @@ public class UserFriends extends javax.swing.JPanel {
         for(Object[] row : friendList) {
             tableModel.addRow(row);
         }
+        friendService.filterByName(tableCustom1, "");
+    }
+    
+    public void updateTable(){
+        friendList = friendService.getAllFriends();
+        tableModel = (DefaultTableModel) tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for (Object[] row : friendList) {
+            tableModel.addRow(row);
+        }
     }
 
     /**

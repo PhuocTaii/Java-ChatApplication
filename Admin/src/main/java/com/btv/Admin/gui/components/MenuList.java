@@ -34,6 +34,7 @@ public class MenuList<E extends Object> extends JList<Object> {
                     Object o = model.getElementAt(index);
                     MenuModel menu = (MenuModel) o;
                     selectedIndex = index;
+                    
                     if (event != null) {
                         event.selected(index);
                     }

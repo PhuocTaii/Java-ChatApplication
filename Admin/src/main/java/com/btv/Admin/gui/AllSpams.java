@@ -39,6 +39,9 @@ public class AllSpams extends javax.swing.JPanel {
         selectedSpam = new Spam();
         updateTable();
         searchUsername();
+        spamService.filterByField(tableSpams, "", "");
+
+//        tableClickHandle();/
     }
 
     public void updateTable() {

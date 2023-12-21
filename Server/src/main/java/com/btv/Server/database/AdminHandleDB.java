@@ -39,6 +39,7 @@ public class AdminHandleDB {
                 tempUser.setBirthday(rs.getDate("birthday"));
                 tempUser.setEmail(rs.getString("email"));
                 tempUser.setGender(rs.getBoolean("gender"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
                 tempUser.setStatus(rs.getString("u_status"));
                 tempUser.setPassword(rs.getString("u_password"));
                 resList.add(tempUser);

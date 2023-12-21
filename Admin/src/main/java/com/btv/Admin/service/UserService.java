@@ -63,6 +63,21 @@ public class UserService {
             }
         }
     }
+    
+//    public void filterByField1(JTable table) {
+//        DefaultTableModel model = (DefaultTableModel) table.getModel();
+//        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+//        table.setRowSorter(rowSorter);
+//
+////        switch (fieldName) {
+////            case "Username" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
+////            case "Name" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
+////            case "Status" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
+////            default -> {
+////            }
+////        }
+//    }
+
 
     public void addNewUser(User newUser) {
         ClientSocket clientSocket = ClientSocket.getInstance();

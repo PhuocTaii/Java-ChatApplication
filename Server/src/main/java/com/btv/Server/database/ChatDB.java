@@ -5,9 +5,12 @@
 package com.btv.Server.database;
 
 import com.btv.Server.model.Friends;
+import com.btv.Server.model.Login;
+import com.btv.Server.model.OnlineUser;
 import com.btv.Server.model.User;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -162,6 +165,77 @@ public class ChatDB { // Singleton
                 resList.add(tempFriends);
             }
             
+            stmt.close();
+        } catch(SQLException e){
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList<OnlineUser> GetAllOnlineUsers(String[] split){
+        String query = """
+                        SELECT
+                           U.u_id,
+                           U.u_name,
+                           U.username,
+                           COUNT(DISTINCT L.id) AS app_open_count,
+                           COUNT(DISTINCT C.receive_id) AS personal_chat_count,
+                           COUNT(DISTINCT CH.group_id) AS group_chat_count
+                        FROM
+                           User U
+                        LEFT JOIN
+                           Logins L ON U.u_id = L.u_id AND L.login_time BETWEEN ? AND ?
+                        LEFT JOIN
+                           ChatHistory C ON U.u_id = C.receive_id AND C.sendtime BETWEEN ? AND ?
+                        LEFT JOIN
+                           ChatHistory CH ON U.u_id = CH.send_id AND CH.sendtime BETWEEN ? AND ?
+                        GROUP BY
+                           U.u_id, U.u_name, U.username;
+                       """;
+        
+        ArrayList<OnlineUser> resList = new ArrayList<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, split[0]);
+            preparedStatement.setString(3, split[0]);
+            preparedStatement.setString(5, split[0]);
+
+            preparedStatement.setString(2, split[1]);
+            preparedStatement.setString(4, split[1]);
+            preparedStatement.setString(6, split[1]);
+            
+            try(ResultSet rs = preparedStatement.executeQuery()){
+                while(rs.next()){
+                    OnlineUser tempOnlUser = new OnlineUser();
+                    tempOnlUser.setId(rs.getInt("u_id"));
+                    tempOnlUser.setName(rs.getString("u_name"));
+                    tempOnlUser.setUsername(rs.getString("username"));
+                    tempOnlUser.setloginTimes(rs.getInt("app_open_count"));
+                    tempOnlUser.setuserChatWith(rs.getInt("personal_chat_count"));
+                    tempOnlUser.setgroupChatWith(rs.getInt("group_chat_count"));
+                    resList.add(tempOnlUser);
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return resList;
+    }
+    
+    public ArrayList<Login> GetAllLogins(){
+        ArrayList<Login> resList = new ArrayList<>();
+        try{
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Logins;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){   
+                Login tempLogin = new Login();
+                tempLogin.setLoginDate(rs.getDate("login_time"));
+                tempLogin.setId(rs.getInt("u_id"));
+
+                resList.add(tempLogin);
+            }
             stmt.close();
         } catch(SQLException e){
             System.err.println(e);
