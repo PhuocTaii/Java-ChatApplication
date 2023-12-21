@@ -4,6 +4,10 @@ import com.btv.Admin.ClientSocket;
 import com.btv.Admin.helper.MessageType;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class LoginListService {
 
@@ -28,6 +32,23 @@ public class LoginListService {
         } catch (IOException e) {
             System.err.println(e);
             return null;
+        }
+    }
+    
+    public void filterByField(JTable table, String fieldName, String searchValue) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        if (searchValue.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            switch (fieldName) {
+                case "Username" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
+                case "Name" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
+                case "Status" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
+                default -> {
+                }
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ public class ListLogin extends javax.swing.JPanel {
         loginListService = new LoginListService();
 
         updateTable();
+        loginListService.filterByField(tableLogin, "", "");
     }
 
     /**
