@@ -37,5 +37,7 @@ public enum MessageType {
     ASSIGN_ADMIN_TO_MEMBER,
     DELETE_MEMBER,
     CHAT_GROUP,
-    ENCRYPT_GROUP
+    ENCRYPT_GROUP,
+    
+    FRIEND_STATUS
 }

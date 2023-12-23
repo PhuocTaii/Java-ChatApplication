@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.btv.User.gui.interfaces.LoginListener;
 import com.btv.User.gui.interfaces.SignUpListener;
-import com.btv.User.helper.MessageStatus;
 import com.btv.User.service.AuthService;
 
 /**
@@ -26,7 +25,6 @@ public class MainApp {
     private AuthService authService;
 
     public MainApp() {
-        mainLayout = new Layout();
         authService = new AuthService();
 
         logInForm = new Login(new LoginListener() {
@@ -35,24 +33,16 @@ public class MainApp {
                 logInForm.setVisible(false);
                 signUpForm.setVisible(true);
             }
-
-            @Override
-            public MessageStatus onLoginButtonClicked() {
-                return authService.login(logInForm.username, logInForm.password);
-            }
-            
-            @Override
-            public MessageStatus onForgotPassLinkClicked() {
-                return authService.forgotPassword(logInForm.username);
-            }
             
             @Override
             public void onLoginSuccess() {
                 logInForm.setVisible(false);
                 signUpForm.setVisible(false);
 
+                mainLayout = new Layout();
                 mainLayout.setVisible(true);
                 mainLayout.setTitle("ChatChat");
+                new Thread(ClientSocket.getInstance()).start();
             }
         });
         signUpForm = new SignUp(new SignUpListener() {
@@ -63,17 +53,14 @@ public class MainApp {
             }
             
             @Override
-            public MessageStatus onSignUpButtonClicked() {
-                return authService.signup(signUpForm.username, signUpForm.email, signUpForm.password, signUpForm.name, signUpForm.address, signUpForm.birthDate, signUpForm.gender);
-            }
-            
-            @Override
             public void onSignUpSuccess() {
                 logInForm.setVisible(false);
                 signUpForm.setVisible(false);
 
+                mainLayout = new Layout();
                 mainLayout.setVisible(true);
                 mainLayout.setTitle("ChatChat");
+                new Thread(ClientSocket.getInstance()).start();
             }
         });
 

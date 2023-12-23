@@ -8,6 +8,7 @@ import com.btv.User.gui.Chat;
 import com.btv.User.gui.Search;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -25,7 +26,7 @@ public class Layout extends javax.swing.JFrame {
         chatItem.setBackground(new Color(6, 20, 133));
         searchItem.setBackground(new Color(48, 162, 255));
         
-        chatPanel = new Chat();
+        chatPanel = Chat.getChatPanelInst(this);
         searchPanel = new Search();
         chatPanel.setVisible(true);
         searchPanel.setVisible(false);
@@ -134,6 +135,7 @@ public class Layout extends javax.swing.JFrame {
             // show chat frame
             chatPanel.setVisible(true);
             searchPanel.setVisible(false);
+            chatPanel.loadChatPanel();
         }
         else {
             chatItem.setBackground(new Color(48, 162, 255));

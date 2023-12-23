@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -22,9 +24,10 @@ public class UserHandler extends ClientHandler{
     public static ArrayList<UserHandler> userHandlers = new ArrayList<>();
     
     private int userId;
+    private Socket clientSocket;
     public UserHandler(Socket clientSocket) {
         super(clientSocket);
-        userHandlers.add(this);
+        this.clientSocket = clientSocket;
     }
 
     public void handleMessage(String messStr) {
@@ -32,6 +35,8 @@ public class UserHandler extends ClientHandler{
         ChatDB db = ChatDB.getDBInstance();
         boolean isSuccess;
         String messFail;
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", messStr);
         
         switch (mess) {
             case REGISTER:
@@ -72,8 +77,7 @@ public class UserHandler extends ClientHandler{
                                 isSuccess = false;
                             }
                             else {
-                                this.userId = uid;
-                                db.updateAccountStatus(uid, "ONLINE");
+                                loginSuccess(uid);
                             }
                         }
                     }
@@ -111,8 +115,7 @@ public class UserHandler extends ClientHandler{
                     }
                     int uid = db.login(username, password);
                     if(uid > 0) {
-                        this.userId = uid;
-                        db.updateAccountStatus(uid, "ONLINE");
+                        loginSuccess(uid);
                         
                         dataOut.write(MessageStatus.SUCCESS.toString());
                         dataOut.newLine();
@@ -167,8 +170,84 @@ public class UserHandler extends ClientHandler{
                 }
                 
                 break;
+                
+            case VIEW_ALL_FRIENDS:
+                ArrayList<User> listFriends = db.getAllFriendsOfUser(this.userId);
+                JSONArray friendArr = new JSONArray();
+                
+                try {
+                    if(listFriends == null) {
+                        messRes.put("data", friendArr);
+                    }
+                    else {
+                        for(User user : listFriends) {
+                            JSONObject friendObj = new JSONObject(user);
+                            friendArr.put(friendObj);
+                        }
+                        messRes.put("data", friendArr);
+                    }
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
+                
+            case UNFRIEND:
+                try {
+                    int friendId = dataIn.read();
+                    
+                    if(db.unfriend(this.userId, friendId) == 1) {
+                        dataOut.write(MessageStatus.SUCCESS.toString());
+                    }
+                    else {
+                        dataOut.write(MessageStatus.FAIL.toString());
+                    }
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
+
             default:
                 System.out.println("Invalid message");
+        }
+    }
+    
+    private void loginSuccess(int uid) {
+        ChatDB db = ChatDB.getDBInstance();
+        this.userId = uid;
+        userHandlers.add(this);
+        db.updateAccountStatus(uid, "ONLINE");
+        broadCastLoginMessToFriends(true);
+    }
+    
+    public void broadCastLoginMessToFriends(boolean isOnline) {
+        ChatDB db = ChatDB.getDBInstance();
+        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.FRIEND_STATUS.toString());
+        
+        JSONObject userSatus = new JSONObject();
+        userSatus.put("id", this.userId);
+        userSatus.put("isOnline", isOnline);
+        
+        messRes.put("data", userSatus);
+        
+        for(UserHandler user : userHandlers) {
+            try {
+                if(user != this && db.checkIfIsFriend(this.userId, user.userId)) {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -176,5 +255,6 @@ public class UserHandler extends ClientHandler{
         userHandlers.remove(this);
         ChatDB db = ChatDB.getDBInstance();
         db.updateAccountStatus(this.userId, "OFFLINE");
+        broadCastLoginMessToFriends(false);
     }
 }

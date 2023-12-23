@@ -293,4 +293,75 @@ public class ChatDB { // Singleton
             return -1;
         }
     }
+    
+    public ArrayList<User> getAllFriendsOfUser(int userId) {
+        ArrayList<User> resList = new ArrayList<>();
+        try {
+            String sql = "select u.u_id, u.username, u.u_status " +
+                         "from Friends f join User u on f.u_id2 = u.u_id " +
+                         "where f.u_id1 = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                User fr = new User();
+                fr.setId(rs.getInt("u_id"));
+                fr.setUsername(rs.getString("username"));
+                fr.setStatus(rs.getString("u_status"));
+                resList.add(fr);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public int unfriend(int userId, int friendId) {
+        try {
+            String sql = "delete from Friends " +
+                        "where (u_id1 = ? and u_id2 = ?) or (u_id1 = ? and u_id2 = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, friendId);
+            stmt.setInt(3, friendId);
+            stmt.setInt(4, userId);
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return 1;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
+    public boolean checkIfIsFriend(int userId, int friendId) {
+        try {
+            String sql = "select exists " +
+                        "(select * " +
+                        "from Friends " +
+                        "where (u_id1 = ? and u_id2 = ?) or (u_id1 = ? and u_id2 = ?))";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, friendId);
+            stmt.setInt(3, friendId);
+            stmt.setInt(4, userId);
+            
+            ResultSet rs = stmt.executeQuery();
+            boolean isFriend = false;
+            while(rs.next()) {
+                isFriend = rs.getBoolean(1);
+            }
+            rs.close();
+            stmt.close();
+            return isFriend;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

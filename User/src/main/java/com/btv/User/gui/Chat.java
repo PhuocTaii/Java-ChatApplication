@@ -4,33 +4,50 @@
  */
 package com.btv.User.gui;
 
+import com.btv.User.gui.components.FriendListCellRender;
 import com.btv.User.gui.components.Message;
+import com.btv.User.gui.interfaces.ChatListener;
+import com.btv.User.gui.interfaces.CustomListener;
+import com.btv.User.gui.layouts.Layout;
+import com.btv.User.service.FriendService;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import com.btv.User.model.User;
+import java.util.ArrayList;
+import javax.swing.JList;
 
 /**
  *
  * @author tvan
  */
 public class Chat extends javax.swing.JPanel {
+    private static Chat chatPanelInst = null;
+    private Layout mainFrame;
 
     /**
      * Creates new form Chat
      */
-    public Chat() {
+    private Chat(Layout mainFrame) {
         initComponents();
+        this.mainFrame = mainFrame;
+        
         JPanel messagesPanel = new JPanel();
         messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
-//        chatZone.setSize(788, chatZone.getPreferredSize().height);
-        // Add Message components to the messagesPanel
         messagesPanel.add(new Message("abcabcxyz", "xyz", true));
         messagesPanel.add(new Message("abcabcxyz", "abc", false));
         messagesPanel.add(new Message("abcabcxyz", "xyz", true));
@@ -53,9 +70,45 @@ public class Chat extends javax.swing.JPanel {
         chatZone.getViewport().add(messagesPanel);
         chatZone.getViewport().revalidate();
 
-
         // Set vertical scrollbar policy
         chatZone.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+        // set cell renderer for JList friendList
+        friendList.setCellRenderer(new FriendListCellRender());
+        friendList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        // set listeners
+        CustomListener.getInstance().addChatListener(new ChatListener() {
+            @Override
+            public void loadListFriend(ArrayList<User> listFriend) {
+                DefaultListModel<User> listFriendModel = new DefaultListModel<>();
+                for(User friend : listFriend) {
+                    listFriendModel.addElement(friend);
+                }
+                friendList.setModel((ListModel)listFriendModel);
+            }
+            
+            @Override
+            public void updateFriendStatus(int friendId, boolean isOnline) {
+                DefaultListModel<User> listFriendModel = (DefaultListModel<User>)friendList.getModel();
+                for(int i = 0; i < listFriendModel.getSize(); i++) {
+                    User currFriend = listFriendModel.getElementAt(i);
+                    if(currFriend.getId() == friendId) {
+                        currFriend.setIsOnline(isOnline);
+                        listFriendModel.setElementAt(currFriend, i);
+                        break;
+                    }
+                }
+            }
+        });
+        
+        loadChatPanel();
+    }
+    
+    public static Chat getChatPanelInst(Layout mainFrame) {
+        if(chatPanelInst == null)
+            chatPanelInst = new Chat(mainFrame);
+        return chatPanelInst;
     }
 
     /**
@@ -197,6 +250,11 @@ public class Chat extends javax.swing.JPanel {
             }
         });
 
+        friendList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                friendListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(friendList);
 
         jScrollPane3.setViewportView(groupList);
@@ -333,13 +391,76 @@ public class Chat extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_messageInputActionPerformed
 
+    private void friendListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_friendListValueChanged
+        // TODO add your handling code here:
+        if (!evt.getValueIsAdjusting()) {
+            User selectedFriend = friendList.getSelectedValue();
+            int selectedIndex = friendList.getSelectedIndex();
+            if (selectedFriend != null) {
+                Rectangle bounds = friendList.getCellBounds(selectedIndex, selectedIndex);
+                if (bounds != null) {
+                    showFriendMenu(selectedIndex, selectedFriend, friendList, bounds.x, bounds.y + bounds.height);
+                }
+            }
+            
+            friendList.clearSelection();
+        }
+    }//GEN-LAST:event_friendListValueChanged
+
+    private void showFriendMenu(int selectedIndex, User selectedFriend, Component component, int x, int y) {
+        JPopupMenu friendMenu = new JPopupMenu();
+
+        JMenuItem chatItem = new JMenuItem("Chat");
+        JMenuItem unfrItem = new JMenuItem("Unfriend");
+        JMenuItem blockItem = new JMenuItem("Block");
+
+        friendMenu.add(chatItem);
+        friendMenu.add(unfrItem);
+        friendMenu.add(blockItem);
+        
+        chatItem.addActionListener(e -> handleChatWithFriend());
+        unfrItem.addActionListener(e -> handleUnfriend(selectedIndex, selectedFriend.getId(), selectedFriend.getUsername()));
+        blockItem.addActionListener(e -> handleBlockFriend());
+
+        friendMenu.show(component, x, y);
+    }
+    
+    public void handleChatWithFriend() {
+    }
+    
+    public void handleUnfriend(int selectedIdx, int friendId, String friendName) {
+        Object[] options = { "YES", "NO" };
+        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to unfriend " + friendName, "Confirm unfriend", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[1]);
+        if(selectedOption == 0) {
+            FriendService friendService = new FriendService();
+            if(friendService.unfriend(friendId))
+                ((DefaultListModel) friendList.getModel()).remove(selectedIdx);
+        }
+    }
+    
+    public void handleBlockFriend() {
+    }
+    
+    public JList<User> getFriendList() {
+        return this.friendList;
+    }
+    
+    public void loadChatPanel() {
+        FriendService friendService = new FriendService();
+        friendService.getListFriends();
+        
+        this.revalidate();
+        this.repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddmemberButton;
     private javax.swing.JLabel UserGoupChat;
     private javax.swing.JScrollPane chatZone;
     private javax.swing.JButton encodeButton;
-    private javax.swing.JList<String> friendList;
+    private javax.swing.JList<User> friendList;
     private javax.swing.JLabel friendlist;
     private javax.swing.JList<String> groupList;
     private java.awt.Label groupMember;

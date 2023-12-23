@@ -55,19 +55,18 @@ public class AuthService {
     
     public MessageStatus login(String username, String password) {
         ClientSocket clientSocket = ClientSocket.getInstance();
-        
         try {
             // send request to sign up
             clientSocket.dataOut.write(MessageType.LOGIN.toString());
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
-                        
+
             clientSocket.dataOut.write(username);
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.write(password);
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
-            
+
             MessageStatus res = MessageStatus.valueOf(clientSocket.dataIn.readLine());
             if(res == MessageStatus.SUCCESS) {
                 return res;
