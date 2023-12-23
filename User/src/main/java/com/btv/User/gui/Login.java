@@ -6,6 +6,7 @@ package com.btv.User.gui;
 
 import com.btv.User.gui.interfaces.LoginListener;
 import com.btv.User.helper.MessageStatus;
+import com.btv.User.service.AuthService;
 import javax.swing.JOptionPane;
 
 /**
@@ -225,7 +226,8 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         // handle login here
         if(setTextFields()) {
-            MessageStatus res = loginListener.onLoginButtonClicked();
+            AuthService authService = new AuthService();
+            MessageStatus res = authService.login(username, password);
             if(!res.isSuccess()) {
                 JOptionPane.showMessageDialog(this, res.getMessage(), "Login notification", JOptionPane.ERROR_MESSAGE);
             }
@@ -253,8 +255,8 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please provide username to reset password", "Forgot password warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-        MessageStatus res = loginListener.onForgotPassLinkClicked();
+        AuthService authService = new AuthService();
+        MessageStatus res = authService.forgotPassword(username);
         JOptionPane.showMessageDialog(this, "We have sent new password to your email: " + res.getMessage(), "Forgot password information", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_forgotPassLinkMouseClicked
 

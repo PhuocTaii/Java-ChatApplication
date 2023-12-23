@@ -12,7 +12,5 @@ import com.btv.User.helper.MessageStatus;
  */
 public interface LoginListener {
     void onSignUpLinkClicked();
-    MessageStatus onLoginButtonClicked();
-    MessageStatus onForgotPassLinkClicked();
     void onLoginSuccess();
 }

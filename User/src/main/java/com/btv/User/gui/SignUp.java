@@ -6,6 +6,7 @@ package com.btv.User.gui;
 
 import com.btv.User.gui.interfaces.SignUpListener;
 import com.btv.User.helper.MessageStatus;
+import com.btv.User.service.AuthService;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -398,7 +399,8 @@ public class SignUp extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(setTextFields())
             if(signUpListener != null) {
-                MessageStatus res = signUpListener.onSignUpButtonClicked();
+                AuthService authService = new AuthService();
+                MessageStatus res = authService.signup(username, email, password,name, address, birthDate, gender);
                 if(!res.isSuccess()) {
                     JOptionPane.showMessageDialog(this, res.getMessage(), "Sign up notification", JOptionPane.ERROR_MESSAGE);
                 }
