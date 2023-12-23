@@ -199,12 +199,17 @@ public class UserHandler extends ClientHandler{
                 try {
                     int friendId = dataIn.read();
                     
+                    JSONObject friendRel = new JSONObject();
+                    friendRel.put("id", friendId);
                     if(db.unfriend(this.userId, friendId) == 1) {
-                        dataOut.write(MessageStatus.SUCCESS.toString());
+                        friendRel.put("status", MessageStatus.SUCCESS.toString());
                     }
                     else {
-                        dataOut.write(MessageStatus.FAIL.toString());
+                        friendRel.put("status", MessageStatus.FAIL.toString());
                     }
+                    
+                    messRes.put("data", friendRel);
+                    dataOut.write(messRes.toString());
                     dataOut.newLine();
                     dataOut.flush();
                 } catch (IOException e) {
@@ -223,10 +228,10 @@ public class UserHandler extends ClientHandler{
         this.userId = uid;
         userHandlers.add(this);
         db.updateAccountStatus(uid, "ONLINE");
-        broadCastLoginMessToFriends(true);
+        broadCastStatusToFriends(true);
     }
     
-    public void broadCastLoginMessToFriends(boolean isOnline) {
+    public void broadCastStatusToFriends(boolean isOnline) {
         ChatDB db = ChatDB.getDBInstance();
         
         JSONObject messRes = new JSONObject();
@@ -255,6 +260,6 @@ public class UserHandler extends ClientHandler{
         userHandlers.remove(this);
         ChatDB db = ChatDB.getDBInstance();
         db.updateAccountStatus(this.userId, "OFFLINE");
-        broadCastLoginMessToFriends(false);
+        broadCastStatusToFriends(false);
     }
 }

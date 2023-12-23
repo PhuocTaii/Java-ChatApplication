@@ -5,7 +5,6 @@
 package com.btv.User.service;
 
 import com.btv.User.ClientSocket;
-import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
 import java.io.IOException;
 
@@ -27,7 +26,7 @@ public class FriendService {
         }
     }
     
-    public boolean unfriend(int friendId) {
+    public void unfriend(int friendId) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
             // send request to view list friends
@@ -37,14 +36,8 @@ public class FriendService {
             
             clientSocket.dataOut.write(friendId);
             clientSocket.dataOut.flush();
-            
-            MessageStatus res = MessageStatus.valueOf(clientSocket.dataIn.readLine());
-            if(res == MessageStatus.SUCCESS) {
-                return true;
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

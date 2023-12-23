@@ -14,4 +14,5 @@ import java.util.ArrayList;
 public interface ChatListener {
     void loadListFriend(ArrayList<User> listFriend);
     void updateFriendStatus(int friendId, boolean isOnline);
+    void unfriend(int friendId);
 }

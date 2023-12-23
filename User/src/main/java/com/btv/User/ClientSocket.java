@@ -5,6 +5,7 @@
 package com.btv.User;
 
 import com.btv.User.gui.interfaces.CustomListener;
+import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
 import com.btv.User.model.User;
 import java.io.BufferedReader;
@@ -78,22 +79,35 @@ public class ClientSocket implements Runnable {
         
         switch (messType) {
             case VIEW_ALL_FRIENDS:
-                ArrayList<User> listFriend = new ArrayList<>();
-                JSONArray friendArr = messObj.getJSONArray("data");
-                for (int i = 0; i < friendArr.length(); i++) {
-                    JSONObject friend = friendArr.getJSONObject(i);
-                    listFriend.add(new User(friend.getInt("id"), friend.getString("username"), friend.getString("status").equalsIgnoreCase("ONLINE")));
+                {
+                    ArrayList<User> listFriend = new ArrayList<>();
+                    JSONArray friendArr = messObj.getJSONArray("data");
+                    for (int i = 0; i < friendArr.length(); i++) {
+                        JSONObject friend = friendArr.getJSONObject(i);
+                        listFriend.add(new User(friend.getInt("id"), friend.getString("username"), friend.getString("status").equalsIgnoreCase("ONLINE")));
+                    }
+                    CustomListener.getInstance().getChatListener().loadListFriend(listFriend);
                 }
-                CustomListener.getInstance().getChatListener().loadListFriend(listFriend);
                 break;
                 
             case FRIEND_STATUS:
-                JSONObject updatedFriend = messObj.getJSONObject("data");
-                int updatedFriendId = updatedFriend.getInt("id");
-                boolean isOnline = updatedFriend.getBoolean("isOnline");
-                CustomListener.getInstance().getChatListener().updateFriendStatus(updatedFriendId, isOnline);
+                {
+                    JSONObject updatedFriend = messObj.getJSONObject("data");
+                    int updatedFriendId = updatedFriend.getInt("id");
+                    boolean isOnline = updatedFriend.getBoolean("isOnline");
+                    CustomListener.getInstance().getChatListener().updateFriendStatus(updatedFriendId, isOnline);
+                }
                 break;
                 
+            case UNFRIEND:
+                {
+                    JSONObject friendRel = messObj.getJSONObject("data");
+                    MessageStatus res = MessageStatus.valueOf(friendRel.getString("status"));
+                    if(res == MessageStatus.SUCCESS) {
+                        CustomListener.getInstance().getChatListener().unfriend(friendRel.getInt("id"));
+                    }
+                }
+                break;
             default:
                 System.out.println("Invalid message");
         }
@@ -102,7 +116,6 @@ public class ClientSocket implements Runnable {
     public void closeClientSocket() {
         try {
             if(socket != null) {
-                System.out.println("Client socket closed");
                 socket.close();
             }
             if(dataIn != null)

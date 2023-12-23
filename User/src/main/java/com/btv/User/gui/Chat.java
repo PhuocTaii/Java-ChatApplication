@@ -100,6 +100,18 @@ public class Chat extends javax.swing.JPanel {
                     }
                 }
             }
+            
+            @Override
+            public void unfriend(int friendId) {
+                DefaultListModel<User> listFriendModel = (DefaultListModel<User>)friendList.getModel();
+                for(int i = 0; i < listFriendModel.getSize(); i++) {
+                    User currFriend = listFriendModel.getElementAt(i);
+                    if(currFriend.getId() == friendId) {
+                        listFriendModel.remove(i);
+                        break;
+                    }
+                }
+            }
         });
         
         loadChatPanel();
@@ -435,8 +447,7 @@ public class Chat extends javax.swing.JPanel {
                 null, options, options[1]);
         if(selectedOption == 0) {
             FriendService friendService = new FriendService();
-            if(friendService.unfriend(friendId))
-                ((DefaultListModel) friendList.getModel()).remove(selectedIdx);
+            friendService.unfriend(friendId);
         }
     }
     
