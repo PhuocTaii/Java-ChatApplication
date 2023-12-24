@@ -13,7 +13,7 @@ import org.json.JSONObject;
  *
  * @author tvan
  */
-public class FriendService {
+public class UserService {
     public void getListFriends() {
         ClientSocket clientSocket = ClientSocket.getInstance();
         
@@ -67,6 +67,20 @@ public class FriendService {
             clientSocket.dataOut.flush();
             
             clientSocket.dataOut.write(friendId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void reportUser(int userId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.REPORT_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(userId);
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.User;
 import com.btv.User.service.ChatService;
-import com.btv.User.service.FriendService;
+import com.btv.User.service.UserService;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -42,7 +42,7 @@ public class Search extends javax.swing.JPanel {
                 
                 if(!user.getUsername().equalsIgnoreCase(Chat.getChatPanelInst(null).getCurrentUsernameChat())) {
                     // load ui
-                    CustomListener.getInstance().getChatListener().loadChatUI(user.getUsername());
+                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername());
 
                     // send request
                     ChatService.getChatUserHistory(user.getId());
@@ -62,7 +62,7 @@ public class Search extends javax.swing.JPanel {
             public void onAddFriend(int row) {
                 SearchTableModel tableModel = (SearchTableModel)tableUserSearch.getModel();
                 int userId = tableModel.getUser(row).getId();
-                new FriendService().addFriend(userId);
+                new UserService().addFriend(userId);
             }
         };
         
@@ -262,7 +262,7 @@ public class Search extends javax.swing.JPanel {
             tableModel.clearData();
         }
         else
-            new FriendService().searchUsers(optionSearch, query);
+            new UserService().searchUsers(optionSearch, query);
     }//GEN-LAST:event_buttonSearchUserActionPerformed
 
 

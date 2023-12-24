@@ -147,6 +147,18 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case REPORT_USER:
+            {
+                JSONObject friendRel = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(friendRel.getString("status"));
+                if(res == MessageStatus.SUCCESS)
+                    res.setMessage("Done report!");
+                else
+                    res.setMessage("Report failed!");
+                CustomListener.getInstance().getChatListener().reportNoti(res);
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }

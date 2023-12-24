@@ -311,8 +311,30 @@ public class UserHandler extends ClientHandler{
                 }
             }
                 break;
-
-
+                
+            case REPORT_USER:
+            {
+                try {
+                    int receiverId = dataIn.read();
+                    
+                    JSONObject reportRes = new JSONObject();
+                    if(db.reportUser(this.userId, receiverId)) {
+                        reportRes.put("status", MessageStatus.SUCCESS.toString());
+                    }
+                    else {
+                        reportRes.put("status", MessageStatus.FAIL.toString());
+                    }
+                    
+                    messRes.put("data", reportRes);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }

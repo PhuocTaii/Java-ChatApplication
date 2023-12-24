@@ -465,4 +465,22 @@ public class ChatDB { // Singleton
         }
         return resList;
     }
+    
+    public boolean reportUser(int reporter, int repoerted) {
+        try {            
+            String sql = "insert into SpamList (u_id, reported_id, report_time) values " +
+                        "(?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, reporter);
+            stmt.setInt(2, repoerted);
+            stmt.setDate(3, new Date(new java.util.Date().getTime()));
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return true;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
