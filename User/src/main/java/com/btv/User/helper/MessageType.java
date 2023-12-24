@@ -14,13 +14,12 @@ public enum MessageType {
     LOGIN,
     
     VIEW_ALL_FRIENDS,
-    ADD_FRIEND_BY_USERNAME,
+    ADD_FRIEND,
     UNFRIEND,
     
     VIEW_ONLINE_FRIENDS,
     
-    FIND_USER_BY_USERNAME,
-    FIND_USER_BY_NAME,
+    FIND_USER,
     
     REPORT_USER,
     

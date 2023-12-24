@@ -11,8 +11,15 @@ package com.btv.User.model;
 public class User {
     private int id;
     private String username;
+    private String name;
     private boolean isOnline;
 
+    public User(int id, String username, String name) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+    }
+    
     public User(int id, String username, boolean isOnline) {
         this.id = id;
         this.username = username;
@@ -31,8 +38,16 @@ public class User {
         return username;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isIsOnline() {

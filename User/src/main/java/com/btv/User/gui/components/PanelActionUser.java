@@ -4,6 +4,12 @@
  */
 package com.btv.User.gui.components;
 
+import com.btv.User.gui.interfaces.SearchUserActionEvent;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 /**
  *
  * @author Vo Quoc Binh
@@ -15,6 +21,27 @@ public class PanelActionUser extends javax.swing.JPanel {
      */
     public PanelActionUser() {
         initComponents();
+    }
+    
+    public void initEvent(SearchUserActionEvent event, int row) {
+        addFriendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                event.onAddFriend(row);
+            }
+        });
+        blockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                event.onBlock(row);
+            }
+        });
+        chatButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                event.onChat(row);
+            }
+        });
     }
 
     /**
@@ -35,19 +62,25 @@ public class PanelActionUser extends javax.swing.JPanel {
         chatButton.setBackground(new java.awt.Color(48, 162, 255));
         chatButton.setForeground(new java.awt.Color(255, 255, 255));
         chatButton.setText("Chat");
+        chatButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        chatButton.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        chatButton.setPreferredSize(new java.awt.Dimension(72, 30));
 
         addFriendButton.setBackground(new java.awt.Color(48, 162, 255));
         addFriendButton.setForeground(new java.awt.Color(255, 255, 255));
-        addFriendButton.setText("Block");
+        addFriendButton.setText("Add friend");
+        addFriendButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addFriendButton.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        addFriendButton.setPreferredSize(new java.awt.Dimension(103, 30));
 
         blockButton.setBackground(new java.awt.Color(48, 162, 255));
         blockButton.setForeground(new java.awt.Color(255, 255, 255));
-        blockButton.setText("Add friend");
-        blockButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                blockButtonActionPerformed(evt);
-            }
-        });
+        blockButton.setText("Block");
+        blockButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        blockButton.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        blockButton.setMaximumSize(new java.awt.Dimension(34, 23));
+        blockButton.setMinimumSize(new java.awt.Dimension(34, 23));
+        blockButton.setPreferredSize(new java.awt.Dimension(72, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -57,9 +90,9 @@ public class PanelActionUser extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(chatButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(blockButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(blockButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -67,17 +100,12 @@ public class PanelActionUser extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(blockButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chatButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addFriendButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(blockButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void blockButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blockButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_blockButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.btv.User.gui.components.ActionButton addFriendButton;

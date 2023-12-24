@@ -364,4 +364,74 @@ public class ChatDB { // Singleton
             return false;
         }
     }
+    
+    public ArrayList<User> searchUsers(int userId, String option, String query) {
+        ArrayList<User> resList = new ArrayList<>();
+        try {
+            String sql = "select u_id, username, u_name " +
+                         "from User " +
+                         "where u_id != ? and " + (option.equalsIgnoreCase("u_name") ? "u_name" : "username") + " like ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setString(2, "%"+query+"%");
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                User fr = new User();
+                fr.setId(rs.getInt("u_id"));
+                fr.setUsername(rs.getString("username"));
+                fr.setName(rs.getString("u_name"));
+                resList.add(fr);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public boolean checkIfBlocked(int userId1, int userId2) { // check if user1 blocks user2
+        try {
+            String sql = "select exists " +
+                        "(select * " +
+                        "from BlockedList " +
+                        "where u_id1 = ? and u_id2 = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId1);
+            stmt.setInt(2, userId2);
+            
+            ResultSet rs = stmt.executeQuery();
+            boolean isBlocked = false;
+            while(rs.next()) {
+                isBlocked = rs.getBoolean(1);
+            }
+            rs.close();
+            stmt.close();
+            return isBlocked;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean addFriend(int userId, int friendId) {
+        try {            
+            String sql = "insert into Friends " +
+                        "values(?, ?), (?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, friendId);
+            stmt.setInt(3, friendId);
+            stmt.setInt(4, userId);
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return true;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

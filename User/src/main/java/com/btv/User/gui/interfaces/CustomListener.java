@@ -9,8 +9,9 @@ package com.btv.User.gui.interfaces;
  * @author tvan
  */
 public class CustomListener {
-    public static CustomListener customListenerInst = null;
+    private static CustomListener customListenerInst = null;
     private ChatListener chatListener;
+    private SearchListener searchListener;
     
     private CustomListener() {
         
@@ -31,4 +32,11 @@ public class CustomListener {
         return chatListener;
     }
     
+    public void addSearchListener(SearchListener searchListener) {
+        this.searchListener = searchListener;
+    }
+
+    public SearchListener getSearchListener() {
+        return searchListener;
+    }
 }

@@ -217,6 +217,70 @@ public class UserHandler extends ClientHandler{
                 }
                 
                 break;
+                
+            case FIND_USER:
+                try {
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String option = messReceived.getString("option");
+                    String query = messReceived.getString("query");
+                    ArrayList<User> listUsers = db.searchUsers(this.userId, option, query);
+                    JSONArray userdArr = new JSONArray();
+                    
+                    if(listUsers == null) {
+                        messRes.put("data", userdArr);
+                    }
+                    else {
+                        for(User user : listUsers) {
+                            JSONObject userdObj = new JSONObject(user);
+                            userdArr.put(userdObj);
+                        }
+                        messRes.put("data", userdArr);
+                    }
+                    
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
+                
+            case ADD_FRIEND:
+                try {
+                    int friendId = dataIn.read();
+                    
+                    JSONObject objData = new JSONObject();
+                    objData.put("id", friendId);
+                    
+                    if(db.checkIfIsFriend(this.userId, friendId)) {
+                        objData.put("status", MessageStatus.FAIL.toString());
+                        objData.put("statusDetail", "Friend already added!");
+                    }
+                    else if(db.checkIfBlocked(this.userId, friendId)) {
+                        objData.put("status", MessageStatus.FAIL.toString());
+                        objData.put("statusDetail", "Cannot add friend!");
+                    }
+                    else {
+                        if(db.addFriend(this.userId, friendId)) {
+                            objData.put("status", MessageStatus.SUCCESS.toString());
+                            objData.put("statusDetail", "Add friend successfully!");
+                        }
+                        else {
+                            objData.put("status", MessageStatus.FAIL.toString());
+                            objData.put("statusDetail", "Cannot add friend!");
+                        }
+                    }
+                    
+                    messRes.put("data", objData);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
 
             default:
                 System.out.println("Invalid message");

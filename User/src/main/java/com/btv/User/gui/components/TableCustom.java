@@ -3,7 +3,6 @@ package com.btv.User.gui.components;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -18,10 +17,6 @@ public class TableCustom extends JTable {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 TableHeader header = new TableHeader(value + "");
-                if (column == 4) {
-                    header.setHorizontalAlignment(JLabel.CENTER);
-                }
-
                 return header;
             }
         });
@@ -44,7 +39,5 @@ public class TableCustom extends JTable {
 
         });
         this.setIntercellSpacing(new Dimension(40, 0));
-        
     }
-
 }

@@ -27,7 +27,7 @@ public class Layout extends javax.swing.JFrame {
         searchItem.setBackground(new Color(48, 162, 255));
         
         chatPanel = Chat.getChatPanelInst(this);
-        searchPanel = new Search();
+        searchPanel = Search.getSearchPanelInst(this);
         chatPanel.setVisible(true);
         searchPanel.setVisible(false);
         

@@ -232,7 +232,7 @@ public class Login extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, res.getMessage(), "Login notification", JOptionPane.ERROR_MESSAGE);
             }
             else {
-            JOptionPane.showMessageDialog(this, "Welcome to ChatChat", "Login successfully", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Welcome to ChatChat", "Login successfully", JOptionPane.INFORMATION_MESSAGE);
                 loginListener.onLoginSuccess();
             }
         }

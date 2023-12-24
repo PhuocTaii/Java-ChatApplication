@@ -79,35 +79,57 @@ public class ClientSocket implements Runnable {
         
         switch (messType) {
             case VIEW_ALL_FRIENDS:
-                {
-                    ArrayList<User> listFriend = new ArrayList<>();
-                    JSONArray friendArr = messObj.getJSONArray("data");
-                    for (int i = 0; i < friendArr.length(); i++) {
-                        JSONObject friend = friendArr.getJSONObject(i);
-                        listFriend.add(new User(friend.getInt("id"), friend.getString("username"), friend.getString("status").equalsIgnoreCase("ONLINE")));
-                    }
-                    CustomListener.getInstance().getChatListener().loadListFriend(listFriend);
+            {
+                ArrayList<User> listFriend = new ArrayList<>();
+                JSONArray friendArr = messObj.getJSONArray("data");
+                for (int i = 0; i < friendArr.length(); i++) {
+                    JSONObject friend = friendArr.getJSONObject(i);
+                    listFriend.add(new User(friend.getInt("id"), friend.getString("username"), friend.getString("status").equalsIgnoreCase("ONLINE")));
                 }
+                CustomListener.getInstance().getChatListener().loadListFriend(listFriend);
+            }
                 break;
                 
             case FRIEND_STATUS:
-                {
-                    JSONObject updatedFriend = messObj.getJSONObject("data");
-                    int updatedFriendId = updatedFriend.getInt("id");
-                    boolean isOnline = updatedFriend.getBoolean("isOnline");
-                    CustomListener.getInstance().getChatListener().updateFriendStatus(updatedFriendId, isOnline);
-                }
+            {
+                JSONObject updatedFriend = messObj.getJSONObject("data");
+                int updatedFriendId = updatedFriend.getInt("id");
+                boolean isOnline = updatedFriend.getBoolean("isOnline");
+                CustomListener.getInstance().getChatListener().updateFriendStatus(updatedFriendId, isOnline);
+            }
                 break;
                 
             case UNFRIEND:
-                {
-                    JSONObject friendRel = messObj.getJSONObject("data");
-                    MessageStatus res = MessageStatus.valueOf(friendRel.getString("status"));
-                    if(res == MessageStatus.SUCCESS) {
-                        CustomListener.getInstance().getChatListener().unfriend(friendRel.getInt("id"));
-                    }
+            {
+                JSONObject friendRel = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(friendRel.getString("status"));
+                if(res == MessageStatus.SUCCESS) {
+                    CustomListener.getInstance().getChatListener().unfriend(friendRel.getInt("id"));
                 }
+            }
                 break;
+                
+            case FIND_USER:
+            {
+                ArrayList<User> listUser = new ArrayList<>();
+                JSONArray friendArr = messObj.getJSONArray("data");
+                for (int i = 0; i < friendArr.length(); i++) {
+                    JSONObject friend = friendArr.getJSONObject(i);
+                    listUser.add(new User(friend.getInt("id"), friend.getString("username"), friend.getString("name")));
+                }
+                CustomListener.getInstance().getSearchListener().showFoundUsers(listUser);
+            }
+                break;
+                
+            case ADD_FRIEND:
+            {
+                JSONObject objData = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(objData.getString("status"));
+                res.setMessage(objData.getString("statusDetail"));
+                CustomListener.getInstance().getSearchListener().addFriend(res);
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }
