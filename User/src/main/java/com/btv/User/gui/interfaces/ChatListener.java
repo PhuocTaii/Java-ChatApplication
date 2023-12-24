@@ -4,6 +4,7 @@
  */
 package com.btv.User.gui.interfaces;
 
+import com.btv.User.model.ChatMessage;
 import com.btv.User.model.User;
 import java.util.ArrayList;
 
@@ -12,7 +13,9 @@ import java.util.ArrayList;
  * @author tvan
  */
 public interface ChatListener {
-    void loadListFriend(ArrayList<User> listFriend);
-    void updateFriendStatus(int friendId, boolean isOnline);
-    void unfriend(int friendId);
+    public void loadListFriend(ArrayList<User> listFriend);
+    public void updateFriendStatus(int friendId, boolean isOnline);
+    public void unfriend(int friendId);
+    public void loadChatUI(int userId, String username);
+    public void loadChatData(ArrayList<ChatMessage> listChat);
 }

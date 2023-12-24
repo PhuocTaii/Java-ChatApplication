@@ -6,9 +6,10 @@ package com.btv.User.gui.layouts;
 
 import com.btv.User.gui.Chat;
 import com.btv.User.gui.Search;
+import com.btv.User.gui.interfaces.CustomListener;
+import com.btv.User.gui.interfaces.MenuListener;
 import java.awt.Color;
 import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -21,6 +22,7 @@ public class Layout extends javax.swing.JFrame {
      */
     private Chat chatPanel;
     private Search searchPanel;
+    
     public Layout() {
         initComponents();
         chatItem.setBackground(new Color(6, 20, 133));
@@ -35,6 +37,28 @@ public class Layout extends javax.swing.JFrame {
         contentPage.add(searchPanel);
         chatPanel.setSize(contentPage.getSize());
         searchPanel.setSize(contentPage.getSize());
+        
+        CustomListener.getInstance().addMenuListener(new MenuListener() {
+            @Override
+            public void showChatPanel() {
+                chatItem.setBackground(new Color(6, 20, 133));
+                searchItem.setBackground(new Color(48, 162, 255));
+                // show chat frame
+                chatPanel.setVisible(true);
+                searchPanel.setVisible(false);
+                chatPanel.loadPanel();
+            }
+
+            @Override
+            public void showSearchPanel() {
+                chatItem.setBackground(new Color(48, 162, 255));
+                searchItem.setBackground(new Color(6, 20, 133));
+                // show search frame
+                chatPanel.setVisible(false);
+                searchPanel.setVisible(true);
+            }
+            
+        });
     }
 
     /**
@@ -120,31 +144,14 @@ public class Layout extends javax.swing.JFrame {
 
     private void chatItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_chatItemMouseClicked
         // TODO add your handling code here:
-        menuItemClicked(0);
+        CustomListener.getInstance().getMenuListener().showChatPanel();
     }//GEN-LAST:event_chatItemMouseClicked
 
     private void searchItemMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchItemMouseClicked
         // TODO add your handling code here:
-        menuItemClicked(1);
+        CustomListener.getInstance().getMenuListener().showSearchPanel();
     }//GEN-LAST:event_searchItemMouseClicked
-    
-    public void menuItemClicked(int i) {
-        if(i == 0) {
-            chatItem.setBackground(new Color(6, 20, 133));
-            searchItem.setBackground(new Color(48, 162, 255));
-            // show chat frame
-            chatPanel.setVisible(true);
-            searchPanel.setVisible(false);
-            chatPanel.loadChatPanel();
-        }
-        else {
-            chatItem.setBackground(new Color(48, 162, 255));
-            searchItem.setBackground(new Color(6, 20, 133));
-            // show search frame
-            chatPanel.setVisible(false);
-            searchPanel.setVisible(true);
-        }
-    }
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel chatItem;
     private javax.swing.JPanel contentPage;

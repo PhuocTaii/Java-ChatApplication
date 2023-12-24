@@ -7,12 +7,15 @@ package com.btv.Server.socket;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
+import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -281,6 +284,34 @@ public class UserHandler extends ClientHandler{
                 }
                 
                 break;
+                
+            case VIEW_CHAT_HISTORY:
+            {
+                try {
+                    int receiverId = dataIn.read();
+                    
+                    ArrayList<ChatMessage> listChat = db.getChatUserHistory(this.userId, receiverId);
+                    JSONArray chatArr = new JSONArray();
+                    if(listChat == null) {
+                        messRes.put("data", chatArr);
+                    }
+                    else {
+                        for(ChatMessage chat : listChat) {
+                            JSONObject chatObj = new JSONObject(chat);
+                            chatArr.put(chatObj);
+                        }
+                        messRes.put("data", chatArr);
+                    }
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                    
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+
 
             default:
                 System.out.println("Invalid message");

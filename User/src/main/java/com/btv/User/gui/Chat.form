@@ -44,8 +44,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="receiver" min="-2" pref="112" max="-2" attributes="0"/>
-                      <EmptySpace pref="642" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="receiverLabel" min="-2" pref="491" max="-2" attributes="0"/>
+                      <EmptySpace pref="257" max="32767" attributes="0"/>
                       <Component id="reportButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                       <Component id="encodeButton" min="-2" max="-2" attributes="0"/>
@@ -55,9 +56,9 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="reportButton" alignment="0" max="32767" attributes="0"/>
+                  <Component id="reportButton" alignment="0" pref="40" max="32767" attributes="0"/>
                   <Component id="encodeButton" alignment="0" max="32767" attributes="0"/>
-                  <Component id="receiver" alignment="1" pref="40" max="32767" attributes="0"/>
+                  <Component id="receiverLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -76,6 +77,9 @@
                 <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reportButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="encodeButton">
               <Properties>
@@ -89,17 +93,23 @@
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
             </Component>
-            <Component class="java.awt.Label" name="receiver">
+            <Component class="javax.swing.JLabel" name="receiverLabel">
               <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="18" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="NVanA"/>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="opaque" type="boolean" value="true"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JScrollPane" name="chatZone">
+        <Container class="javax.swing.JScrollPane" name="chatZoneScroll">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[788, 32767]"/>

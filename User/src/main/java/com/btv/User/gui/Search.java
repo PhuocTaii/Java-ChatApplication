@@ -37,7 +37,9 @@ public class Search extends javax.swing.JPanel {
             @Override
             public void onChat(int row) {
                 SearchTableModel tableModel = (SearchTableModel)tableUserSearch.getModel();
-                int userId = tableModel.getUser(row).getId();
+                User user = tableModel.getUser(row);
+                CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername());
+                CustomListener.getInstance().getMenuListener().showChatPanel();
             }
 
             @Override

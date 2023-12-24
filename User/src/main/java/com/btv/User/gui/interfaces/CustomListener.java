@@ -12,6 +12,7 @@ public class CustomListener {
     private static CustomListener customListenerInst = null;
     private ChatListener chatListener;
     private SearchListener searchListener;
+    private MenuListener menuListener;
     
     private CustomListener() {
         
@@ -38,5 +39,13 @@ public class CustomListener {
 
     public SearchListener getSearchListener() {
         return searchListener;
+    }
+    
+    public void addMenuListener(MenuListener menuListener) {
+        this.menuListener = menuListener;
+    }
+
+    public MenuListener getMenuListener() {
+        return menuListener;
     }
 }

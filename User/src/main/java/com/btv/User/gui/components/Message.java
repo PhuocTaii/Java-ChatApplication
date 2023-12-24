@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 public class Message extends JPanel {
     private String content;
     private String name;
-    private Boolean type; // 0 for send, 1 for receive
+    private Boolean type; // 1 for send, 0 for receive
     
 
     public Message(String content, String name, Boolean type) {

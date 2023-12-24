@@ -7,6 +7,7 @@ package com.btv.User;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
+import com.btv.User.model.ChatMessage;
 import com.btv.User.model.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -127,6 +128,22 @@ public class ClientSocket implements Runnable {
                 MessageStatus res = MessageStatus.valueOf(objData.getString("status"));
                 res.setMessage(objData.getString("statusDetail"));
                 CustomListener.getInstance().getSearchListener().addFriend(res);
+            }
+                break;
+                
+            case VIEW_CHAT_HISTORY:
+            {
+                ArrayList<ChatMessage> listChat = new ArrayList<>();
+                JSONArray chatArr = messObj.getJSONArray("data");
+                for (int i = 0; i < chatArr.length(); i++) {
+                    JSONObject chatObj = chatArr.getJSONObject(i);
+                    ChatMessage chat = new ChatMessage();
+                    chat.setContent(chatObj.getString("content"));
+                    chat.setIsMine(chatObj.getBoolean("mine"));
+                    chat.setSendName(chatObj.getString("sendName"));
+                    listChat.add(chat);
+                }
+                CustomListener.getInstance().getChatListener().loadChatData(listChat);
             }
                 break;
                 

@@ -4,6 +4,7 @@
  */
 package com.btv.Server.database;
 
+import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.sql.Connection;
@@ -433,5 +434,35 @@ public class ChatDB { // Singleton
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public ArrayList<ChatMessage> getChatUserHistory(int userId, int receiverId) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name, u1.username as receive_name " +
+                        "from ChatHistory c join User u on (c.send_id = u.u_id) join User u1 on (c.receive_id = u1.u_id) " +
+                        "where (c.receive_id = ? and c.send_id = ?) or (c.receive_id = ? and c.send_id = ?) " +
+                        "order by c.sendtime asc";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, receiverId);
+            stmt.setInt(3, receiverId);
+            stmt.setInt(4, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setIsMine(rs.getInt("send_id") == userId);
+                mess.setSendName(rs.getString("send_name"));
+                resList.add(mess);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
     }
 }

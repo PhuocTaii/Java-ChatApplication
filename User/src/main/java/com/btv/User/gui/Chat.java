@@ -9,6 +9,7 @@ import com.btv.User.gui.components.Message;
 import com.btv.User.gui.interfaces.ChatListener;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.gui.layouts.Layout;
+import com.btv.User.model.ChatMessage;
 import com.btv.User.service.FriendService;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,6 +29,8 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import com.btv.User.model.User;
+import com.btv.User.service.ChatService;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import javax.swing.JList;
 
@@ -38,6 +41,7 @@ import javax.swing.JList;
 public class Chat extends javax.swing.JPanel {
     private static Chat chatPanelInst = null;
     private Layout mainFrame;
+    private JPanel messagesPanel;
 
     /**
      * Creates new form Chat
@@ -46,32 +50,8 @@ public class Chat extends javax.swing.JPanel {
         initComponents();
         this.mainFrame = mainFrame;
         
-        JPanel messagesPanel = new JPanel();
-        messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "abc", false));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "abc", false));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "abc", false));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.add(new Message("abcabcxyz", "xyz", true));
-        messagesPanel.revalidate();
-
-        messagesPanel.setPreferredSize(new Dimension(680, messagesPanel.getPreferredSize().height + 20));
-
-        chatZone.getViewport().add(messagesPanel);
-        chatZone.getViewport().revalidate();
-
         // Set vertical scrollbar policy
-        chatZone.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        chatZoneScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         // set cell renderer for JList friendList
         friendList.setCellRenderer(new FriendListCellRender());
@@ -112,9 +92,30 @@ public class Chat extends javax.swing.JPanel {
                     }
                 }
             }
+
+            @Override
+            public void loadChatUI(int userId, String username) {
+                // send request
+                ChatService.getChatUserHistory(userId);
+                
+                // load ui
+                receiverLabel.setText(username);
+        
+                messagesPanel = new JPanel();
+                messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
+
+                chatZoneScroll.getViewport().add(messagesPanel);
+            }
+
+            @Override
+            public void loadChatData(ArrayList<ChatMessage> listChat) {
+                for(ChatMessage chat : listChat) {
+                    addMessageToChatZone(chat);
+                }
+            }
         });
         
-        loadChatPanel();
+        loadPanel();
     }
     
     public static Chat getChatPanelInst(Layout mainFrame) {
@@ -136,8 +137,8 @@ public class Chat extends javax.swing.JPanel {
         pageHeader = new javax.swing.JPanel();
         reportButton = new javax.swing.JButton();
         encodeButton = new javax.swing.JButton();
-        receiver = new java.awt.Label();
-        chatZone = new javax.swing.JScrollPane();
+        receiverLabel = new javax.swing.JLabel();
+        chatZoneScroll = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
         messageInput = new java.awt.TextField();
         sendButton = new javax.swing.JButton();
@@ -167,6 +168,11 @@ public class Chat extends javax.swing.JPanel {
         reportButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         reportButton.setFocusPainted(false);
         reportButton.setFocusable(false);
+        reportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportButtonActionPerformed(evt);
+            }
+        });
 
         encodeButton.setIcon(new ImageIcon(getClass().getResource("/images/encode.png"))
         );
@@ -174,16 +180,19 @@ public class Chat extends javax.swing.JPanel {
         encodeButton.setFocusPainted(false);
         encodeButton.setFocusable(false);
 
-        receiver.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        receiver.setText("NVanA");
+        receiverLabel.setBackground(new java.awt.Color(255, 255, 255));
+        receiverLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        receiverLabel.setForeground(new java.awt.Color(0, 0, 0));
+        receiverLabel.setOpaque(true);
 
         javax.swing.GroupLayout pageHeaderLayout = new javax.swing.GroupLayout(pageHeader);
         pageHeader.setLayout(pageHeaderLayout);
         pageHeaderLayout.setHorizontalGroup(
             pageHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pageHeaderLayout.createSequentialGroup()
-                .addComponent(receiver, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 642, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(receiverLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE)
                 .addComponent(reportButton)
                 .addGap(26, 26, 26)
                 .addComponent(encodeButton)
@@ -191,17 +200,17 @@ public class Chat extends javax.swing.JPanel {
         );
         pageHeaderLayout.setVerticalGroup(
             pageHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(reportButton, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
             .addComponent(encodeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(receiver, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+            .addComponent(receiverLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jPanel1.add(pageHeader, java.awt.BorderLayout.NORTH);
 
-        chatZone.setMaximumSize(new java.awt.Dimension(788, 32767));
-        chatZone.setMinimumSize(new java.awt.Dimension(788, 16));
-        chatZone.setPreferredSize(new java.awt.Dimension(788, 600));
-        jPanel1.add(chatZone, java.awt.BorderLayout.CENTER);
+        chatZoneScroll.setMaximumSize(new java.awt.Dimension(788, 32767));
+        chatZoneScroll.setMinimumSize(new java.awt.Dimension(788, 16));
+        chatZoneScroll.setPreferredSize(new java.awt.Dimension(788, 600));
+        jPanel1.add(chatZoneScroll, java.awt.BorderLayout.CENTER);
 
         messageInput.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         messageInput.addActionListener(new java.awt.event.ActionListener() {
@@ -419,6 +428,10 @@ public class Chat extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_friendListValueChanged
 
+    private void reportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reportButtonActionPerformed
+
     private void showFriendMenu(int selectedIndex, User selectedFriend, Component component, int x, int y) {
         JPopupMenu friendMenu = new JPopupMenu();
 
@@ -458,18 +471,26 @@ public class Chat extends javax.swing.JPanel {
         return this.friendList;
     }
     
-    public void loadChatPanel() {
+    public void loadPanel() {
         FriendService friendService = new FriendService();
         friendService.getListFriends();
         
         this.revalidate();
         this.repaint();
     }
+    
+    public void addMessageToChatZone(ChatMessage mess) {
+        messagesPanel.add(new Message(mess.getContent(), mess.getSendName(), mess.getIsMine()));
+        messagesPanel.revalidate();
+        messagesPanel.repaint();
+        
+        messagesPanel.setPreferredSize(new Dimension(680, messagesPanel.getPreferredSize().height + 70));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddmemberButton;
     private javax.swing.JLabel UserGoupChat;
-    private javax.swing.JScrollPane chatZone;
+    private javax.swing.JScrollPane chatZoneScroll;
     private javax.swing.JButton encodeButton;
     private javax.swing.JList<User> friendList;
     private javax.swing.JLabel friendlist;
@@ -486,7 +507,7 @@ public class Chat extends javax.swing.JPanel {
     private javax.swing.JTable memberTable;
     private java.awt.TextField messageInput;
     private javax.swing.JPanel pageHeader;
-    private java.awt.Label receiver;
+    private javax.swing.JLabel receiverLabel;
     private javax.swing.JButton reportButton;
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
