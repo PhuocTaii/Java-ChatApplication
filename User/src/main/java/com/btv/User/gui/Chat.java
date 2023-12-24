@@ -94,11 +94,7 @@ public class Chat extends javax.swing.JPanel {
             }
 
             @Override
-            public void loadChatUI(int userId, String username) {
-                // send request
-                ChatService.getChatUserHistory(userId);
-                
-                // load ui
+            public void loadChatUI(String username) {
                 receiverLabel.setText(username);
         
                 messagesPanel = new JPanel();
@@ -443,14 +439,18 @@ public class Chat extends javax.swing.JPanel {
         friendMenu.add(unfrItem);
         friendMenu.add(blockItem);
         
-        chatItem.addActionListener(e -> handleChatWithFriend());
+        chatItem.addActionListener(e -> handleChatWithFriend(selectedFriend.getId(), selectedFriend.getUsername()));
         unfrItem.addActionListener(e -> handleUnfriend(selectedIndex, selectedFriend.getId(), selectedFriend.getUsername()));
         blockItem.addActionListener(e -> handleBlockFriend());
 
         friendMenu.show(component, x, y);
     }
     
-    public void handleChatWithFriend() {
+    public void handleChatWithFriend(int friendId, String friendName) {
+        if(!friendName.equalsIgnoreCase(receiverLabel.getText())) {
+            CustomListener.getInstance().getChatListener().loadChatUI(friendName);
+            ChatService.getChatUserHistory(friendId);
+        }
     }
     
     public void handleUnfriend(int selectedIdx, int friendId, String friendName) {
@@ -485,6 +485,10 @@ public class Chat extends javax.swing.JPanel {
         messagesPanel.repaint();
         
         messagesPanel.setPreferredSize(new Dimension(680, messagesPanel.getPreferredSize().height + 70));
+    }
+    
+    public String getCurrentUsernameChat() {
+        return receiverLabel.getText();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

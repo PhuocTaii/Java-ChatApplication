@@ -16,6 +16,6 @@ public interface ChatListener {
     public void loadListFriend(ArrayList<User> listFriend);
     public void updateFriendStatus(int friendId, boolean isOnline);
     public void unfriend(int friendId);
-    public void loadChatUI(int userId, String username);
+    public void loadChatUI(String username);
     public void loadChatData(ArrayList<ChatMessage> listChat);
 }
