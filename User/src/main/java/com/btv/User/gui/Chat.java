@@ -46,7 +46,6 @@ import javax.swing.JList;
 public class Chat extends javax.swing.JPanel {
     private static Chat chatPanelInst = null;
     private Layout mainFrame;
-//    private JPanel messagesPanel;
     private int receiverId;
     private boolean isGroup;
     private JPanel messagesPanel;
@@ -77,10 +76,6 @@ public class Chat extends javax.swing.JPanel {
                 
             }
         };
-        
-        // set cell renderer for JTable memberTable
-        memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer());
-        memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent));
         
         // set listeners
         CustomListener.getInstance().addChatListener(new ChatListener() {
@@ -157,6 +152,15 @@ public class Chat extends javax.swing.JPanel {
                 }
                 groupList.setModel((ListModel)listGroupModel);
             }
+
+            @Override
+            public void loadListMember(ArrayList<Member> listMem, boolean isAdmin) {
+                MemberTableModel tableModel = new MemberTableModel(listMem);
+                memberTable.setModel(tableModel);
+                // set cell renderer for JTable memberTable
+                memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
+                memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
+            }
         });
         
         loadPanel();
@@ -177,7 +181,7 @@ public class Chat extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         pageHeader = new javax.swing.JPanel();
         downButton = new javax.swing.JButton();
         receiverLabel = new javax.swing.JLabel();
@@ -185,17 +189,17 @@ public class Chat extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         messageInput = new java.awt.TextField();
         sendButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        friendlist = new javax.swing.JLabel();
-        UserGoupChat = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        javax.swing.JLabel friendlist = new javax.swing.JLabel();
+        javax.swing.JLabel UserGoupChat = new javax.swing.JLabel();
         createGroupBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         friendList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         groupList = new javax.swing.JList<>();
         groupInfoPanel = new javax.swing.JPanel();
-        groupMember = new java.awt.Label();
-        AddmemberButton = new javax.swing.JButton();
+        java.awt.Label groupMember = new java.awt.Label();
+        addMemberButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         memberTable = new javax.swing.JTable();
 
@@ -313,6 +317,7 @@ public class Chat extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(friendList);
 
+        groupList.setForeground(new java.awt.Color(0, 0, 0));
         groupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         groupList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -327,8 +332,13 @@ public class Chat extends javax.swing.JPanel {
         groupMember.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         groupMember.setText("MEMBERS");
 
-        AddmemberButton.setBackground(new java.awt.Color(48, 162, 255));
-        AddmemberButton.setText("Add member");
+        addMemberButton.setBackground(new java.awt.Color(48, 162, 255));
+        addMemberButton.setText("Add member");
+        addMemberButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMemberButtonActionPerformed(evt);
+            }
+        });
 
         memberTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -373,7 +383,7 @@ public class Chat extends javax.swing.JPanel {
                     .addGroup(groupInfoPanelLayout.createSequentialGroup()
                         .addComponent(groupMember, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(AddmemberButton)))
+                        .addComponent(addMemberButton)))
                 .addGap(0, 0, 0))
         );
         groupInfoPanelLayout.setVerticalGroup(
@@ -382,7 +392,7 @@ public class Chat extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(groupInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(groupMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(AddmemberButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(addMemberButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -489,12 +499,25 @@ public class Chat extends javax.swing.JPanel {
             Group selectedGroup = groupList.getSelectedValue();
             if (selectedGroup != null && (!isGroup || receiverId != selectedGroup.getId())) {
                 ChatService.getChatGroupHistory(selectedGroup.getId());
+                GroupService.getMembers(selectedGroup.getId());
                 CustomListener.getInstance().getChatListener().loadChatUI(selectedGroup.getId(), selectedGroup.getName(), true);
             }
             
             groupList.clearSelection();
         }
     }//GEN-LAST:event_groupListValueChanged
+
+    private void addMemberButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMemberButtonActionPerformed
+        // TODO add your handling code here:
+        String username = JOptionPane.showInputDialog(mainFrame, 
+            "Please enter member's username: ", 
+            "Add member",
+            JOptionPane.QUESTION_MESSAGE);
+        if("".equals(username)) {
+            JOptionPane.showMessageDialog(mainFrame, "Please provide username to add member", "Add member warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }//GEN-LAST:event_addMemberButtonActionPerformed
     
     public void handleReportUser() {
         if(getCurrentUsernameChat().equals("")) return;
@@ -606,18 +629,13 @@ public class Chat extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton AddmemberButton;
-    private javax.swing.JLabel UserGoupChat;
+    private javax.swing.JButton addMemberButton;
     private javax.swing.JScrollPane chatZoneScroll;
     private javax.swing.JButton createGroupBtn;
     private javax.swing.JButton downButton;
     private javax.swing.JList<User> friendList;
-    private javax.swing.JLabel friendlist;
     private javax.swing.JPanel groupInfoPanel;
     private javax.swing.JList<Group> groupList;
-    private java.awt.Label groupMember;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

@@ -34,7 +34,7 @@ public class GroupListCellRenderer extends JLabel implements ListCellRenderer<Gr
         if (isSelected) {
             setForeground(new Color(13, 113, 182));
         } else {
-            setForeground(new Color(102, 102, 102));
+            setForeground(Color.BLACK);
         }
         
         return this;

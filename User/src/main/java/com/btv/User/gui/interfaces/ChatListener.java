@@ -7,6 +7,7 @@ package com.btv.User.gui.interfaces;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
+import com.btv.User.model.Member;
 import com.btv.User.model.User;
 import java.util.ArrayList;
 
@@ -23,4 +24,5 @@ public interface ChatListener {
     public void reportNoti(MessageStatus res);
     public void blockNoti(MessageStatus res);
     public void loadListGroup(ArrayList<Group> listGroup);
+    public void loadListMember(ArrayList<Member> listMem, boolean isAdmin);
 }

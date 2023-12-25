@@ -15,11 +15,12 @@ import javax.swing.JButton;
  * @author tvan
  */
 public class RemoveMemBtn extends JButton {
-    public RemoveMemBtn() {
+    public RemoveMemBtn(boolean isAdmin) {
         super("Remove");
         setBackground(new Color(239,149,149));
         setOpaque(true);
         setMargin(new java.awt.Insets(2, 0, 2, 0));
+        setVisible(isAdmin);
     }
     
     public void addEvent(GroupMemActionEvent event, int row) {

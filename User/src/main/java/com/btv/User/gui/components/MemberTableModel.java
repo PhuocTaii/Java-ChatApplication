@@ -6,6 +6,7 @@ package com.btv.User.gui.components;
 
 import com.btv.User.model.Member;
 import java.util.ArrayList;
+import javax.swing.JCheckBox;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -56,6 +57,9 @@ public class MemberTableModel extends AbstractTableModel {
     
     @Override
     public Class<?> getColumnClass(int columnIndex) {
+        if (columnIndex == 1) {
+            return Boolean.class;
+        }
         if (columnIndex == 2) {
             return RemoveMemBtn.class;
         }

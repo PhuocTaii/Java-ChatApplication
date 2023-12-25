@@ -6,6 +6,7 @@ package com.btv.Server.database;
 
 import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
+import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.sql.Connection;
@@ -552,5 +553,53 @@ public class ChatDB { // Singleton
             return null;
         }
         return resList;
+    }
+    
+    public ArrayList<GroupMember> getAllMembers(int groupId) {
+        ArrayList<GroupMember> resList = new ArrayList<>();
+        try {
+            String sql = "select u.u_id, u.username, m.is_admin " +
+                        "from GroupMembers m join User u on m.u_id = u.u_id " +
+                        "where gr_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                GroupMember mem = new GroupMember();
+                mem.setId(rs.getInt("u_id"));
+                mem.setUsername(rs.getString("username"));
+                mem.setIsAdmin(rs.getBoolean("is_admin"));
+                resList.add(mem);
+            }
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public boolean checkIfIsAdmin (int userId, int groupId) {
+        try {
+            String sql = "select is_admin " +
+                        "from GroupMembers " +
+                        "where gr_id = ? and u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            boolean isAdmin = false;
+            while(rs.next()) {
+                isAdmin = rs.getBoolean("is_admin");
+            }
+            
+            rs.close();
+            stmt.close();
+            return isAdmin;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

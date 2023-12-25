@@ -9,6 +9,7 @@ import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
+import com.btv.User.model.Member;
 import com.btv.User.model.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -186,6 +187,23 @@ public class ClientSocket implements Runnable {
                     listGroup.add(gr);
                 }
                 CustomListener.getInstance().getChatListener().loadListGroup(listGroup);
+            }
+                break;
+                
+            case VIEW_MEMBERS:
+            {
+                ArrayList<Member> listMem = new ArrayList<>();
+                JSONObject memRes = messObj.getJSONObject("data");
+                JSONArray memArr = memRes.getJSONArray("list");
+                for (int i = 0; i < memArr.length(); i++) {
+                    JSONObject memObj = memArr.getJSONObject(i);
+                    Member mem = new Member();
+                    mem.setId(memObj.getInt("id"));
+                    mem.setUsername(memObj.getString("username"));
+                    mem.setIsAdmin(memObj.getBoolean("isAdmin"));
+                    listMem.add(mem);
+                }
+                CustomListener.getInstance().getChatListener().loadListMember(listMem, memRes.getBoolean("isAdmin"));
             }
                 break;
                 

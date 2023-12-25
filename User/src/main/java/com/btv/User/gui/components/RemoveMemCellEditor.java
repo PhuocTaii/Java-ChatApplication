@@ -16,15 +16,17 @@ import javax.swing.JTable;
  */
 public class RemoveMemCellEditor extends DefaultCellEditor {
     private GroupMemActionEvent event;
+    private boolean isAdmin;
     
-    public RemoveMemCellEditor(GroupMemActionEvent event) {
+    public RemoveMemCellEditor(GroupMemActionEvent event, boolean isAdmin) {
         super(new JCheckBox());
         this.event = event;
+        this.isAdmin = isAdmin;
     }
     
     @Override
     public Component getTableCellEditorComponent(JTable jtable, Object object, boolean bln, int row, int column) {
-        RemoveMemBtn action = new RemoveMemBtn();
+        RemoveMemBtn action = new RemoveMemBtn(isAdmin);
         action.addEvent(event, row);
         return action;
     }

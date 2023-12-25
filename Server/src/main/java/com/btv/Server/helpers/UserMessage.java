@@ -34,6 +34,7 @@ public enum UserMessage {
     VIEW_ALL_GROUPS,
     CREATE_GROUP,
     RENAME_GROUP,
+    VIEW_MEMBERS,
     ADD_MEMBER,
     ASSIGN_ADMIN_TO_MEMBER,
     DELETE_MEMBER,

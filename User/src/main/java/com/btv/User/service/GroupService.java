@@ -24,4 +24,19 @@ public class GroupService {
             e.printStackTrace();
         }
     }
+    
+    public static void getMembers(int groupId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.VIEW_MEMBERS.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(groupId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

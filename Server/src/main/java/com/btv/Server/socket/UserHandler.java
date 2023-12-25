@@ -9,6 +9,7 @@ import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
 import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
+import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.io.IOException;
@@ -419,6 +420,35 @@ public class UserHandler extends ClientHandler{
                     dataOut.newLine();
                     dataOut.flush();
                     
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case VIEW_MEMBERS:
+            {
+                try {
+                    int grId = dataIn.read();
+
+                    ArrayList<GroupMember> listMems = db.getAllMembers(grId);
+                    JSONArray memArr = new JSONArray();
+                    JSONObject messObj = new JSONObject();
+
+                    if(listMems == null) {
+                        messObj.put("list", memArr);
+                    }
+                    else {
+                        for(GroupMember mem : listMems) {
+                            memArr.put(new JSONObject(mem));
+                        }
+                        messObj.put("list", memArr);
+                    }
+                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, grId));
+                    messRes.put("data", messObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
