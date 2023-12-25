@@ -465,7 +465,7 @@ public class Chat extends javax.swing.JPanel {
 
     private void downButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downButtonMouseClicked
         // TODO add your handling code here:
-        if(getCurrentUsernameChat().equals("")) return;
+        if(getCurrentNameChat().equals("")) return;
         
         JPopupMenu chatSettingMenu = new JPopupMenu();
         
@@ -519,11 +519,9 @@ public class Chat extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_addMemberButtonActionPerformed
     
-    public void handleReportUser() {
-        if(getCurrentUsernameChat().equals("")) return;
-        
+    public void handleReportUser() {        
         Object[] options = { "YES", "NO" };
-        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to report " + getCurrentUsernameChat(), "Confirm report", 
+        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to report " + getCurrentNameChat(), "Confirm report", 
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
                 null, options, options[1]);
         if(selectedOption == 0) {
@@ -532,9 +530,27 @@ public class Chat extends javax.swing.JPanel {
     }
     
     public void handleClearChatHistory() {
+        Object[] options = { "YES", "NO" };
+        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to clear chat history with " + getCurrentNameChat(), "Confirm clear history", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[1]);
+        if(selectedOption == 0) {
+            // call service here
+            //
+        }
     }
     
     public void handleRenameGroupChat() {
+        String newName = JOptionPane.showInputDialog(mainFrame, 
+            "New group's name: ", 
+            "Rename group chat",
+            JOptionPane.QUESTION_MESSAGE);
+        if("".equals(newName) || getCurrentNameChat().equals(newName)) {
+            JOptionPane.showMessageDialog(mainFrame, "Please provide new name", "Rename group chat warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // call service here
+        //
     }
     
     public void handleEncodeGroupChat() {
@@ -608,7 +624,7 @@ public class Chat extends javax.swing.JPanel {
         messagesPanel.setPreferredSize(new Dimension(messagesPanel.getPreferredSize().width, messagesPanel.getPreferredSize().height + 70));
     }
     
-    public String getCurrentUsernameChat() {
+    public String getCurrentNameChat() {
         return receiverLabel.getText();
     }
 
