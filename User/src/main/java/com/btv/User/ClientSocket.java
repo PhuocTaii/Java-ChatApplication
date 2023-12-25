@@ -8,6 +8,7 @@ import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
 import com.btv.User.model.ChatMessage;
+import com.btv.User.model.Group;
 import com.btv.User.model.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -132,6 +133,7 @@ public class ClientSocket implements Runnable {
                 break;
                 
             case VIEW_CHAT_HISTORY:
+            case VIEW_GROUP_CHAT_HISTORY:
             {
                 ArrayList<ChatMessage> listChat = new ArrayList<>();
                 JSONArray chatArr = messObj.getJSONArray("data");
@@ -169,6 +171,21 @@ public class ClientSocket implements Runnable {
                     CustomListener.getInstance().getChatListener().unfriend(blockedId);
                 }
                 CustomListener.getInstance().getChatListener().blockNoti(res);
+            }
+                break;
+                
+            case VIEW_ALL_GROUPS:
+            {
+                ArrayList<Group> listGroup = new ArrayList<>();
+                JSONArray grArr = messObj.getJSONArray("data");
+                for (int i = 0; i < grArr.length(); i++) {
+                    JSONObject grObj = grArr.getJSONObject(i);
+                    Group gr = new Group();
+                    gr.setId(grObj.getInt("id"));
+                    gr.setName(grObj.getString("name"));
+                    listGroup.add(gr);
+                }
+                CustomListener.getInstance().getChatListener().loadListGroup(listGroup);
             }
                 break;
                 

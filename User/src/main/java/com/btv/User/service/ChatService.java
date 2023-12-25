@@ -13,7 +13,7 @@ import java.io.IOException;
  * @author tvan
  */
 public class ChatService {
-     public static void getChatUserHistory(int userId) {
+    public static void getChatUserHistory(int userId) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         
         try {
@@ -22,6 +22,21 @@ public class ChatService {
             clientSocket.dataOut.flush();
             
             clientSocket.dataOut.write(userId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+     
+    public static void getChatGroupHistory(int groupId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.VIEW_GROUP_CHAT_HISTORY.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(groupId);
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import org.json.JSONObject;
  * @author tvan
  */
 public class UserService {
-    public void getListFriends() {
+    public static void getListFriends() {
         ClientSocket clientSocket = ClientSocket.getInstance();
         
         try {

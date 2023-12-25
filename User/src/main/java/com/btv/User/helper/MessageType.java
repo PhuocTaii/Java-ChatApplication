@@ -30,6 +30,8 @@ public enum MessageType {
     CLEAR_CHAT_HISTORY,
     FIND_MESSAGE,
     
+    VIEW_GROUP_CHAT_HISTORY,
+    VIEW_ALL_GROUPS,
     CREATE_GROUP,
     RENAME_GROUP,
     ADD_MEMBER,

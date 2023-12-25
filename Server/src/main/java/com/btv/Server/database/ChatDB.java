@@ -5,6 +5,7 @@
 package com.btv.Server.database;
 
 import com.btv.Server.model.ChatMessage;
+import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.sql.Connection;
@@ -499,5 +500,57 @@ public class ChatDB { // Singleton
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public ArrayList<GroupChat> getAllGroupsOfUser(int userId) {
+        ArrayList<GroupChat> resList = new ArrayList<>();
+        try {
+            String sql = "select g.gr_id, g.gr_name " +
+                        "from GroupMembers m join ChatGroups g on m.gr_id = g.gr_id " +
+                        "where u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                GroupChat gr = new GroupChat();
+                gr.setId(rs.getInt("gr_id"));
+                gr.setName(rs.getString("gr_name"));
+                resList.add(gr);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList<ChatMessage> getChatGroupHistory(int userId, int groupId) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name " +
+                        "from ChatHistory c join User u on (c.send_id = u.u_id) " +
+                        "where c.group_id = ? " +
+                        "order by c.sendtime asc";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setIsMine(rs.getInt("send_id") == userId);
+                mess.setSendName(rs.getString("send_name"));
+                resList.add(mess);
+            }
+            
+            rs.close();
+            stmt.close();
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
     }
 }

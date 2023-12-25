@@ -5,6 +5,8 @@
 package com.btv.User.gui;
 
 import com.btv.User.gui.components.FriendListCellRender;
+import com.btv.User.gui.components.GroupListCellRenderer;
+import com.btv.User.gui.components.MemberTableModel;
 import com.btv.User.gui.components.Message;
 import com.btv.User.gui.components.RemoveMemCellEditor;
 import com.btv.User.gui.components.RemoveMemCellRenderer;
@@ -14,6 +16,8 @@ import com.btv.User.gui.interfaces.GroupMemActionEvent;
 import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.ChatMessage;
+import com.btv.User.model.Group;
+import com.btv.User.model.Member;
 import com.btv.User.service.UserService;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,6 +35,7 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import com.btv.User.model.User;
 import com.btv.User.service.ChatService;
+import com.btv.User.service.GroupService;
 import java.util.ArrayList;
 import javax.swing.JList;
 
@@ -41,9 +46,10 @@ import javax.swing.JList;
 public class Chat extends javax.swing.JPanel {
     private static Chat chatPanelInst = null;
     private Layout mainFrame;
-    private JPanel messagesPanel;
+//    private JPanel messagesPanel;
     private int receiverId;
     private boolean isGroup;
+    private JPanel messagesPanel;
 
     /**
      * Creates new form Chat
@@ -57,14 +63,18 @@ public class Chat extends javax.swing.JPanel {
         
         // set cell renderer for JList friendList
         friendList.setCellRenderer(new FriendListCellRender());
-        friendList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        // set cell renderer for JList groupList
+        groupList.setCellRenderer(new GroupListCellRenderer());
         
         groupInfoPanel.setVisible(false);
         
         GroupMemActionEvent groupMemActionEvent = new GroupMemActionEvent() {
             @Override
             public void removeMem(int row) {
-                System.out.println(row);
+                MemberTableModel tableModel = (MemberTableModel)memberTable.getModel();
+                Member member = tableModel.getMember(row);
+                
             }
         };
         
@@ -113,11 +123,12 @@ public class Chat extends javax.swing.JPanel {
                 Chat.getChatPanelInst(null).setReceiverId(id);
                 receiverLabel.setText(name);
                 
+                Chat.getChatPanelInst(null).setIsGroup(isGroup);
                 groupInfoPanel.setVisible(isGroup);
         
                 messagesPanel = new JPanel();
                 messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
-
+                
                 chatZoneScroll.getViewport().add(messagesPanel);
             }
 
@@ -136,6 +147,15 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void blockNoti(MessageStatus res) {
                 JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Block notification", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            @Override
+            public void loadListGroup(ArrayList<Group> listGroup) {
+                DefaultListModel<Group> listGroupModel = new DefaultListModel<>();
+                for(Group group : listGroup) {
+                    listGroupModel.addElement(group);
+                }
+                groupList.setModel((ListModel)listGroupModel);
             }
         });
         
@@ -159,8 +179,7 @@ public class Chat extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         pageHeader = new javax.swing.JPanel();
-        reportButton = new javax.swing.JButton();
-        encodeButton = new javax.swing.JButton();
+        downButton = new javax.swing.JButton();
         receiverLabel = new javax.swing.JLabel();
         chatZoneScroll = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
@@ -169,7 +188,7 @@ public class Chat extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         friendlist = new javax.swing.JLabel();
         UserGoupChat = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        createGroupBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         friendList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -187,23 +206,16 @@ public class Chat extends javax.swing.JPanel {
         pageHeader.setBackground(new java.awt.Color(255, 255, 255));
         pageHeader.setPreferredSize(new java.awt.Dimension(172, 40));
 
-        reportButton.setIcon(new ImageIcon(getClass().getResource("/images/warning.png")));
-        reportButton.setToolTipText("Report");
-        reportButton.setBorder(null);
-        reportButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        reportButton.setFocusPainted(false);
-        reportButton.setFocusable(false);
-        reportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reportButtonActionPerformed(evt);
+        downButton.setIcon(new ImageIcon(getClass().getResource("/images/down.png"))
+        );
+        downButton.setBorder(null);
+        downButton.setFocusPainted(false);
+        downButton.setFocusable(false);
+        downButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                downButtonMouseClicked(evt);
             }
         });
-
-        encodeButton.setIcon(new ImageIcon(getClass().getResource("/images/encode.png"))
-        );
-        encodeButton.setBorder(null);
-        encodeButton.setFocusPainted(false);
-        encodeButton.setFocusable(false);
 
         receiverLabel.setBackground(new java.awt.Color(255, 255, 255));
         receiverLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -217,16 +229,13 @@ public class Chat extends javax.swing.JPanel {
             .addGroup(pageHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(receiverLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 491, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE)
-                .addComponent(reportButton)
-                .addGap(26, 26, 26)
-                .addComponent(encodeButton)
-                .addGap(24, 24, 24))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+                .addComponent(downButton)
+                .addGap(10, 10, 10))
         );
         pageHeaderLayout.setVerticalGroup(
             pageHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(reportButton, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-            .addComponent(encodeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(downButton, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
             .addComponent(receiverLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -287,15 +296,16 @@ public class Chat extends javax.swing.JPanel {
         UserGoupChat.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         UserGoupChat.setText("GROUP CHAT");
 
-        jButton2.setBackground(new java.awt.Color(48, 162, 255));
-        jButton2.setText("Create group chat");
-        jButton2.setPreferredSize(new java.awt.Dimension(125, 40));
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        createGroupBtn.setBackground(new java.awt.Color(48, 162, 255));
+        createGroupBtn.setText("Create group chat");
+        createGroupBtn.setPreferredSize(new java.awt.Dimension(125, 40));
+        createGroupBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                createGroupBtnActionPerformed(evt);
             }
         });
 
+        friendList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         friendList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 friendListValueChanged(evt);
@@ -304,6 +314,11 @@ public class Chat extends javax.swing.JPanel {
         jScrollPane1.setViewportView(friendList);
 
         groupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        groupList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                groupListValueChanged(evt);
+            }
+        });
         jScrollPane3.setViewportView(groupList);
 
         groupInfoPanel.setOpaque(false);
@@ -338,7 +353,9 @@ public class Chat extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        memberTable.setColumnSelectionAllowed(true);
         jScrollPane2.setViewportView(memberTable);
+        memberTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (memberTable.getColumnModel().getColumnCount() > 0) {
             memberTable.getColumnModel().getColumn(0).setResizable(false);
             memberTable.getColumnModel().getColumn(1).setResizable(false);
@@ -381,7 +398,7 @@ public class Chat extends javax.swing.JPanel {
                     .addComponent(groupInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createGroupBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(UserGoupChat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(friendlist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18))
@@ -400,7 +417,7 @@ public class Chat extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(createGroupBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -411,9 +428,10 @@ public class Chat extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_sendButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void createGroupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        new CreateGroupDlg(mainFrame, true);
+    }//GEN-LAST:event_createGroupBtnActionPerformed
 
     private void messageInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageInputActionPerformed
         // TODO add your handling code here:
@@ -435,8 +453,50 @@ public class Chat extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_friendListValueChanged
 
-    private void reportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportButtonActionPerformed
+    private void downButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downButtonMouseClicked
         // TODO add your handling code here:
+        if(getCurrentUsernameChat().equals("")) return;
+        
+        JPopupMenu chatSettingMenu = new JPopupMenu();
+        
+        if(!isGroup) {
+            JMenuItem reportItem = new JMenuItem("Report");
+            JMenuItem clearChatItem = new JMenuItem("Clear chat history");
+
+            chatSettingMenu.add(reportItem);
+            chatSettingMenu.add(clearChatItem);
+
+            reportItem.addActionListener(e -> handleReportUser());
+            clearChatItem.addActionListener(e -> handleClearChatHistory());
+        }
+        else {
+            JMenuItem renameItem = new JMenuItem("Rename");
+            JMenuItem encodeItem = new JMenuItem("Encode");
+
+            chatSettingMenu.add(renameItem);
+            chatSettingMenu.add(encodeItem);
+
+            renameItem.addActionListener(e -> handleRenameGroupChat());
+            encodeItem.addActionListener(e -> handleEncodeGroupChat());
+        }
+        
+        chatSettingMenu.show(downButton, evt.getX() , evt.getY());
+    }//GEN-LAST:event_downButtonMouseClicked
+
+    private void groupListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_groupListValueChanged
+        // TODO add your handling code here:
+        if (!evt.getValueIsAdjusting()) {
+            Group selectedGroup = groupList.getSelectedValue();
+            if (selectedGroup != null && (!isGroup || receiverId != selectedGroup.getId())) {
+                ChatService.getChatGroupHistory(selectedGroup.getId());
+                CustomListener.getInstance().getChatListener().loadChatUI(selectedGroup.getId(), selectedGroup.getName(), true);
+            }
+            
+            groupList.clearSelection();
+        }
+    }//GEN-LAST:event_groupListValueChanged
+    
+    public void handleReportUser() {
         if(getCurrentUsernameChat().equals("")) return;
         
         Object[] options = { "YES", "NO" };
@@ -446,9 +506,18 @@ public class Chat extends javax.swing.JPanel {
         if(selectedOption == 0) {
             UserService.reportUser(receiverId);
         }
-    }//GEN-LAST:event_reportButtonActionPerformed
-
-    private void showFriendMenu(int selectedIndex, User selectedFriend, Component component, int x, int y) {
+    }
+    
+    public void handleClearChatHistory() {
+    }
+    
+    public void handleRenameGroupChat() {
+    }
+    
+    public void handleEncodeGroupChat() {
+    }
+    
+    public void showFriendMenu(int selectedIndex, User selectedFriend, Component component, int x, int y) {
         JPopupMenu friendMenu = new JPopupMenu();
 
         JMenuItem chatItem = new JMenuItem("Chat");
@@ -467,7 +536,7 @@ public class Chat extends javax.swing.JPanel {
     }
     
     public void handleChatWithFriend(int friendId, String friendName) {
-        if(!friendName.equalsIgnoreCase(receiverLabel.getText())) {
+        if(isGroup || friendId != receiverId) {
             CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName, false);
             ChatService.getChatUserHistory(friendId);
         }
@@ -499,19 +568,21 @@ public class Chat extends javax.swing.JPanel {
     }
     
     public void loadPanel() {
-        UserService friendService = new UserService();
-        friendService.getListFriends();
+        UserService.getListFriends();
+        GroupService.getListGroups();
         
         this.revalidate();
         this.repaint();
     }
     
     public void addMessageToChatZone(ChatMessage mess) {
-        messagesPanel.add(new Message(mess.getContent(), mess.getSendName(), mess.getIsMine()));
+        Message newMess = new Message(messagesPanel, mess.getContent(), mess.getSendName(), mess.getIsMine());
+        
+        messagesPanel.add(newMess);
         messagesPanel.revalidate();
         messagesPanel.repaint();
         
-        messagesPanel.setPreferredSize(new Dimension(680, messagesPanel.getPreferredSize().height + 70));
+        messagesPanel.setPreferredSize(new Dimension(messagesPanel.getPreferredSize().width, messagesPanel.getPreferredSize().height + 70));
     }
     
     public String getCurrentUsernameChat() {
@@ -526,17 +597,25 @@ public class Chat extends javax.swing.JPanel {
         this.receiverId = receiverId;
     }
 
+    public boolean getIsGroup() {
+        return isGroup;
+    }
+
+    public void setIsGroup(boolean isGroup) {
+        this.isGroup = isGroup;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddmemberButton;
     private javax.swing.JLabel UserGoupChat;
     private javax.swing.JScrollPane chatZoneScroll;
-    private javax.swing.JButton encodeButton;
+    private javax.swing.JButton createGroupBtn;
+    private javax.swing.JButton downButton;
     private javax.swing.JList<User> friendList;
     private javax.swing.JLabel friendlist;
     private javax.swing.JPanel groupInfoPanel;
-    private javax.swing.JList<String> groupList;
+    private javax.swing.JList<Group> groupList;
     private java.awt.Label groupMember;
-    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -547,7 +626,6 @@ public class Chat extends javax.swing.JPanel {
     private java.awt.TextField messageInput;
     private javax.swing.JPanel pageHeader;
     private javax.swing.JLabel receiverLabel;
-    private javax.swing.JButton reportButton;
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 }

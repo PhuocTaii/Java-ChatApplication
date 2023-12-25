@@ -8,6 +8,7 @@ import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
 import com.btv.Server.model.ChatMessage;
+import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.io.IOException;
@@ -366,6 +367,58 @@ public class UserHandler extends ClientHandler{
                     dataOut.write(messRes.toString());
                     dataOut.newLine();
                     dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case VIEW_ALL_GROUPS:
+            {
+                ArrayList<GroupChat> listGroups = db.getAllGroupsOfUser(this.userId);
+                JSONArray groupArr = new JSONArray();
+                
+                try {
+                    if(listGroups == null) {
+                        messRes.put("data", groupArr);
+                    }
+                    else {
+                        for(GroupChat gr : listGroups) {
+                            JSONObject grObj = new JSONObject(gr);
+                            groupArr.put(grObj);
+                        }
+                        messRes.put("data", groupArr);
+                    }
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case VIEW_GROUP_CHAT_HISTORY:
+            {
+                try {
+                    int grId = dataIn.read();
+                    
+                    ArrayList<ChatMessage> listChat = db.getChatGroupHistory(this.userId, grId);
+                    JSONArray chatArr = new JSONArray();
+                    if(listChat == null) {
+                        messRes.put("data", chatArr);
+                    }
+                    else {
+                        for(ChatMessage chat : listChat) {
+                            JSONObject chatObj = new JSONObject(chat);
+                            chatArr.put(chatObj);
+                        }
+                        messRes.put("data", chatArr);
+                    }
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                    
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
