@@ -260,7 +260,7 @@ public class UserHandler extends ClientHandler{
                         objData.put("status", MessageStatus.FAIL.toString());
                         objData.put("statusDetail", "Friend already added!");
                     }
-                    else if(db.checkIfBlocked(this.userId, friendId)) {
+                    else if(db.checkIfBlocked(this.userId, friendId) || db.checkIfBlocked(friendId, this.userId)) {
                         objData.put("status", MessageStatus.FAIL.toString());
                         objData.put("statusDetail", "Cannot add friend!");
                     }
@@ -326,6 +326,43 @@ public class UserHandler extends ClientHandler{
                     }
                     
                     messRes.put("data", reportRes);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case BLOCK_USER:
+            {
+                try {
+                    int blockedId = dataIn.read();
+                    
+                    JSONObject blockRes = new JSONObject();
+                    blockRes.put("id", -1);
+                    
+                    if(db.checkIfBlocked(this.userId, blockedId)) {
+                        blockRes.put("status", MessageStatus.FAIL.toString());
+                        blockRes.put("statusDetail", "Already blocked!");
+                    }
+                    else {
+                        if(db.blockUser(this.userId, blockedId)) {
+                            if(db.checkIfIsFriend(this.userId, blockedId)) {
+                                db.unfriend(this.userId, blockedId);
+                                blockRes.put("id", blockedId);
+                            }
+                            blockRes.put("status", MessageStatus.SUCCESS.toString());
+                            blockRes.put("statusDetail", "Done blocked!");
+                        }
+                        else {
+                            blockRes.put("status", MessageStatus.FAIL.toString());
+                            blockRes.put("statusDetail", "Block failed!");
+                        }
+                    }
+                    
+                    messRes.put("data", blockRes);
                     dataOut.write(messRes.toString());
                     dataOut.newLine();
                     dataOut.flush();

@@ -86,4 +86,18 @@ public class UserService {
             e.printStackTrace();
         }
     }
+    
+    public static void blockUser(int userId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.BLOCK_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(userId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

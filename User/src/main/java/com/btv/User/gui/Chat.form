@@ -209,7 +209,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jPanel4" max="32767" attributes="0"/>
+                      <Component id="groupInfoPanel" max="32767" attributes="0"/>
                       <Component id="jScrollPane3" pref="240" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                       <Component id="jButton2" alignment="1" max="32767" attributes="0"/>
@@ -224,18 +224,18 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                  <Component id="jPanel4" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="groupInfoPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="friendlist" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="158" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" pref="158" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="UserGoupChat" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane3" pref="195" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -305,6 +305,7 @@
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>
                 </Property>
+                <Property name="selectionMode" type="int" value="0"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -312,7 +313,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel4">
+        <Container class="javax.swing.JPanel" name="groupInfoPanel">
           <Properties>
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
@@ -379,14 +380,10 @@
                 <Component class="javax.swing.JTable" name="memberTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="3">
-                        <Column editable="false" title="Username" type="java.lang.Object">
-                          <Data value="Text"/>
-                          <Data value="Text"/>
-                          <Data value="Text"/>
-                        </Column>
+                      <Table columnCount="3" rowCount="0">
+                        <Column editable="false" title="Username" type="java.lang.Object"/>
                         <Column editable="true" title="Admin" type="java.lang.Boolean"/>
-                        <Column editable="false" title="" type="java.lang.Object"/>
+                        <Column editable="true" title="" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -412,9 +409,6 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="class ButtonRenderer extends DefaultTableCellRenderer {&#xa;    private JButton button;&#xa;&#xa;    public ButtonRenderer() {&#xa;        button = new JButton(&quot;Remove&quot;);&#xa;        button.setBackground(new Color(239,149,149));&#xa;        button.setOpaque(true);&#xa;    }&#xa;&#xa;    @Override&#xa;    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {&#xa;        return button;&#xa;    }&#xa;}&#xa;&#xa;memberTable.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());&#xa;//jTable1.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JCheckBox()));"/>
-                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>

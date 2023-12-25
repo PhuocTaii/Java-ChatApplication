@@ -42,7 +42,7 @@ public class Search extends javax.swing.JPanel {
                 
                 if(!user.getUsername().equalsIgnoreCase(Chat.getChatPanelInst(null).getCurrentUsernameChat())) {
                     // load ui
-                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername());
+                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername(), false);
 
                     // send request
                     ChatService.getChatUserHistory(user.getId());
@@ -56,6 +56,8 @@ public class Search extends javax.swing.JPanel {
             public void onBlock(int row) {
                 SearchTableModel tableModel = (SearchTableModel)tableUserSearch.getModel();
                 int userId = tableModel.getUser(row).getId();
+                
+                UserService.blockUser(userId);
             }
 
             @Override

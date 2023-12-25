@@ -12,7 +12,6 @@ import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.service.UserService;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -31,7 +30,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import com.btv.User.model.User;
 import com.btv.User.service.ChatService;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import javax.swing.JList;
 
@@ -44,6 +42,7 @@ public class Chat extends javax.swing.JPanel {
     private Layout mainFrame;
     private JPanel messagesPanel;
     private int receiverId;
+    private boolean isGroup;
 
     /**
      * Creates new form Chat
@@ -116,6 +115,11 @@ public class Chat extends javax.swing.JPanel {
             @Override
             public void reportNoti(MessageStatus res) {
                 JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Report notification", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            @Override
+            public void blockNoti(MessageStatus res) {
+                JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Block notification", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         
@@ -459,14 +463,14 @@ public class Chat extends javax.swing.JPanel {
         
         chatItem.addActionListener(e -> handleChatWithFriend(selectedFriend.getId(), selectedFriend.getUsername()));
         unfrItem.addActionListener(e -> handleUnfriend(selectedIndex, selectedFriend.getId(), selectedFriend.getUsername()));
-        blockItem.addActionListener(e -> handleBlockFriend());
+        blockItem.addActionListener(e -> handleBlockFriend(selectedFriend.getId(), selectedFriend.getUsername()));
 
         friendMenu.show(component, x, y);
     }
     
     public void handleChatWithFriend(int friendId, String friendName) {
         if(!friendName.equalsIgnoreCase(receiverLabel.getText())) {
-            CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName);
+            CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName, false);
             ChatService.getChatUserHistory(friendId);
         }
     }
@@ -482,7 +486,14 @@ public class Chat extends javax.swing.JPanel {
         }
     }
     
-    public void handleBlockFriend() {
+    public void handleBlockFriend(int friendId, String friendName) {
+        Object[] options = { "YES", "NO" };
+        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to block " + friendName, "Confirm block", 
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
+                null, options, options[1]);
+        if(selectedOption == 0) {
+            UserService.blockUser(friendId);
+        }
     }
     
     public JList<User> getFriendList() {

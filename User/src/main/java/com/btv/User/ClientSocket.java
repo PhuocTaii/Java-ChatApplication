@@ -149,13 +149,26 @@ public class ClientSocket implements Runnable {
                 
             case REPORT_USER:
             {
-                JSONObject friendRel = messObj.getJSONObject("data");
-                MessageStatus res = MessageStatus.valueOf(friendRel.getString("status"));
+                JSONObject reportRes = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(reportRes.getString("status"));
                 if(res == MessageStatus.SUCCESS)
                     res.setMessage("Done report!");
                 else
                     res.setMessage("Report failed!");
                 CustomListener.getInstance().getChatListener().reportNoti(res);
+            }
+                break;
+                
+            case BLOCK_USER:
+            {
+                JSONObject blockRes = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(blockRes.getString("status"));
+                res.setMessage(blockRes.getString("statusDetail"));
+                int blockedId = blockRes.getInt("id");
+                if(blockedId != -1) {
+                    CustomListener.getInstance().getChatListener().unfriend(blockedId);
+                }
+                CustomListener.getInstance().getChatListener().blockNoti(res);
             }
                 break;
                 

@@ -483,4 +483,21 @@ public class ChatDB { // Singleton
             return false;
         }
     }
+    
+    public boolean blockUser(int userId, int blockedId) {
+        try {            
+            String sql = "insert into BlockedList values " +
+                        "(?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, blockedId);
+            stmt.executeUpdate();
+            
+            stmt.close();
+            return true;
+        } catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
