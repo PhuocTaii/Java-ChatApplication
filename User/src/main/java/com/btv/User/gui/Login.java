@@ -247,11 +247,11 @@ public class Login extends javax.swing.JFrame {
 
     private void forgotPassLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotPassLinkMouseClicked
         // TODO add your handling code here:
-        username = JOptionPane.showInputDialog(this, 
+        String username = JOptionPane.showInputDialog(this, 
             "Please enter username: ", 
             "Forgot password",
             JOptionPane.QUESTION_MESSAGE);
-        if("".equals(username)) {
+        if(username == null || "".equals(username)) {
             JOptionPane.showMessageDialog(this, "Please provide username to reset password", "Forgot password warning", JOptionPane.WARNING_MESSAGE);
             return;
         }

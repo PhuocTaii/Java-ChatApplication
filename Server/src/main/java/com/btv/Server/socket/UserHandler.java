@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

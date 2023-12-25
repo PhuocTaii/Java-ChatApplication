@@ -513,10 +513,11 @@ public class Chat extends javax.swing.JPanel {
             "Please enter member's username: ", 
             "Add member",
             JOptionPane.QUESTION_MESSAGE);
-        if("".equals(username)) {
+        if(username == null || "".equals(username)) {
             JOptionPane.showMessageDialog(mainFrame, "Please provide username to add member", "Add member warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        // call service here
     }//GEN-LAST:event_addMemberButtonActionPerformed
     
     public void handleReportUser() {        
@@ -545,7 +546,7 @@ public class Chat extends javax.swing.JPanel {
             "New group's name: ", 
             "Rename group chat",
             JOptionPane.QUESTION_MESSAGE);
-        if("".equals(newName) || getCurrentNameChat().equals(newName)) {
+        if(newName == null || "".equals(newName) || getCurrentNameChat().equals(newName)) {
             JOptionPane.showMessageDialog(mainFrame, "Please provide new name", "Rename group chat warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
