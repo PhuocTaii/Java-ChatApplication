@@ -1,5 +1,6 @@
 package com.btv.Server.socket;
 
+import com.btv.Server.database.AdminHandleDB;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
 import com.btv.Server.model.Friends;
@@ -31,10 +32,10 @@ public class AdminHandler extends ClientHandler {
 
     public void handleMessage(String messStr) {
         AdminMessage mess = AdminMessage.valueOf(messStr);
-        ChatDB db = ChatDB.getDBInstance();
+        AdminHandleDB db = AdminHandleDB.getDBInstance();
         switch (mess) {
             case VIEW_USERS:
-                ArrayList<User> allUsers = db.adminHandleDB.getAllUsers();
+                ArrayList<User> allUsers = db.getAllUsers();
                 try {
                     // send number of users
                     dataOut.write(allUsers.size());
@@ -82,7 +83,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
 
                     String[] split = userData.split("\\|");
-                    db.adminHandleDB.addUser(split);
+                    db.addUser(split);
 
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,7 +95,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
 
                     String[] split = userData.split("\\|");
-                    db.adminHandleDB.modifyUser(split);
+                    db.modifyUser(split);
 
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,7 +107,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
                     System.out.println(split[0]);
-                    db.adminHandleDB.deleteUser(split[0]);
+                    db.deleteUser(split[0]);
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -118,7 +119,7 @@ public class AdminHandler extends ClientHandler {
                     String[] split = userData.split("\\|");
 //                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
 
-                    ArrayList<Date> allLoginTime = db.adminHandleDB.getLoginTime(split[0]);
+                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
                     dataOut.write(allLoginTime.size());
                     for (Date loginTime : allLoginTime) {
                         dataOut.write(loginTime.toString());
@@ -136,7 +137,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
 
-                    ArrayList<String> allFriendName = db.adminHandleDB.getFriendName(split[0]);
+                    ArrayList<String> allFriendName = db.getFriendName(split[0]);
                     dataOut.write(allFriendName.size());
                     for (String name : allFriendName) {
                         dataOut.write(name);
@@ -150,7 +151,7 @@ public class AdminHandler extends ClientHandler {
                 break;
 
             case VIEW_LOGINS:
-                ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
+                ArrayList<User> allUserLogin = db.getAllUsersLogin();
                 try {
                     dataOut.write(allUserLogin.size());
 
@@ -185,7 +186,7 @@ public class AdminHandler extends ClientHandler {
                 }
                 break;
             case VIEW_GROUPS:
-                ArrayList<Group> allGroups = db.adminHandleDB.getAllGroups();
+                ArrayList<Group> allGroups = db.getAllGroups();
                 try {
                     // send number of users
                     dataOut.write(allGroups.size());
@@ -207,7 +208,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
 
-                    ArrayList<String> groupMember = db.adminHandleDB.getGroupMember(split[0]);
+                    ArrayList<String> groupMember = db.getGroupMember(split[0]);
                     dataOut.write(groupMember.size());
                     for (String member : groupMember) {
                         dataOut.write(member);
@@ -225,7 +226,7 @@ public class AdminHandler extends ClientHandler {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
 
-                    ArrayList<String> groupAdmin = db.adminHandleDB.getGroupAdmin(split[0]);
+                    ArrayList<String> groupAdmin = db.getGroupAdmin(split[0]);
                     dataOut.write(groupAdmin.size());
                     for (String admin : groupAdmin) {
                         dataOut.write(admin);
@@ -239,7 +240,7 @@ public class AdminHandler extends ClientHandler {
                 break;
 
             case VIEW_SPAMS:
-                ArrayList<Spam> allSpams = db.adminHandleDB.getAllSpams();
+                ArrayList<Spam> allSpams = db.getAllSpams();
                 try {
                     // send number of users
                     dataOut.write(allSpams.size());
