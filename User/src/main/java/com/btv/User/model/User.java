@@ -13,6 +13,10 @@ public class User {
     private String username;
     private String name;
     private boolean isOnline;
+    
+    public User() {
+        
+    }
 
     public User(int id, String username, String name) {
         this.id = id;
