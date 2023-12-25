@@ -1,20 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.btv.Server.model;
+package com.btv.Admin.model;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
-/**
- *
- * @author tvan
- */
 public class User {
 
     private String address, email, name, password, status, username, gender;
     private Date birthday, timeCreate, loginDate;
+
+    private int id;
+//    private int gender;
+
+    public User() {
+    }
+
+    public User(User user) {
+
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public User(String username, String name, String address, Date birthday, String gender, String email, Date timeCreate, String status, String password) {
+        this.address = address;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.status = status;
+        this.username = username;
+        this.birthday = birthday;
+        this.timeCreate = timeCreate;
+        this.gender = gender;
+    }
 
     public Date getLoginDate() {
         return loginDate;
@@ -22,12 +39,6 @@ public class User {
 
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
-    }
-    private int id;
-//    private boolean gender;
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public void setEmail(String email) {
@@ -58,10 +69,10 @@ public class User {
         this.id = id;
     }
 
-    public void setGender(boolean gender) {
-        if(gender){
+    public void setGender(int gender) {
+        if(gender == 1){
             this.gender = "Male";
-        }else
+        } else
             this.gender = "Female";
     }
 
@@ -108,4 +119,5 @@ public class User {
     public Date getTimeCreate() {
         return timeCreate;
     }
+
 }

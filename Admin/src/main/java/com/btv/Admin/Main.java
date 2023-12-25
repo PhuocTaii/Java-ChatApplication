@@ -5,14 +5,15 @@
 package com.btv.Admin;
 
 import com.btv.Admin.gui.interfaces.EventMenuSelected;
-import com.btv.Admin.gui.AllGroup;
+import com.btv.Admin.gui.AllGroups;
 import com.btv.Admin.gui.AllUsers;
 import com.btv.Admin.gui.ListLogin;
 import com.btv.Admin.gui.NewUsers;
 import com.btv.Admin.gui.OnlineUsers;
-import com.btv.Admin.gui.Spam;
+import com.btv.Admin.gui.AllSpams;
 import com.btv.Admin.gui.UserFriends;
 import com.formdev.flatlaf.FlatLightLaf;
+import java.text.ParseException;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -29,40 +30,55 @@ public class Main extends javax.swing.JFrame {
     private NewUsers newUsers;
     private UserFriends userFriends;
     private OnlineUsers onlineUsers;
-    private AllGroup group;
-    private Spam spam;
+    private AllGroups group;
+    private AllSpams spam;
     private ListLogin listLogin;
 
-    public Main() {
+    public Main(){
         initComponents();
         
         users = new AllUsers();
         newUsers = new NewUsers();
         userFriends = new UserFriends();
         onlineUsers = new OnlineUsers();
-        group = new AllGroup();
-        spam = new Spam();
+        group = new AllGroups();
+        
+        spam = new AllSpams();
+        
         listLogin = new ListLogin();
         
-
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
                 System.out.println(index);
-                if (index == 0) {
-                    setForm(users);
-                } else if (index == 1) {
-                    setForm(listLogin);
-                } else if (index == 2) {
-                    setForm(group);
-                } else if (index == 3) {
-                    setForm(spam);
-                } else if (index == 4) {
-                    setForm(newUsers);
-                } else if (index == 5) {
-                    setForm(userFriends);
-                } else {
-                    setForm(onlineUsers);
+                switch (index) {
+                    case 0:
+                        setForm(users);
+                        users.updateTable();
+                        break;
+                    case 1:
+                        setForm(listLogin);
+                        listLogin.updateTable();
+                        break;
+                    case 2:
+                        setForm(group);
+                        group.updateTable();
+                        break;
+                    case 3:
+                        setForm(spam);
+                        spam.updateTable();
+                        break;
+                    case 4:
+                        setForm(newUsers);
+                        newUsers.updateTable();
+                        break;
+                    case 5:
+                        setForm(userFriends);
+                        userFriends.updateTable();
+                        break;
+                    default:
+                        setForm(onlineUsers);
+                        break;
                 }
             }
         });
@@ -168,6 +184,8 @@ public class Main extends javax.swing.JFrame {
         
         // init instance to send role
         ClientSocket.getInstance();
+        
+//        System.out.println("------------------------");
         
         /* Create and display the form */
         SwingUtilities.invokeLater(new Runnable() {

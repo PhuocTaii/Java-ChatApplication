@@ -7,12 +7,17 @@ package com.btv.Server.database;
 import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
+import com.btv.Server.model.Friends;
+import com.btv.Server.model.Login;
+import com.btv.Server.model.OnlineUser;
 import com.btv.Server.model.User;
 import com.btv.Server.service.MailService;
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,20 +31,25 @@ import java.util.Random;
  * @author tvan
  */
 public class ChatDB { // Singleton
+
     private static ChatDB dbInstance = null;
-    
+
     private static final String URL = "jdbc:mysql://chatchat-db.c0kjxptbsciv.ap-southeast-1.rds.amazonaws.com:3306/?user=admin";
-    private static final String USERNAME = System.getenv("USERNAME_DB");;
+    private static final String USERNAME = System.getenv("USERNAME_DB");
     private static final String PASSWORD = System.getenv("PASS_DB");
-    private static Connection connection;
+//    private static final String USERNAME = "admin";
+//    private static final String PASSWORD = "asd12345";
+//    public  AdminHandleDB adminHandleDB = null;
     
+    protected static Connection connection;
+
     public Connection getConnection() {
         return connection;
     }
-    
+
     public void closeConnection() {
         try {
-            if(connection != null) {
+            if (connection != null) {
                 connection.close();
                 System.out.println("Database close connection!");
             }
@@ -47,8 +57,8 @@ public class ChatDB { // Singleton
             System.err.println(e);
         }
     }
-    
-    private ChatDB() {
+
+    protected ChatDB() {
         connection = null;
 
         try {
@@ -56,7 +66,7 @@ public class ChatDB { // Singleton
             Driver myDriver = new Driver();
             DriverManager.registerDriver(myDriver);
             System.out.println("Connecting to database...");
-            
+
             // Establish connection
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             System.out.println("Database connected");
@@ -65,16 +75,16 @@ public class ChatDB { // Singleton
             String sql;
             sql = "USE chatchat_db";
             stmt.execute(sql);
-
+//            adminHandleDB = new AdminHandleDB(getConnection());
             stmt.close();
-            
+
         } catch (SQLException e) {
             System.err.println(e);
         }
     }
-    
+
     public static ChatDB getDBInstance() {
-        if(dbInstance == null) {
+        if (dbInstance == null) {
             dbInstance = new ChatDB();
         }
         return dbInstance;

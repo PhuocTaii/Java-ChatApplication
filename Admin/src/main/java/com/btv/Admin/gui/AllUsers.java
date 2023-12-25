@@ -4,36 +4,224 @@
  */
 package com.btv.Admin.gui;
 
+import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author Admin
  */
 public class AllUsers extends javax.swing.JPanel {
+
     boolean isLocked = false; // temp
     private DefaultTableModel tableModel;
     private String[][] userList;
     private UserService userService;
-    
+    private User selectedUser;
+
     /**
      * Creates new form AllUser
      */
     public AllUsers() {
         initComponents();
-        
+        selectedUser = new User();
         userService = new UserService();
+
+        updateTable();
+        addUserDialog.setLocationRelativeTo(null);
+        tableClickHandle();        
+        userService.filterByField(tableUsers, "", "");
+
+    }
+    
+
+    public void tableClickHandle() {
+        tableUsers.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int selectedRow = tableUsers.getSelectedRow();
+                if (selectedRow != -1) {
+                    for (int i = 0; i < tableUsers.getColumnCount(); i++) {
+                        switch (i) {
+                            case 0:
+                                selectedUser.setId(Integer.parseInt(tableUsers.getValueAt(selectedRow, i).toString()));
+                            case 1:
+                                selectedUser.setUsername((String) tableUsers.getValueAt(selectedRow, i));
+                                usernameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 2:
+                                selectedUser.setName((String) tableUsers.getValueAt(selectedRow, i));
+                                nameField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 3:
+                                selectedUser.setAddress((String) tableUsers.getValueAt(selectedRow, i));
+
+                                addressField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 4:
+                                String dateString = tableUsers.getValueAt(selectedRow, i).toString();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                try {
+                                    // Parsing the date string to verify its correctness
+                                    Date parsedDate = Date.valueOf(dateString);
+                                    selectedUser.setBirthday(parsedDate);
+
+                                    // Setting the date in the JDateChooser
+                                    birthChooser.setDate(parsedDate);
+                                } catch (IllegalArgumentException ex) {
+                                    // Handle incorrect date format or parsing issues
+                                    Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
+
+                            case 5:
+
+                                String male = tableUsers.getValueAt(selectedRow, i).toString();
+                                if (male.equals("true")) {
+                                    maleRadioButton.setSelected(true);
+                                    selectedUser.setGender(1);
+
+                                } else {
+                                    femaleRadioButton.setSelected(true);
+                                    selectedUser.setGender(0);
+
+                                }
+                                break;
+                            case 6:
+                                selectedUser.setEmail((String) tableUsers.getValueAt(selectedRow, i));
+
+                                emailField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 7:
+                                String timeCreateString = tableUsers.getValueAt(selectedRow, i).toString();
+
+                                if (!timeCreateString.isEmpty() && !timeCreateString.equals("null")) { // Check for non-empty and non-null values
+                                    try {
+                                        // Debug print the string content
+                                        System.out.println("TimeCreate String: " + timeCreateString);
+
+                                        // Convert the string to a java.sql.Date object
+                                        Date timeCreateDate = Date.valueOf(timeCreateString);
+                                        selectedUser.setTimeCreate(timeCreateDate);
+                                    } catch (IllegalArgumentException ex) {
+                                        // Handle incorrect date format or parsing issues
+                                        Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    // Handle empty or null values in the table cell
+                                    // This could be setting a default date or displaying a message
+                                    System.out.println("Empty or null value encountered");
+                                }
+                                break;
+
+                            case 8:
+                                selectedUser.setStatus((String) tableUsers.getValueAt(selectedRow, i));
+                                String status = selectedUser.getStatus();
+                                System.out.println(status);
+                                if (status.equals("LOCKED")) {
+                                    isLocked = true;
+                                    lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
+                                } else {
+                                    isLocked = false;
+                                    lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+                                }
+                            case 9:
+                                selectedUser.setPassword((String) tableUsers.getValueAt(selectedRow, i));
+                                passwordField.setText(tableUsers.getValueAt(selectedRow, i).toString());
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                    System.out.println(); // New line for next row
+                    getLoginListByUser(selectedUser);
+                    getFriendListByUser(selectedUser);
+                }
+            }
+        });
+    }
+
+    public void updateTable() {
         userList = userService.getAllUsers();
-        
-        tableModel = (DefaultTableModel)tableUsers.getModel();
+        tableModel = (DefaultTableModel) tableUsers.getModel();
         tableModel.setRowCount(0);
-        for(Object[] row : userList) {
+        for (Object[] row : userList) {
             tableModel.addRow(row);
         }
+    }
+
+    private void getUserField() {
+        selectedUser.setUsername(usernameField.getText());
+        selectedUser.setName(nameField.getText());
+        selectedUser.setAddress(addressField.getText());
+        selectedUser.setBirthday(new Date(birthChooser.getDate().getTime()));
+
+        if (maleRadioButton.isSelected()) {
+            selectedUser.setGender(1);
+        } else {
+            selectedUser.setGender(0);
+        }
+        selectedUser.setEmail(emailField.getText());
+        selectedUser.setPassword(new String(passwordField.getPassword()));
+
+        if (isLocked) {
+            selectedUser.setStatus("LOCKED");
+        } else {
+            selectedUser.setStatus("OFFLINE");
+        }
+
+    }
+
+    private void clearField() {
+        usernameField.setText("");
+        nameField.setText("");
+        addressField.setText("");
+        birthChooser.setDate(null);
+        genderBtnGroup.setSelected(null, isLocked);
+        emailField.setText("");
+        passwordField.setText("");
+        messageField.setText("");
+    }
+
+    private void getLoginListByUser(User user) {
+        String[] loginListString = userService.getLoginTime(user);
+
+        DefaultListModel<String> modelLoginList = new DefaultListModel<>();
+        for (String login : loginListString) {
+            modelLoginList.addElement(login);
+        }
+
+        loginList.setModel(modelLoginList);
+    }
+
+    private void getFriendListByUser(User user) {
+        String[] friendListString = userService.getFriendName(user);
+
+        DefaultListModel<String> modelFriendList = new DefaultListModel<>();
+        for (String name : friendListString) {
+            modelFriendList.addElement(name);
+        }
+
+        friendList.setModel(modelFriendList);
     }
 
     /**
@@ -53,16 +241,26 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         usernameAddLabel = new javax.swing.JLabel();
         usernameAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        javax.swing.Box.Filler filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        jPanel10 = new javax.swing.JPanel();
+        passwordAddLabel = new javax.swing.JLabel();
+        passwordAddField = new javax.swing.JTextField();
+        javax.swing.Box.Filler filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         jPanel5 = new javax.swing.JPanel();
         emailAddLabel = new javax.swing.JLabel();
         emailAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        jPanel9 = new javax.swing.JPanel();
+        genderAddLabel = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        maleRadioButtonAdd = new javax.swing.JRadioButton();
+        femaleRadioButtonAdd = new javax.swing.JRadioButton();
+        javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        addFieldsPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         nameAddLabel = new javax.swing.JLabel();
         nameAddField = new javax.swing.JTextField();
-        javax.swing.Box.Filler filler4 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        addFieldsPanel1 = new javax.swing.JPanel();
+        javax.swing.Box.Filler filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         jPanel7 = new javax.swing.JPanel();
         addressAddLabel = new javax.swing.JLabel();
         addressAddField = new javax.swing.JTextField();
@@ -71,13 +269,10 @@ public class AllUsers extends javax.swing.JPanel {
         birthAddLabel = new javax.swing.JLabel();
         birthDateChooserAdd = new com.toedter.calendar.JDateChooser();
         javax.swing.Box.Filler filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel9 = new javax.swing.JPanel();
-        genderAddLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        maleRadioButtonAdd = new javax.swing.JRadioButton();
-        femaleRadioButtonAdd = new javax.swing.JRadioButton();
         jPanel3 = new javax.swing.JPanel();
+        messageAddLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
+        messageAddLabel1 = new javax.swing.JLabel();
         genderAddbuttonGroup = new javax.swing.ButtonGroup();
         title = new javax.swing.JLabel();
         controlSection = new javax.swing.JPanel();
@@ -115,13 +310,16 @@ public class AllUsers extends javax.swing.JPanel {
         passwordPanel = new javax.swing.JPanel();
         passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
+        messagePanel = new javax.swing.JPanel();
+        messageLabel1 = new javax.swing.JLabel();
+        messageField = new javax.swing.JTextField();
         actionPanel = new javax.swing.JPanel();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         lockToggleButton = new javax.swing.JToggleButton();
         loginHistoryPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        loginScrollPane = new javax.swing.JScrollPane();
         loginList = new javax.swing.JList<>();
         friendsPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -129,11 +327,11 @@ public class AllUsers extends javax.swing.JPanel {
         friendList = new javax.swing.JList<>();
 
         addUserDialog.setTitle("Add New User");
+        addUserDialog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addUserDialog.setMinimumSize(new java.awt.Dimension(860, 295));
         addUserDialog.setModal(true);
         addUserDialog.setResizable(false);
-        addUserDialog.setSize(new java.awt.Dimension(900, 320));
-        addUserDialog.getContentPane().setLayout(new java.awt.BorderLayout(0, 20));
+        addUserDialog.setSize(new java.awt.Dimension(900, 620));
 
         titleAddDialg.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         titleAddDialg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -142,10 +340,10 @@ public class AllUsers extends javax.swing.JPanel {
         addUserDialog.getContentPane().add(titleAddDialg, java.awt.BorderLayout.NORTH);
 
         inputPanel.setPreferredSize(new java.awt.Dimension(900, 500));
-        inputPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 5));
+        inputPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 0));
 
         addFieldsPanel.setMinimumSize(new java.awt.Dimension(300, 183));
-        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 200));
+        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 300));
         addFieldsPanel.setLayout(new javax.swing.BoxLayout(addFieldsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel4.setMaximumSize(new java.awt.Dimension(2147483647, 42));
@@ -163,7 +361,23 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel4.add(usernameAddField, java.awt.BorderLayout.SOUTH);
 
         addFieldsPanel.add(jPanel4);
-        addFieldsPanel.add(filler1);
+        addFieldsPanel.add(filler9);
+
+        jPanel10.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel10.setLayout(new java.awt.BorderLayout(0, 2));
+
+        passwordAddLabel.setText("Password");
+        jPanel10.add(passwordAddLabel, java.awt.BorderLayout.NORTH);
+
+        passwordAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel10.add(passwordAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel.add(jPanel10);
+        addFieldsPanel.add(filler12);
 
         jPanel5.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel5.setLayout(new java.awt.BorderLayout(0, 2));
@@ -179,57 +393,7 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel5.add(emailAddField, java.awt.BorderLayout.SOUTH);
 
         addFieldsPanel.add(jPanel5);
-        addFieldsPanel.add(filler3);
-
-        jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel6.setLayout(new java.awt.BorderLayout(0, 2));
-
-        nameAddLabel.setText("Full name");
-        jPanel6.add(nameAddLabel, java.awt.BorderLayout.NORTH);
-
-        nameAddField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameAddFieldActionPerformed(evt);
-            }
-        });
-        jPanel6.add(nameAddField, java.awt.BorderLayout.SOUTH);
-
-        addFieldsPanel.add(jPanel6);
-        addFieldsPanel.add(filler4);
-
-        inputPanel.add(addFieldsPanel);
-
-        addFieldsPanel1.setMinimumSize(new java.awt.Dimension(300, 183));
-        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 200));
-        addFieldsPanel1.setLayout(new javax.swing.BoxLayout(addFieldsPanel1, javax.swing.BoxLayout.Y_AXIS));
-
-        jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel7.setLayout(new java.awt.BorderLayout(0, 2));
-
-        addressAddLabel.setText("Address");
-        jPanel7.add(addressAddLabel, java.awt.BorderLayout.PAGE_START);
-
-        addressAddField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addressAddFieldActionPerformed(evt);
-            }
-        });
-        jPanel7.add(addressAddField, java.awt.BorderLayout.SOUTH);
-
-        addFieldsPanel1.add(jPanel7);
-        addFieldsPanel1.add(filler6);
-
-        jPanel8.setMaximumSize(new java.awt.Dimension(2147483647, 42));
-        jPanel8.setLayout(new java.awt.BorderLayout(0, 2));
-
-        birthAddLabel.setText("Date of birth");
-        jPanel8.add(birthAddLabel, java.awt.BorderLayout.CENTER);
-
-        birthDateChooserAdd.setDateFormatString("dd-MM-yyyy");
-        jPanel8.add(birthDateChooserAdd, java.awt.BorderLayout.PAGE_END);
-
-        addFieldsPanel1.add(jPanel8);
-        addFieldsPanel1.add(filler5);
+        addFieldsPanel.add(filler10);
 
         jPanel9.setMaximumSize(new java.awt.Dimension(2147483647, 42));
         jPanel9.setLayout(new java.awt.BorderLayout(0, 2));
@@ -261,10 +425,10 @@ public class AllUsers extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(maleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(maleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addComponent(femaleRadioButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,7 +441,58 @@ public class AllUsers extends javax.swing.JPanel {
 
         jPanel9.add(jPanel2, java.awt.BorderLayout.CENTER);
 
-        addFieldsPanel1.add(jPanel9);
+        addFieldsPanel.add(jPanel9);
+        addFieldsPanel.add(filler11);
+
+        inputPanel.add(addFieldsPanel);
+
+        addFieldsPanel1.setMinimumSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel1.setLayout(new javax.swing.BoxLayout(addFieldsPanel1, javax.swing.BoxLayout.Y_AXIS));
+
+        jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel6.setLayout(new java.awt.BorderLayout(0, 2));
+
+        nameAddLabel.setText("Full name");
+        jPanel6.add(nameAddLabel, java.awt.BorderLayout.NORTH);
+
+        nameAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nameAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel6.add(nameAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel1.add(jPanel6);
+        addFieldsPanel1.add(filler7);
+
+        jPanel7.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel7.setLayout(new java.awt.BorderLayout(0, 2));
+
+        addressAddLabel.setText("Address");
+        jPanel7.add(addressAddLabel, java.awt.BorderLayout.PAGE_START);
+
+        addressAddField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addressAddFieldActionPerformed(evt);
+            }
+        });
+        jPanel7.add(addressAddField, java.awt.BorderLayout.SOUTH);
+
+        addFieldsPanel1.add(jPanel7);
+        addFieldsPanel1.add(filler6);
+
+        jPanel8.setMaximumSize(new java.awt.Dimension(2147483647, 42));
+        jPanel8.setLayout(new java.awt.BorderLayout(0, 2));
+
+        birthAddLabel.setText("Date of birth");
+        jPanel8.add(birthAddLabel, java.awt.BorderLayout.CENTER);
+
+        birthDateChooserAdd.setDateFormatString("dd-MM-yyyy");
+        jPanel8.add(birthDateChooserAdd, java.awt.BorderLayout.PAGE_END);
+
+        addFieldsPanel1.add(jPanel8);
+        addFieldsPanel1.add(filler5);
 
         inputPanel.add(addFieldsPanel1);
 
@@ -285,7 +500,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         jPanel3.setMaximumSize(new java.awt.Dimension(32767, 30));
         jPanel3.setMinimumSize(new java.awt.Dimension(110, 30));
-        jPanel3.setPreferredSize(new java.awt.Dimension(500, 50));
+        jPanel3.setPreferredSize(new java.awt.Dimension(500, 80));
 
         saveButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveButton.setText("SAVE");
@@ -300,7 +515,36 @@ public class AllUsers extends javax.swing.JPanel {
                 saveButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(saveButton);
+
+        messageAddLabel1.setText("Message: ");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(238, 238, 238)
+                .addComponent(messageAddLabel1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(messageAddLabel)))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(messageAddLabel)
+                    .addComponent(messageAddLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
+        );
 
         addUserDialog.getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
@@ -422,6 +666,11 @@ public class AllUsers extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableUsersMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tableUsers);
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
@@ -534,6 +783,23 @@ public class AllUsers extends javax.swing.JPanel {
 
         infoFields.add(passwordPanel);
 
+        messagePanel.setLayout(new java.awt.BorderLayout());
+
+        messageLabel1.setText("Message:");
+        messageLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        messagePanel.add(messageLabel1, java.awt.BorderLayout.CENTER);
+
+        messageField.setEditable(false);
+        messageField.setBackground(new java.awt.Color(240, 240, 240));
+        messageField.setForeground(new java.awt.Color(255, 51, 51));
+        messageField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        messageField.setBorder(null);
+        messageField.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        messageField.setPreferredSize(new java.awt.Dimension(200, 30));
+        messagePanel.add(messageField, java.awt.BorderLayout.EAST);
+
+        infoFields.add(messagePanel);
+
         actionPanel.setMaximumSize(new java.awt.Dimension(32767, 310));
         actionPanel.setMinimumSize(new java.awt.Dimension(160, 0));
         actionPanel.setOpaque(false);
@@ -583,15 +849,10 @@ public class AllUsers extends javax.swing.JPanel {
         jLabel1.setPreferredSize(new java.awt.Dimension(93, 30));
         loginHistoryPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
 
-        loginList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         loginList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(loginList);
+        loginScrollPane.setViewportView(loginList);
 
-        loginHistoryPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        loginHistoryPanel.add(loginScrollPane, java.awt.BorderLayout.CENTER);
 
         friendsPanel.setOpaque(false);
         friendsPanel.setPreferredSize(new java.awt.Dimension(93, 310));
@@ -603,11 +864,6 @@ public class AllUsers extends javax.swing.JPanel {
         jLabel2.setPreferredSize(new java.awt.Dimension(93, 30));
         friendsPanel.add(jLabel2, java.awt.BorderLayout.NORTH);
 
-        friendList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         friendList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(friendList);
 
@@ -675,24 +931,23 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void filterOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOptionsActionPerformed
         // TODO add your handling code here:
-        JComboBox cb = (JComboBox)evt.getSource();
-        String optionChosen = (String)cb.getSelectedItem();
+        JComboBox cb = (JComboBox) evt.getSource();
+        String optionChosen = (String) cb.getSelectedItem();
         if ("None".equals(optionChosen)) {
             filterTextField.setVisible(false);
             statusOptions.setVisible(false);
             searchButton.setVisible(false);
             // Show all data
-        }
-        else if ("Status".equals(optionChosen)) {
+        } else if ("Status".equals(optionChosen)) {
             filterTextField.setVisible(false);
             statusOptions.setVisible(true);
             searchButton.setVisible(true);
-        }
-        else {
+        } else {
             filterTextField.setVisible(true);
             statusOptions.setVisible(false);
             searchButton.setVisible(true);
         }
+        userService.filterByField(tableUsers, "", optionChosen);
     }//GEN-LAST:event_filterOptionsActionPerformed
 
     private void filterTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterTextFieldActionPerformed
@@ -710,33 +965,63 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
+        String searchString = filterTextField.getText();
+        String searchOption = filterOptions.getSelectedItem().toString();
+        if (searchOption.equals("Status")) {
+            searchString = statusOptions.getSelectedItem().toString();
+        }
+        userService.filterByField(tableUsers, searchOption, searchString);
+        filterTextField.setText("");
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
+        if (usernameField.getText().equals("")) {
+            return;
+        }
+
         int res = JOptionPane.showConfirmDialog(this,
-            "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
-        if(res == JOptionPane.YES_OPTION) {
-            // handle update here
+                "Sure you want to update this user?", "Update comfirmation", JOptionPane.YES_NO_OPTION);
+
+        if (res == JOptionPane.YES_OPTION) {
+            getUserField();
+            String message = userService.validateUser(selectedUser);
+            System.out.println(selectedUser.getStatus());
+
+//            System.out.println(selectedUser.getUsername());
+            if (message.equals("valid")) {
+                userService.modifyUser(selectedUser);
+                clearField();
+                updateTable();
+            } else {
+                messageField.setText(message);
+            }
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
         int res = JOptionPane.showConfirmDialog(this,
-            "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if(res == JOptionPane.YES_OPTION) {
-            // handle update here
+                "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (usernameField.getText().equals("")) {
+            return;
+        }
+
+        if (res == JOptionPane.YES_OPTION) {
+            userService.deleteUser(selectedUser);
+            updateTable();
+            clearField();
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void lockToggleButtontoggleLockUser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockToggleButtontoggleLockUser
         // TODO add your handling code here:
         isLocked = !isLocked;
-        if(isLocked)
-        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
-        else
-        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+        if (isLocked) {
+            lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
+        } else {
+            lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+        }
 
     }//GEN-LAST:event_lockToggleButtontoggleLockUser
 
@@ -765,8 +1050,72 @@ public class AllUsers extends javax.swing.JPanel {
     }//GEN-LAST:event_femaleRadioButtonAddActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
+
+        String address, email, name, password, status, username;
+        Date birthday, timeCreate;
+        String gender;
+        address = addressAddField.getText();
+        email = emailAddField.getText();
+        name = nameAddField.getText();
+        password = passwordAddField.getText();
+        status = "OFFLINE";
+        username = usernameAddField.getText();
+
+        if (birthDateChooserAdd.getDate() != null) {
+            birthday = new Date(birthDateChooserAdd.getDate().getTime());
+        } else {
+            birthday = null;
+        }
+
+        timeCreate = java.sql.Date.valueOf(LocalDate.now());
+        if (maleRadioButtonAdd.isSelected()) {
+            gender = "Male";
+        } else {
+            gender = "Female";
+        }
+
+        User newUser = new User(username, name, address, birthday, gender, email, timeCreate, status, password);
+
+        String validMessage = userService.validateUser(newUser);
+        if (validMessage.equals("valid")) {
+            userService.addNewUser(newUser);
+            addUserDialog.setVisible(false);
+
+            addressAddField.setText("");
+            emailAddField.setText("");
+            nameAddField.setText("");
+            passwordAddField.setText("");
+            usernameAddField.setText("");
+            updateTable();
+        } else {
+            messageAddLabel.setText(validMessage);
+            messageAddLabel.setForeground(Color.red);
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void passwordAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordAddFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordAddFieldActionPerformed
+
+    private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUsersMouseClicked
+        // TODO add your handling code here
+//        DefaultTableModel model = (DefaultTableModel) tableUsers.getModel();
+//        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+//        tableUsers.setRowSorter(rowSorter);
+//        int columnIndex = tableUsers.columnAtPoint(evt.getPoint());
+//        System.out.println(columnIndex);
+//        switch (columnIndex) {
+//            case 1 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 1)); // Case-insensitive search
+//            case 2 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 2)); // Case-insensitive search
+//            case 8 -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)", 8)); // Case-insensitive search
+//            default -> {
+//            }
+//        }
+////        userService.filterByField1(tableUsers);
+//        JTableHeader header = tableUsers.getTableHeader();
+//        int columnIndex = header.columnAtPoint(evt.getPoint());
+//        System.out.println(columnIndex);
+    }//GEN-LAST:event_tableUsersMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -811,6 +1160,7 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JPanel inputPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -819,19 +1169,26 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToggleButton lockToggleButton;
     private javax.swing.JPanel loginHistoryPanel;
     private javax.swing.JList<String> loginList;
+    private javax.swing.JScrollPane loginScrollPane;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JRadioButton maleRadioButtonAdd;
+    private javax.swing.JLabel messageAddLabel;
+    private javax.swing.JLabel messageAddLabel1;
+    private javax.swing.JTextField messageField;
+    private javax.swing.JLabel messageLabel1;
+    private javax.swing.JPanel messagePanel;
     private javax.swing.JTextField nameAddField;
     private javax.swing.JLabel nameAddLabel;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel namePanel;
+    private javax.swing.JTextField passwordAddField;
+    private javax.swing.JLabel passwordAddLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JPanel passwordPanel;

@@ -10,7 +10,7 @@ package com.btv.Admin.helper;
  */
 public enum MessageType {
     VIEW_USERS,
-    FILTER_USERS,
+    FILTER_USER,
     SORT_USERS,
     ADD_USER,
     UPDATE_USER,
@@ -20,6 +20,7 @@ public enum MessageType {
     VIEW_FRIENDS_BY_USER,
     
     VIEW_LOGINS,
+    VIEW_LOGINS_LOG,
     
     VIEW_GROUPS,
     SORT_GROUPS,

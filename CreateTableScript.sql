@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS User (
   address VARCHAR(255),
   birthday DATE,
   email VARCHAR(255) NOT NULL,
-  gender BOOLEAN NOT NULL,
+  gender TINYINT NOT NULL,
   u_name VARCHAR(255),
   u_password VARCHAR(255) NOT NULL,
   u_status VARCHAR(255) NOT NULL CHECK (u_status IN ('ONLINE', 'OFFLINE', 'LOCKED')),
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS Logins (
 
 CREATE TABLE IF NOT EXISTS GroupMembers (
   gr_id INT NOT NULL,
-  is_admin BINARY NOT NULL,
+  is_admin TINYINT NOT NULL,
   u_id INT NOT NULL,
   PRIMARY KEY (gr_id, u_id),
   FOREIGN KEY (gr_id) REFERENCES ChatGroups(gr_id),
@@ -69,16 +69,4 @@ CREATE TABLE IF NOT EXISTS GroupMembers (
 );
 
 ALTER TABLE User
-MODIFY COLUMN time_create DATE NOT NULL;
-
-ALTER TABLE ChatGroups
-MODIFY COLUMN created_time DATE NOT NULL;
-
-ALTER TABLE SpamList
-MODIFY COLUMN report_time DATE NOT NULL;
-
-ALTER TABLE Logins
-MODIFY COLUMN login_time DATE NOT NULL;
-
-
-
+ADD COLUMN time_create DATE NOT NULL
