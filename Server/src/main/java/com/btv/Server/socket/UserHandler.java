@@ -11,7 +11,7 @@ import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
-import com.btv.Server.service.MailService;
+import com.btv.Server.socket.MailService;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Date;

@@ -83,7 +83,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
 
                 String[] split = userData.split("\\|");
-                db.adminHandleDB.addUser(split);
+                db.addUser(split);
 
             } catch (IOException ex) {
                 Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,7 +96,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
 
                 String[] split = userData.split("\\|");
-                db.adminHandleDB.modifyUser(split);
+                db.modifyUser(split);
 
             } catch (IOException ex) {
                 Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,7 +109,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
                 String[] split = userData.split("\\|");
                 System.out.println(split[0]);
-                db.adminHandleDB.deleteUser(split[0]);
+                db.deleteUser(split[0]);
             } catch (IOException ex) {
                 Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -122,7 +122,7 @@ public class AdminHandler extends ClientHandler {
                 String[] split = userData.split("\\|");
 //                    ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
 
-                ArrayList<Date> allLoginTime = db.adminHandleDB.getLoginTime(split[0]);
+                ArrayList<Date> allLoginTime = db.getLoginTime(split[0]);
                 dataOut.write(allLoginTime.size());
                 for (Date loginTime : allLoginTime) {
                     dataOut.write(loginTime.toString());
@@ -141,7 +141,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
                 String[] split = userData.split("\\|");
 
-                ArrayList<String> allFriendName = db.adminHandleDB.getFriendName(split[0]);
+                ArrayList<String> allFriendName = db.getFriendName(split[0]);
                 dataOut.write(allFriendName.size());
                 for (String name : allFriendName) {
                     dataOut.write(name.toString());
@@ -213,7 +213,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
                 String[] split = userData.split("\\|");
 
-                ArrayList<String> groupMember = db.adminHandleDB.getGroupMember(split[0]);
+                ArrayList<String> groupMember = db.getGroupMember(split[0]);
                 dataOut.write(groupMember.size());
                 for (String member : groupMember) {
                     dataOut.write(member.toString());
@@ -232,7 +232,7 @@ public class AdminHandler extends ClientHandler {
                 String userData = dataIn.readLine();
                 String[] split = userData.split("\\|");
 
-                ArrayList<String> groupAdmin = db.adminHandleDB.getGroupAdmin(split[0]);
+                ArrayList<String> groupAdmin = db.getGroupAdmin(split[0]);
                 dataOut.write(groupAdmin.size());
                 for (String admin : groupAdmin) {
                     dataOut.write(admin.toString());
@@ -267,12 +267,13 @@ public class AdminHandler extends ClientHandler {
                     System.out.println(e);
                 }
                 break;
+                
             case SPAM_USER: {
                 try {
                     String userData = dataIn.readLine();
 
                     String[] split = userData.split("\\|");
-                    db.adminHandleDB.blockedUser(split);
+                    db.blockedUser(split);
 
                 } catch (IOException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,6 +282,66 @@ public class AdminHandler extends ClientHandler {
                 }
                 break;
             }
+     
+            case VIEW_ONLINE_USERS:                
+                try {
+                    String dates = dataIn.readLine();
+//                    System.out.println(dates);
+                    String[] split = dates.split("\\|");
+                    
+                    ArrayList<OnlineUser> allOnlineUsers = db.GetAllOnlineUsers(split);
+                    
+                    try{
+                        dataOut.write(allOnlineUsers.size());
+                        
+                        for(OnlineUser OnlineUser : allOnlineUsers) {
+                            dataOut.write(OnlineUser.getId() + "|");
+                            dataOut.write(OnlineUser.getName()+ "|");
+                            dataOut.write(OnlineUser.getUsername()+ "|");
+                            dataOut.write(OnlineUser.getLoginTime()+ "|");
+                            dataOut.write(OnlineUser.getuserChatWith()+ "|");
+                            dataOut.write(OnlineUser.getgroupChatWith()+ "|");
+                            dataOut.newLine();
+                        }
+                        dataOut.flush();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+                
+            case LOCK_USER:                
+                try {
+                    int spamId = dataIn.read();
+                    
+                    db.lockUserSpam(spamId);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+                
+            case VIEW_LOGINS_LOG:
+                ArrayList<Login> allLogins = db.GetAllLogins();
+                try {
+                    // send number of users
+                    dataOut.write(allLogins.size());
+
+                    // send data of all users
+                    for(Login user : allLogins) {
+                        dataOut.write(user.getId() + "|");
+                        dataOut.write(user.getLoginDate()+ "|");
+                        dataOut.newLine();
+                    }
+                    dataOut.flush();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+                break;
+
             default:
                 System.out.println("Invalid message");
         }

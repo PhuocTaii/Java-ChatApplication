@@ -303,7 +303,7 @@ public class AdminHandleDB extends ChatDB{
             while (rs.next()) {
                 Spam tempSpam = new Spam();
                 tempSpam.setSpamId(rs.getInt("spam_id"));
-                tempSpam.setReporter(rs.getString("reporter"));
+                tempSpam.setSpamName(rs.getString("username"));
                 tempSpam.setSpamTime(rs.getDate("report_time"));
                 tempSpam.setSpamName(rs.getString("u_name"));
                 String blocked = rs.getString("u_status");
