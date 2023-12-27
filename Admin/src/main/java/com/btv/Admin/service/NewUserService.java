@@ -69,7 +69,6 @@ public class NewUserService {
         table.setRowSorter(rowSorter);
         
         if(StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(EndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())){
-            System.out.println(124);
             RowFilter<DefaultTableModel, Integer> dateFilter = new RowFilter<DefaultTableModel, Integer>() {
             @Override
                 public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
@@ -85,11 +84,9 @@ public class NewUserService {
                     }
                 }            
             };
-            System.out.println(dateFilter);
             rowSorter.setRowFilter(dateFilter);
         }
         else if(StartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isEqual(EndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())){
-            System.out.println(123);
             RowFilter<DefaultTableModel, Integer> dateFilter = new RowFilter<DefaultTableModel, Integer>() {
             @Override
                 public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
@@ -105,11 +102,9 @@ public class NewUserService {
                     }
                 }            
             };
-            System.out.println(dateFilter);
             rowSorter.setRowFilter(dateFilter);
         }
         else{
-            System.out.println("wrong condition");
             rowSorter.setRowFilter(null);
         }
     }
@@ -124,7 +119,6 @@ public class NewUserService {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(creationTime);
                 if(cal.get(Calendar.YEAR) == year){
-                    System.out.println(cal.get(Calendar.MONTH));
                     int idx = cal.get(Calendar.MONTH);
                     monthCnt[idx]++;
                 }

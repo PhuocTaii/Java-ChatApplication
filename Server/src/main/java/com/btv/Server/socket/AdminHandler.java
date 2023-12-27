@@ -1,9 +1,12 @@
 package com.btv.Server.socket;
 
+import com.btv.Server.database.AdminHandleDB;
 import com.btv.Server.database.ChatDB;
 import com.btv.Server.helpers.AdminMessage;
 import com.btv.Server.model.Friends;
 import com.btv.Server.model.Group;
+import com.btv.Server.model.Login;
+import com.btv.Server.model.OnlineUser;
 import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
 import java.io.IOException;
@@ -29,10 +32,10 @@ public class AdminHandler extends ClientHandler {
 
     public void handleMessage(String messStr) {
         AdminMessage mess = AdminMessage.valueOf(messStr);
-        ChatDB db = ChatDB.getDBInstance();
+        AdminHandleDB db = AdminHandleDB.getDBInstance();
         switch (mess) {
             case VIEW_USERS:
-                ArrayList<User> allUsers = db.adminHandleDB.getAllUsers();
+                ArrayList<User> allUsers = db.getAllUsers();
                 try {
                     // send number of users
                     dataOut.write(allUsers.size());
@@ -44,9 +47,9 @@ public class AdminHandler extends ClientHandler {
                         dataOut.write(user.getName() + "|");
                         dataOut.write(user.getAddress() + "|");
                         dataOut.write(user.getBirthday().toString() + "|");
-                        dataOut.write(user.getGender() + "|");
+                        dataOut.write(user.getGenderStr() + "|");
                         dataOut.write(user.getEmail() + "|");
-                        dataOut.write(user.getTimeCreate() + "|");
+                        dataOut.write(user.getTimeCreate().toString() + "|");
                         dataOut.write(user.getStatus() + "|");
                         dataOut.write(user.getPassword() + "|");
                         dataOut.newLine();
@@ -153,12 +156,10 @@ public class AdminHandler extends ClientHandler {
             }
             break;
             case VIEW_LOGINS:
-                ArrayList<User> allUserLogin = db.adminHandleDB.getAllUsersLogin();
+                ArrayList<User> allUserLogin = db.getAllUsersLogin();
                 try {
-                    // send number of users
                     dataOut.write(allUserLogin.size());
 
-                    // send data of all users
                     for (User user : allUserLogin) {
                         dataOut.write(user.getId() + "|");
                         dataOut.write(user.getUsername() + "|");
@@ -190,7 +191,7 @@ public class AdminHandler extends ClientHandler {
                 }
                 break;
             case VIEW_GROUPS:
-                ArrayList<Group> allGroups = db.adminHandleDB.getAllGroups();
+                ArrayList<Group> allGroups = db.getAllGroups();
                 try {
                     // send number of users
                     dataOut.write(allGroups.size());
@@ -246,7 +247,7 @@ public class AdminHandler extends ClientHandler {
             }
             break;
             case VIEW_SPAMS:
-                ArrayList<Spam> allSpams = db.adminHandleDB.getAllSpams();
+                ArrayList<Spam> allSpams = db.getAllSpams();
                 try {
                     // send number of users
                     dataOut.write(allSpams.size());
@@ -285,6 +286,7 @@ public class AdminHandler extends ClientHandler {
         }
     }
 
+    @Override
     protected void removeClientFromList() {
         adminHandlers.remove(this);
     }

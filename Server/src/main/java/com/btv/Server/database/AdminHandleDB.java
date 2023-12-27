@@ -1,9 +1,11 @@
 package com.btv.Server.database;
 
+import com.btv.Server.model.Friends;
 import com.btv.Server.model.Group;
+import com.btv.Server.model.Login;
+import com.btv.Server.model.OnlineUser;
 import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +17,20 @@ import java.util.ArrayList;
  *
  * @author Vo Quoc Binh
  */
-public class AdminHandleDB {
+public class AdminHandleDB extends ChatDB{
 
-    private Connection connection;
+    private static AdminHandleDB dbInstance = null;
 
-    public AdminHandleDB(Connection connection) {
-        this.connection = connection;
+    private AdminHandleDB() {
+        super();
     }
+    
+    public static AdminHandleDB getDBInstance() {
+       if (dbInstance == null) {
+           dbInstance = new AdminHandleDB();
+       }
+       return dbInstance;
+   }  
 
     public ArrayList<User> getAllUsers() {
         ArrayList<User> resList = new ArrayList<>();
@@ -39,6 +48,7 @@ public class AdminHandleDB {
                 tempUser.setBirthday(rs.getDate("birthday"));
                 tempUser.setEmail(rs.getString("email"));
                 tempUser.setGender(rs.getBoolean("gender"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
                 tempUser.setStatus(rs.getString("u_status"));
                 tempUser.setPassword(rs.getString("u_password"));
                 resList.add(tempUser);
@@ -71,7 +81,7 @@ public class AdminHandleDB {
         //email,
         preparedStatement.setString(5, split[4]);
         //gender
-        preparedStatement.setString(6, split[5]);
+        preparedStatement.setBoolean(6, Boolean.valueOf(split[5]));
         //time_create
         preparedStatement.setString(7, split[6]);
         //u_status
@@ -99,7 +109,7 @@ public class AdminHandleDB {
         //email,
         preparedStatement.setString(5, split[4]);
         //gender
-        preparedStatement.setString(6, split[5]);
+        preparedStatement.setBoolean(6, Boolean.valueOf(split[5]));
         //u_status
         preparedStatement.setString(7, split[7]);
         //u_password
@@ -293,7 +303,7 @@ public class AdminHandleDB {
             while (rs.next()) {
                 Spam tempSpam = new Spam();
                 tempSpam.setSpamId(rs.getInt("spam_id"));
-                tempSpam.setSpamUsername(rs.getString("username"));
+                tempSpam.setReporter(rs.getString("reporter"));
                 tempSpam.setSpamTime(rs.getDate("report_time"));
                 tempSpam.setSpamName(rs.getString("u_name"));
                 String blocked = rs.getString("u_status");
@@ -334,4 +344,123 @@ public class AdminHandleDB {
         preparedStatement.close();
     }
 
+
+    public ArrayList<User> GetAllNewUsers() {
+        ArrayList<User> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = "select u_id, username, u_name, time_create from User order by time_create desc";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                User tempUser = new User();
+                tempUser.setId(rs.getInt("u_id"));
+                tempUser.setUsername(rs.getString("username"));
+                tempUser.setName(rs.getString("u_name"));
+                tempUser.setTimeCreate(rs.getDate("time_create"));
+                resList.add(tempUser);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+
+    public ArrayList<Login> GetAllLogins() {
+        ArrayList<Login> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = "SELECT * FROM Logins;";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Login tempLogin = new Login();
+                tempLogin.setLoginDate(rs.getDate("login_time"));
+                tempLogin.setId(rs.getInt("u_id"));
+                resList.add(tempLogin);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+
+    public ArrayList<Friends> GetAllFriends() {
+        ArrayList<Friends> resList = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String sql = """
+                         select u_id, u_name, time_create, count(distinct(f.u_id2)) as 'direct_friends', count(distinct(f2.u_id2)) as 'indirect_friends'
+                         from User u 
+                         left join Friends f on u.u_id = f.u_id1 
+                         left join Friends f2 on u.u_id = f2.u_id1 OR u.u_id = f2.u_id2
+                         group by u.u_id, u.u_name
+                         order by u.u_id""";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Friends tempFriends = new Friends();
+                tempFriends.setId(rs.getInt("u_id"));
+                tempFriends.setName(rs.getString("u_name"));
+                tempFriends.setTimeCreate(rs.getDate("time_create"));
+                tempFriends.setDirectFriends(rs.getInt("direct_friends"));
+                tempFriends.setIndirectFriends(rs.getInt("indirect_friends"));
+                resList.add(tempFriends);
+            }
+            stmt.close();
+        } catch (SQLException e) {
+            System.err.println(e);
+            return null;
+        }
+        return resList;
+    }
+
+    public ArrayList<OnlineUser> GetAllOnlineUsers(String[] split) {
+        String query = " SELECT\n    U.u_id,\n    U.u_name,\n    U.username,\n    COUNT(DISTINCT L.id) AS app_open_count,\n    COUNT(DISTINCT C.receive_id) AS personal_chat_count,\n    COUNT(DISTINCT CH.group_id) AS group_chat_count\n FROM\n    User U\n LEFT JOIN\n    Logins L ON U.u_id = L.u_id AND L.login_time BETWEEN ? AND ?\n LEFT JOIN\n    ChatHistory C ON U.u_id = C.receive_id AND C.sendtime BETWEEN ? AND ?\n LEFT JOIN\n    ChatHistory CH ON U.u_id = CH.send_id AND CH.sendtime BETWEEN ? AND ?\n GROUP BY\n    U.u_id, U.u_name, U.username;\n";
+        ArrayList<OnlineUser> resList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, split[0]);
+            preparedStatement.setString(3, split[0]);
+            preparedStatement.setString(5, split[0]);
+            preparedStatement.setString(2, split[1]);
+            preparedStatement.setString(4, split[1]);
+            preparedStatement.setString(6, split[1]);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                while (rs.next()) {
+                    OnlineUser tempOnlUser = new OnlineUser();
+                    tempOnlUser.setId(rs.getInt("u_id"));
+                    tempOnlUser.setName(rs.getString("u_name"));
+                    tempOnlUser.setUsername(rs.getString("username"));
+                    tempOnlUser.setloginTimes(rs.getInt("app_open_count"));
+                    tempOnlUser.setuserChatWith(rs.getInt("personal_chat_count"));
+                    tempOnlUser.setgroupChatWith(rs.getInt("group_chat_count"));
+                    resList.add(tempOnlUser);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resList;
+    }
+    
+    public boolean lockUserSpam(int spamId) {
+        try {
+            String sql = """
+                         UPDATE User u
+                         SET u_status = 'LOCKED'
+                         WHERE (u.u_id = (SELECT s.reported_id
+                                          FROM SpamList s
+                                          WHERE s.spam_id = ?))
+                         """;
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, spamId);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

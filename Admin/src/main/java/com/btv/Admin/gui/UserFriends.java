@@ -31,6 +31,16 @@ public class UserFriends extends javax.swing.JPanel {
         for(Object[] row : friendList) {
             tableModel.addRow(row);
         }
+        friendService.filterByName(tableCustom1, "");
+    }
+    
+    public void updateTable(){
+        friendList = friendService.getAllFriends();
+        tableModel = (DefaultTableModel) tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for (Object[] row : friendList) {
+            tableModel.addRow(row);
+        }
     }
 
     /**
@@ -172,8 +182,8 @@ public class UserFriends extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                .addGap(34, 34, 34))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

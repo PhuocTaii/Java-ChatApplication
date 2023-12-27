@@ -132,5 +132,20 @@ public class SpamService {
             System.err.println(e);
         }
     }
+    
+    public void handleLockUser(int spamId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.LOCK_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(spamId);
+            clientSocket.dataOut.flush();
+
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+    }
 
 }

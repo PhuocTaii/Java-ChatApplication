@@ -21,8 +21,7 @@ import javax.swing.table.TableRowSorter;
  *
  * @author tvan
  */
-public class UserService {
-
+public class UserService {    
     public String[][] getAllUsers() {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
@@ -67,7 +66,6 @@ public class UserService {
     public void addNewUser(User newUser) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
-            // send request to view all users
             clientSocket.dataOut.write(MessageType.ADD_USER.toString());
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.write(newUser.getUsername() + "|");
@@ -83,7 +81,6 @@ public class UserService {
 
             clientSocket.dataOut.flush();
 
-            // read number of users
         } catch (IOException e) {
             System.err.println(e);
         }

@@ -17,5 +17,15 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.23</version> <!-- Thay đổi version phù hợp với phiên bản bạn đang sử dụng -->
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
     </dependencies>
 </project>

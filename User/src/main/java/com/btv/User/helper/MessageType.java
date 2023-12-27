@@ -10,17 +10,16 @@ package com.btv.User.helper;
  */
 public enum MessageType {
     REGISTER,
-    CREATE_PASSWORD,
+    FORGOT_PASSWORD,
     LOGIN,
     
     VIEW_ALL_FRIENDS,
-    ADD_FRIEND_BY_USERNAME,
+    ADD_FRIEND,
     UNFRIEND,
     
     VIEW_ONLINE_FRIENDS,
     
-    FIND_USER_BY_USERNAME,
-    FIND_USER_BY_NAME,
+    FIND_USER,
     
     REPORT_USER,
     
@@ -31,11 +30,16 @@ public enum MessageType {
     CLEAR_CHAT_HISTORY,
     FIND_MESSAGE,
     
+    VIEW_GROUP_CHAT_HISTORY,
+    VIEW_ALL_GROUPS,
     CREATE_GROUP,
     RENAME_GROUP,
+    VIEW_MEMBERS,
     ADD_MEMBER,
     ASSIGN_ADMIN_TO_MEMBER,
     DELETE_MEMBER,
     CHAT_GROUP,
-    ENCRYPT_GROUP
+    ENCRYPT_GROUP,
+    
+    FRIEND_STATUS
 }

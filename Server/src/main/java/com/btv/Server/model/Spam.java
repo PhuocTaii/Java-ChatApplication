@@ -20,12 +20,12 @@ public class Spam {
         return spamName;
     }
 
-    public String getSpamUsername() {
-        return spamUsername;
+    public String getReportedUsername() {
+        return reportedUsername;
     }
 
-    public void setSpamUsername(String spamUsername) {
-        this.spamUsername = spamUsername;
+    public void setReportedUsername(String reportedUsername) {
+        this.reportedUsername = reportedUsername;
     }
 
     public Date getSpamTime() {
@@ -67,4 +67,21 @@ public class Spam {
     public void setReportId(int reportId) {
         this.reportId = reportId;
     }
+
+    public String getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(String reporter) {
+        this.reporter = reporter;
+    }
+
+    public boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+    
 }

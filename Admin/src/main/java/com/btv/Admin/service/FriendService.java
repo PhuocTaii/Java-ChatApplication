@@ -22,7 +22,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class FriendService {
     public String[][] getAllFriends(){
-        var clientSocket = ClientSocket.getInstance();
+        ClientSocket clientSocket = ClientSocket.getInstance();
         try{
             clientSocket.dataOut.write(MessageType.VIEW_USER_FRIEND.toString());
             clientSocket.dataOut.newLine();

@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
         onlineUsers = new OnlineUsers();
         group = new AllGroups();
         
-        spam = new AllSpams();
+        spam = new AllSpams(this);
         
         listLogin = new ListLogin();
         
@@ -53,21 +53,27 @@ public class Main extends javax.swing.JFrame {
                 switch (index) {
                     case 0:
                         setForm(users);
+                        users.updateTable();
                         break;
                     case 1:
                         setForm(listLogin);
+                        listLogin.updateTable();
                         break;
                     case 2:
                         setForm(group);
+                        group.updateTable();
                         break;
                     case 3:
                         setForm(spam);
+                        spam.updateTable();
                         break;
                     case 4:
                         setForm(newUsers);
+                        newUsers.updateTable();
                         break;
                     case 5:
                         setForm(userFriends);
+                        userFriends.updateTable();
                         break;
                     default:
                         setForm(onlineUsers);

@@ -5,6 +5,9 @@
 package com.btv.User.gui;
 
 import com.btv.User.gui.interfaces.LoginListener;
+import com.btv.User.helper.MessageStatus;
+import com.btv.User.service.AuthService;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,6 +15,8 @@ import com.btv.User.gui.interfaces.LoginListener;
  */
 public class Login extends javax.swing.JFrame {
     private LoginListener loginListener;
+    
+    public String username, password;
     /**
      * Creates new form SignIn
      */
@@ -41,6 +46,7 @@ public class Login extends javax.swing.JFrame {
         passField = new javax.swing.JPasswordField();
         jPanel1 = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
+        forgotPassLink = new javax.swing.JLabel();
         link = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         signUpLink = new javax.swing.JLabel();
@@ -148,18 +154,29 @@ public class Login extends javax.swing.JFrame {
         });
         jPanel1.add(loginButton);
 
+        forgotPassLink.setForeground(new java.awt.Color(48, 162, 255));
+        forgotPassLink.setText("Forgot password?");
+        forgotPassLink.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        forgotPassLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                forgotPassLinkMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout formLayout = new javax.swing.GroupLayout(form);
         form.setLayout(formLayout);
         formLayout.setHorizontalGroup(
             formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(formLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
+                .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(forgotPassLink)
+                    .addGroup(formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         formLayout.setVerticalGroup(
             formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,7 +186,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(10, 10, 10)
+                .addComponent(forgotPassLink)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
@@ -206,18 +225,54 @@ public class Login extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
         // handle login here
-        
-        loginListener.onLoginButtonClicked();
+        if(setTextFields()) {
+            AuthService authService = new AuthService();
+            MessageStatus res = authService.login(username, password);
+            if(!res.isSuccess()) {
+                JOptionPane.showMessageDialog(this, res.getMessage(), "Login notification", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Welcome to ChatChat", "Login successfully", JOptionPane.INFORMATION_MESSAGE);
+                loginListener.onLoginSuccess();
+            }
+        }
+        else
+            return;
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void signUpLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signUpLinkMouseClicked
         // TODO add your handling code here:
-        if(loginListener != null) {
-            loginListener.onSignUpLinkClicked();
-        }
+        loginListener.onSignUpLinkClicked();
     }//GEN-LAST:event_signUpLinkMouseClicked
 
+    private void forgotPassLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotPassLinkMouseClicked
+        // TODO add your handling code here:
+        String username = JOptionPane.showInputDialog(this, 
+            "Please enter username: ", 
+            "Forgot password",
+            JOptionPane.QUESTION_MESSAGE);
+        if(username == null || "".equals(username)) {
+            JOptionPane.showMessageDialog(this, "Please provide username to reset password", "Forgot password warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        AuthService authService = new AuthService();
+        MessageStatus res = authService.forgotPassword(username);
+        JOptionPane.showMessageDialog(this, "We have sent new password to your email: " + res.getMessage(), "Forgot password information", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_forgotPassLinkMouseClicked
+
+    public boolean setTextFields() {
+        username = usernameField.getText();
+        char[] passChar = passField.getPassword();
+        password = new String(passChar);
+        if("".equals(username) || "".equals(password)) {
+            JOptionPane.showMessageDialog(this, "Please fill all fields", "Login warning", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel forgotPassLink;
     private javax.swing.JPanel form;
     private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;

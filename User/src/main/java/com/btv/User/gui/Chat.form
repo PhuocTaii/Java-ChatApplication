@@ -17,6 +17,10 @@
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="jPanel1">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+      </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
           <BorderConstraints direction="Center"/>
@@ -44,43 +48,26 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="receiver" min="-2" pref="112" max="-2" attributes="0"/>
-                      <EmptySpace pref="642" max="32767" attributes="0"/>
-                      <Component id="reportButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="encodeButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="receiverLabel" min="-2" pref="491" max="-2" attributes="0"/>
+                      <EmptySpace pref="297" max="32767" attributes="0"/>
+                      <Component id="downButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="reportButton" alignment="0" max="32767" attributes="0"/>
-                  <Component id="encodeButton" alignment="0" max="32767" attributes="0"/>
-                  <Component id="receiver" alignment="1" pref="40" max="32767" attributes="0"/>
+                  <Component id="downButton" alignment="0" pref="40" max="32767" attributes="0"/>
+                  <Component id="receiverLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="reportButton">
+            <Component class="javax.swing.JButton" name="downButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new ImageIcon(getClass().getResource(&quot;/images/warning.png&quot;))" type="code"/>
-                </Property>
-                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                  <Border info="null"/>
-                </Property>
-                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Default Cursor"/>
-                </Property>
-                <Property name="focusPainted" type="boolean" value="false"/>
-                <Property name="focusable" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JButton" name="encodeButton">
-              <Properties>
-                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="new ImageIcon(getClass().getResource(&quot;/images/encode.png&quot;))&#xd;&#xa;" type="code"/>
+                  <Connection code="new ImageIcon(getClass().getResource(&quot;/images/down.png&quot;))&#xa;    " type="code"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
@@ -88,18 +75,27 @@
                 <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="downButtonMouseClicked"/>
+              </Events>
             </Component>
-            <Component class="java.awt.Label" name="receiver">
+            <Component class="javax.swing.JLabel" name="receiverLabel">
               <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Dialog" size="18" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="NVanA"/>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="opaque" type="boolean" value="true"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JScrollPane" name="chatZone">
+        <Container class="javax.swing.JScrollPane" name="chatZoneScroll">
           <Properties>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[788, 32767]"/>
@@ -186,6 +182,10 @@
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+      </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
           <BorderConstraints direction="East"/>
@@ -198,10 +198,10 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jPanel4" max="32767" attributes="0"/>
+                      <Component id="groupInfoPanel" max="32767" attributes="0"/>
                       <Component id="jScrollPane3" pref="240" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
-                      <Component id="jButton2" alignment="1" max="32767" attributes="0"/>
+                      <Component id="createGroupBtn" alignment="1" max="32767" attributes="0"/>
                       <Component id="UserGoupChat" alignment="1" max="32767" attributes="0"/>
                       <Component id="friendlist" alignment="1" max="32767" attributes="0"/>
                   </Group>
@@ -213,18 +213,18 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                  <Component id="jPanel4" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="groupInfoPanel" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="friendlist" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" min="-2" pref="158" max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" pref="158" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="UserGoupChat" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane3" pref="195" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="createGroupBtn" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -237,6 +237,10 @@
             </Property>
             <Property name="text" type="java.lang.String" value="LIST FRIENDS"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="UserGoupChat">
           <Properties>
@@ -245,8 +249,12 @@
             </Property>
             <Property name="text" type="java.lang.String" value="GROUP CHAT"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+          </AuxValues>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton2">
+        <Component class="javax.swing.JButton" name="createGroupBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="a2" red="30" type="rgb"/>
@@ -257,7 +265,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createGroupBtnActionPerformed"/>
           </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -272,9 +280,13 @@
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>
                 </Property>
+                <Property name="selectionMode" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="friendListValueChanged"/>
+              </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;User&gt;"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -288,17 +300,24 @@
           <SubComponents>
             <Component class="javax.swing.JList" name="groupList">
               <Properties>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>
                 </Property>
+                <Property name="selectionMode" type="int" value="0"/>
               </Properties>
+              <Events>
+                <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="groupListValueChanged"/>
+              </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Group&gt;"/>
               </AuxValues>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel4">
+        <Container class="javax.swing.JPanel" name="groupInfoPanel">
           <Properties>
             <Property name="opaque" type="boolean" value="false"/>
           </Properties>
@@ -313,7 +332,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="groupMember" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Component id="AddmemberButton" min="-2" max="-2" attributes="0"/>
+                              <Component id="addMemberButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
@@ -326,7 +345,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="groupMember" max="32767" attributes="0"/>
-                          <Component id="AddmemberButton" min="-2" pref="28" max="-2" attributes="0"/>
+                          <Component id="addMemberButton" min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="225" max="-2" attributes="0"/>
@@ -346,14 +365,21 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="MEMBERS"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+              </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="AddmemberButton">
+            <Component class="javax.swing.JButton" name="addMemberButton">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="a2" red="30" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Add member"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addMemberButtonActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane2">
               <AuxValues>
@@ -365,18 +391,14 @@
                 <Component class="javax.swing.JTable" name="memberTable">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="3" rowCount="3">
-                        <Column editable="false" title="Username" type="java.lang.Object">
-                          <Data value="Text"/>
-                          <Data value="Text"/>
-                          <Data value="Text"/>
-                        </Column>
+                      <Table columnCount="3" rowCount="0">
+                        <Column editable="false" title="Username" type="java.lang.Object"/>
                         <Column editable="true" title="Admin" type="java.lang.Boolean"/>
-                        <Column editable="false" title="" type="java.lang.Object"/>
+                        <Column editable="true" title="" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="0">
+                      <TableColumnModel selectionModel="1">
                         <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
                           <Title/>
                           <Editor/>
@@ -394,13 +416,11 @@
                         </Column>
                       </TableColumnModel>
                     </Property>
+                    <Property name="columnSelectionAllowed" type="boolean" value="true"/>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="class ButtonRenderer extends DefaultTableCellRenderer {&#xa;    private JButton button;&#xa;&#xa;    public ButtonRenderer() {&#xa;        button = new JButton(&quot;Remove&quot;);&#xa;        button.setBackground(new Color(239,149,149));&#xa;        button.setOpaque(true);&#xa;    }&#xa;&#xa;    @Override&#xa;    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {&#xa;        return button;&#xa;    }&#xa;}&#xa;&#xa;memberTable.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());&#xa;//jTable1.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JCheckBox()));"/>
-                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>

@@ -34,6 +34,7 @@ public class Main {
                 BufferedReader dataIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 // read role
                 String role = dataIn.readLine();
+                
                 ClientHandler clientHandler;
                 if(role.equalsIgnoreCase("admin")) {
                     System.out.println("Role: admin");

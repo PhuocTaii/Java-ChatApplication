@@ -4,7 +4,7 @@
  */
 package com.btv.User.gui.components;
 
-import com.btv.User.helper.TableActionEvent;
+import com.btv.User.gui.interfaces.SearchUserActionEvent;
 import java.awt.Component;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -12,24 +12,20 @@ import javax.swing.JTable;
 
 /**
  *
- * @author Vo Quoc Binh
+ * @author tvan
  */
 public class TableActionCellEditor extends DefaultCellEditor{
-    private TableActionEvent event;
-    
-    public TableActionCellEditor(TableActionEvent event){
-        super(new JCheckBox());
-        this.event=event;
-    }
+    private SearchUserActionEvent event;
 
+    public TableActionCellEditor(SearchUserActionEvent event) {
+        super(new JCheckBox());
+        this.event = event;
+    }
+    
     @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        PanelActionUser action=new PanelActionUser();
+    public Component getTableCellEditorComponent(JTable jtable, Object o, boolean bln, int row, int column) {
+        PanelActionUser action = new PanelActionUser();
         action.initEvent(event, row);
-        action.setBackground(table.getSelectionBackground());
         return action;
     }
-    
-    
-    
 }

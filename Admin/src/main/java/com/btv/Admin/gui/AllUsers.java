@@ -6,9 +6,7 @@ package com.btv.Admin.gui;
 
 import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
-import java.awt.Color;
 import java.sql.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.logging.Level;
@@ -18,7 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -42,7 +39,8 @@ public class AllUsers extends javax.swing.JPanel {
 
         updateTable();
         addUserDialog.setLocationRelativeTo(null);
-        tableClickHandle();
+        tableClickHandle();        
+        userService.filterByField(tableUsers, "", "");
     }
 
     public void tableClickHandle() {
@@ -87,14 +85,13 @@ public class AllUsers extends javax.swing.JPanel {
                             case 5:
 
                                 String male = tableUsers.getValueAt(selectedRow, i).toString();
-                                if (male.equals("true")) {
+                                if (male.equalsIgnoreCase("male")) {
                                     maleRadioButton.setSelected(true);
-                                    selectedUser.setGender(1);
+                                    selectedUser.setGender(true);
 
                                 } else {
                                     femaleRadioButton.setSelected(true);
-                                    selectedUser.setGender(0);
-
+                                    selectedUser.setGender(false);
                                 }
                                 break;
                             case 6:
@@ -167,16 +164,17 @@ public class AllUsers extends javax.swing.JPanel {
         selectedUser.setBirthday(new Date(birthChooser.getDate().getTime()));
 
         if (maleRadioButton.isSelected()) {
-            selectedUser.setGender(1);
+            selectedUser.setGender(true);
         } else {
-            selectedUser.setGender(0);
+            selectedUser.setGender(false);
         }
         selectedUser.setEmail(emailField.getText());
         selectedUser.setPassword(new String(passwordField.getPassword()));
 
         if (isLocked) {
             selectedUser.setStatus("LOCKED");
-        } else {
+        } 
+        else if (selectedUser.getStatus().equals("LOCKED")) {
             selectedUser.setStatus("OFFLINE");
         }
 
@@ -191,6 +189,12 @@ public class AllUsers extends javax.swing.JPanel {
         emailField.setText("");
         passwordField.setText("");
         messageField.setText("");
+        
+        isLocked = false;
+        lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/unlock.png")));
+        
+        loginList.setModel(new DefaultListModel<>());
+        friendList.setModel(new DefaultListModel<>());
     }
 
     private void getLoginListByUser(User user) {
@@ -227,93 +231,91 @@ public class AllUsers extends javax.swing.JPanel {
         genderBtnGroup = new javax.swing.ButtonGroup();
         addUserDialog = new javax.swing.JDialog();
         titleAddDialg = new javax.swing.JLabel();
-        inputPanel = new javax.swing.JPanel();
-        addFieldsPanel = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        usernameAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel inputPanel = new javax.swing.JPanel();
+        javax.swing.JPanel addFieldsPanel = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
+        javax.swing.JLabel usernameAddLabel = new javax.swing.JLabel();
         usernameAddField = new javax.swing.JTextField();
         javax.swing.Box.Filler filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel10 = new javax.swing.JPanel();
-        passwordAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel10 = new javax.swing.JPanel();
+        javax.swing.JLabel passwordAddLabel = new javax.swing.JLabel();
         passwordAddField = new javax.swing.JTextField();
         javax.swing.Box.Filler filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel5 = new javax.swing.JPanel();
-        emailAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel5 = new javax.swing.JPanel();
+        javax.swing.JLabel emailAddLabel = new javax.swing.JLabel();
         emailAddField = new javax.swing.JTextField();
         javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel9 = new javax.swing.JPanel();
-        genderAddLabel = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel9 = new javax.swing.JPanel();
+        javax.swing.JLabel genderAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
         maleRadioButtonAdd = new javax.swing.JRadioButton();
         femaleRadioButtonAdd = new javax.swing.JRadioButton();
         javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        addFieldsPanel1 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        nameAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel addFieldsPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel6 = new javax.swing.JPanel();
+        javax.swing.JLabel nameAddLabel = new javax.swing.JLabel();
         nameAddField = new javax.swing.JTextField();
         javax.swing.Box.Filler filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel7 = new javax.swing.JPanel();
-        addressAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel7 = new javax.swing.JPanel();
+        javax.swing.JLabel addressAddLabel = new javax.swing.JLabel();
         addressAddField = new javax.swing.JTextField();
         javax.swing.Box.Filler filler6 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
         jPanel8 = new javax.swing.JPanel();
-        birthAddLabel = new javax.swing.JLabel();
+        javax.swing.JLabel birthAddLabel = new javax.swing.JLabel();
         birthDateChooserAdd = new com.toedter.calendar.JDateChooser();
         javax.swing.Box.Filler filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
-        jPanel3 = new javax.swing.JPanel();
-        messageAddLabel = new javax.swing.JLabel();
+        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
-        messageAddLabel1 = new javax.swing.JLabel();
         genderAddbuttonGroup = new javax.swing.ButtonGroup();
-        title = new javax.swing.JLabel();
-        controlSection = new javax.swing.JPanel();
-        filterLabel = new javax.swing.JLabel();
+        javax.swing.JLabel title = new javax.swing.JLabel();
+        javax.swing.JPanel controlSection = new javax.swing.JPanel();
+        javax.swing.JLabel filterLabel = new javax.swing.JLabel();
         filterOptions = new javax.swing.JComboBox<>();
         filterTextField = new javax.swing.JTextField(16);
         statusOptions = new javax.swing.JComboBox<>();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         addBtn = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableUsers = new com.btv.Admin.gui.components.TableCustom();
-        infoSection = new javax.swing.JPanel();
-        infoFields = new javax.swing.JPanel();
-        usernamePanel = new javax.swing.JPanel();
-        usernameLabel = new javax.swing.JLabel();
+        javax.swing.JPanel infoSection = new javax.swing.JPanel();
+        javax.swing.JPanel infoFields = new javax.swing.JPanel();
+        javax.swing.JPanel usernamePanel = new javax.swing.JPanel();
+        javax.swing.JLabel usernameLabel = new javax.swing.JLabel();
         usernameField = new javax.swing.JTextField();
-        namePanel = new javax.swing.JPanel();
-        nameLabel = new javax.swing.JLabel();
+        javax.swing.JPanel namePanel = new javax.swing.JPanel();
+        javax.swing.JLabel nameLabel = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
-        addressPanel = new javax.swing.JPanel();
-        addressLabel = new javax.swing.JLabel();
+        javax.swing.JPanel addressPanel = new javax.swing.JPanel();
+        javax.swing.JLabel addressLabel = new javax.swing.JLabel();
         addressField = new javax.swing.JTextField();
-        birthPanel = new javax.swing.JPanel();
-        birthLabel = new javax.swing.JLabel();
+        javax.swing.JPanel birthPanel = new javax.swing.JPanel();
+        javax.swing.JLabel birthLabel = new javax.swing.JLabel();
         birthChooser = new com.toedter.calendar.JDateChooser();
-        genderPanel = new javax.swing.JPanel();
-        genderLabel = new javax.swing.JLabel();
-        genderOptionPanel = new javax.swing.JPanel();
+        javax.swing.JPanel genderPanel = new javax.swing.JPanel();
+        javax.swing.JLabel genderLabel = new javax.swing.JLabel();
+        javax.swing.JPanel genderOptionPanel = new javax.swing.JPanel();
         maleRadioButton = new javax.swing.JRadioButton();
         femaleRadioButton = new javax.swing.JRadioButton();
-        emailPanel = new javax.swing.JPanel();
-        addressLabel1 = new javax.swing.JLabel();
+        javax.swing.JPanel emailPanel = new javax.swing.JPanel();
+        javax.swing.JLabel addressLabel1 = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
-        passwordPanel = new javax.swing.JPanel();
-        passwordLabel = new javax.swing.JLabel();
+        javax.swing.JPanel passwordPanel = new javax.swing.JPanel();
+        javax.swing.JLabel passwordLabel = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
-        messagePanel = new javax.swing.JPanel();
-        messageLabel1 = new javax.swing.JLabel();
+        javax.swing.JPanel messagePanel = new javax.swing.JPanel();
+        javax.swing.JLabel messageLabel1 = new javax.swing.JLabel();
         messageField = new javax.swing.JTextField();
-        actionPanel = new javax.swing.JPanel();
+        javax.swing.JPanel actionPanel = new javax.swing.JPanel();
         updateButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         lockToggleButton = new javax.swing.JToggleButton();
-        loginHistoryPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        javax.swing.JPanel loginHistoryPanel = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         loginScrollPane = new javax.swing.JScrollPane();
         loginList = new javax.swing.JList<>();
-        friendsPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        javax.swing.JPanel friendsPanel = new javax.swing.JPanel();
+        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         friendList = new javax.swing.JList<>();
 
@@ -322,19 +324,20 @@ public class AllUsers extends javax.swing.JPanel {
         addUserDialog.setMinimumSize(new java.awt.Dimension(860, 295));
         addUserDialog.setModal(true);
         addUserDialog.setResizable(false);
-        addUserDialog.setSize(new java.awt.Dimension(900, 620));
+        addUserDialog.setSize(new java.awt.Dimension(900, 370));
 
         titleAddDialg.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         titleAddDialg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titleAddDialg.setText("ADD NEW USER");
+        titleAddDialg.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 0, 5, 0));
         titleAddDialg.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addUserDialog.getContentPane().add(titleAddDialg, java.awt.BorderLayout.NORTH);
 
-        inputPanel.setPreferredSize(new java.awt.Dimension(900, 500));
+        inputPanel.setPreferredSize(new java.awt.Dimension(900, 220));
         inputPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 0));
 
         addFieldsPanel.setMinimumSize(new java.awt.Dimension(300, 183));
-        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel.setPreferredSize(new java.awt.Dimension(300, 215));
         addFieldsPanel.setLayout(new javax.swing.BoxLayout(addFieldsPanel, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel4.setMaximumSize(new java.awt.Dimension(2147483647, 42));
@@ -438,7 +441,7 @@ public class AllUsers extends javax.swing.JPanel {
         inputPanel.add(addFieldsPanel);
 
         addFieldsPanel1.setMinimumSize(new java.awt.Dimension(300, 300));
-        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 300));
+        addFieldsPanel1.setPreferredSize(new java.awt.Dimension(300, 215));
         addFieldsPanel1.setLayout(new javax.swing.BoxLayout(addFieldsPanel1, javax.swing.BoxLayout.Y_AXIS));
 
         jPanel6.setMaximumSize(new java.awt.Dimension(2147483647, 42));
@@ -507,34 +510,21 @@ public class AllUsers extends javax.swing.JPanel {
             }
         });
 
-        messageAddLabel1.setText("Message: ");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(238, 238, 238)
-                .addComponent(messageAddLabel1)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(messageAddLabel)))
+                .addGap(379, 379, 379)
+                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(messageAddLabel)
-                    .addComponent(messageAddLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
+                .addGap(17, 17, 17)
+                .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(33, 33, 33))
         );
 
         addUserDialog.getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
@@ -861,27 +851,25 @@ public class AllUsers extends javax.swing.JPanel {
             infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoSectionLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(actionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(loginHistoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                .addComponent(friendsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                 .addContainerGap())
         );
         infoSectionLayout.setVerticalGroup(
             infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoSectionLayout.createSequentialGroup()
-                .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(actionPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
-                    .addComponent(infoFields, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, infoSectionLayout.createSequentialGroup()
-                        .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(friendsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(loginHistoryPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(infoSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(friendsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginHistoryPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(actionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(infoFields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -910,8 +898,8 @@ public class AllUsers extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(infoSection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(30, 30, 30))
+                .addComponent(infoSection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -974,7 +962,6 @@ public class AllUsers extends javax.swing.JPanel {
             String message = userService.validateUser(selectedUser);
 //            System.out.println(selectedUser.getStatus());
 
-//            System.out.println(selectedUser.getUsername());
             if (message.equals("valid")) {
                 userService.modifyUser(selectedUser);
                 clearField();
@@ -987,11 +974,11 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
-        int res = JOptionPane.showConfirmDialog(this,
-                "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (usernameField.getText().equals("")) {
             return;
         }
+        int res = JOptionPane.showConfirmDialog(this,
+                "Sure you want to delete this user?", "Delete comfirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (res == JOptionPane.YES_OPTION) {
             userService.deleteUser(selectedUser);
@@ -1002,6 +989,9 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void lockToggleButtontoggleLockUser(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockToggleButtontoggleLockUser
         // TODO add your handling code here:
+        if (usernameField.getText().equals("")) {
+            return;
+        }
         isLocked = !isLocked;
         if (isLocked) {
             lockToggleButton.setIcon(new ImageIcon(getClass().getResource("/com/btv/images/lock.png")));
@@ -1039,7 +1029,7 @@ public class AllUsers extends javax.swing.JPanel {
 
         String address, email, name, password, status, username;
         Date birthday, timeCreate;
-        int gender;
+        boolean gender;
         address = addressAddField.getText();
         email = emailAddField.getText();
         name = nameAddField.getText();
@@ -1055,9 +1045,9 @@ public class AllUsers extends javax.swing.JPanel {
 
         timeCreate = java.sql.Date.valueOf(LocalDate.now());
         if (maleRadioButtonAdd.isSelected()) {
-            gender = 1;
+            gender = true;
         } else {
-            gender = 0;
+            gender = false;
         }
 
         User newUser = new User(username, name, address, birthday, gender, email, timeCreate, status, password);
@@ -1074,8 +1064,8 @@ public class AllUsers extends javax.swing.JPanel {
             usernameAddField.setText("");
             updateTable();
         } else {
-            messageAddLabel.setText(validMessage);
-            messageAddLabel.setForeground(Color.red);
+//            messageAddLabel.setText(validMessage);
+//            messageAddLabel.setForeground(Color.red);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -1085,90 +1075,42 @@ public class AllUsers extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel actionPanel;
     private javax.swing.JButton addBtn;
-    private javax.swing.JPanel addFieldsPanel;
-    private javax.swing.JPanel addFieldsPanel1;
     private javax.swing.JDialog addUserDialog;
     private javax.swing.JTextField addressAddField;
-    private javax.swing.JLabel addressAddLabel;
     private javax.swing.JTextField addressField;
-    private javax.swing.JLabel addressLabel;
-    private javax.swing.JLabel addressLabel1;
-    private javax.swing.JPanel addressPanel;
-    private javax.swing.JLabel birthAddLabel;
     private com.toedter.calendar.JDateChooser birthChooser;
     private com.toedter.calendar.JDateChooser birthDateChooserAdd;
-    private javax.swing.JLabel birthLabel;
-    private javax.swing.JPanel birthPanel;
-    private javax.swing.JPanel controlSection;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextField emailAddField;
-    private javax.swing.JLabel emailAddLabel;
     private javax.swing.JTextField emailField;
-    private javax.swing.JPanel emailPanel;
     private javax.swing.JRadioButton femaleRadioButton;
     private javax.swing.JRadioButton femaleRadioButtonAdd;
-    private javax.swing.Box.Filler filler2;
-    private javax.swing.JLabel filterLabel;
     private javax.swing.JComboBox<String> filterOptions;
     private javax.swing.JTextField filterTextField;
     private javax.swing.JList<String> friendList;
-    private javax.swing.JPanel friendsPanel;
-    private javax.swing.JLabel genderAddLabel;
     private javax.swing.ButtonGroup genderAddbuttonGroup;
     private javax.swing.ButtonGroup genderBtnGroup;
-    private javax.swing.JLabel genderLabel;
-    private javax.swing.JPanel genderOptionPanel;
-    private javax.swing.JPanel genderPanel;
-    private javax.swing.JPanel infoFields;
-    private javax.swing.JPanel infoSection;
-    private javax.swing.JPanel inputPanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToggleButton lockToggleButton;
-    private javax.swing.JPanel loginHistoryPanel;
     private javax.swing.JList<String> loginList;
     private javax.swing.JScrollPane loginScrollPane;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JRadioButton maleRadioButtonAdd;
-    private javax.swing.JLabel messageAddLabel;
-    private javax.swing.JLabel messageAddLabel1;
     private javax.swing.JTextField messageField;
-    private javax.swing.JLabel messageLabel1;
-    private javax.swing.JPanel messagePanel;
     private javax.swing.JTextField nameAddField;
-    private javax.swing.JLabel nameAddLabel;
     private javax.swing.JTextField nameField;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JPanel namePanel;
     private javax.swing.JTextField passwordAddField;
-    private javax.swing.JLabel passwordAddLabel;
     private javax.swing.JPasswordField passwordField;
-    private javax.swing.JLabel passwordLabel;
-    private javax.swing.JPanel passwordPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> statusOptions;
     private com.btv.Admin.gui.components.TableCustom tableUsers;
-    private javax.swing.JLabel title;
     private javax.swing.JLabel titleAddDialg;
     private javax.swing.JButton updateButton;
     private javax.swing.JTextField usernameAddField;
-    private javax.swing.JLabel usernameAddLabel;
     private javax.swing.JTextField usernameField;
-    private javax.swing.JLabel usernameLabel;
-    private javax.swing.JPanel usernamePanel;
     // End of variables declaration//GEN-END:variables
 }

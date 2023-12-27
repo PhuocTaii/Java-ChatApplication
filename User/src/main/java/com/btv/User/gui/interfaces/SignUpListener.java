@@ -4,10 +4,13 @@
  */
 package com.btv.User.gui.interfaces;
 
+import com.btv.User.helper.MessageStatus;
+
 /**
  *
  * @author Admin
  */
 public interface SignUpListener {
     void onLoginLinkClicked();
+    void onSignUpSuccess();
 }

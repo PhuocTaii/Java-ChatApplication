@@ -20,6 +20,7 @@ public enum MessageType {
     VIEW_FRIENDS_BY_USER,
     
     VIEW_LOGINS,
+    VIEW_LOGINS_LOG,
     
     VIEW_GROUPS,
     SORT_GROUPS,
@@ -31,6 +32,7 @@ public enum MessageType {
     SORT_SPAMS,
     FILTER_SPAMS,
     SPAM_USER,
+    LOCK_USER,
     
     VIEW_NEW_USERS,
     SORT_NEW_USERS,
