@@ -4,11 +4,10 @@ import java.sql.Date;
 
 public class User {
 
-    private String address, email, name, password, status, username, gender;
+    private String address, email, name, password, status, username;
     private Date birthday, timeCreate, loginDate;
-
+    private boolean gender; // true: male, false: female
     private int id;
-//    private int gender;
 
     public User() {
     }
@@ -21,7 +20,7 @@ public class User {
         this.address = address;
     }
 
-    public User(String username, String name, String address, Date birthday, String gender, String email, Date timeCreate, String status, String password) {
+    public User(String username, String name, String address, Date birthday, boolean gender, String email, Date timeCreate, String status, String password) {
         this.address = address;
         this.email = email;
         this.name = name;
@@ -69,11 +68,8 @@ public class User {
         this.id = id;
     }
 
-    public void setGender(int gender) {
-        if(gender == 1){
-            this.gender = "Male";
-        } else
-            this.gender = "Female";
+    public void setGender(boolean gender) {
+        this.gender = gender;
     }
 
     public void setTimeCreate(Date timeCreate) {
@@ -112,7 +108,7 @@ public class User {
         return id;
     }
 
-    public String getGender() {
+    public boolean getGender() {
         return gender;
     }
 

@@ -14,7 +14,7 @@ import javax.swing.table.TableRowSorter;
 
 public class SpamService {
 
-    public String[][] getAllSpam() {
+    public Object[][] getAllSpam() {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
             clientSocket.dataOut.write(MessageType.VIEW_SPAMS.toString());
@@ -24,12 +24,21 @@ public class SpamService {
             // read number of users
             int numSpam = clientSocket.dataIn.read();
 
-            ArrayList<String[]> spams = new ArrayList<>();
+            ArrayList<Object[]> spams = new ArrayList<>();
             for (int i = 0; i < numSpam; i++) {
                 String userData = clientSocket.dataIn.readLine();
-                spams.add(userData.split("\\|"));
+                String[] splits = userData.split("\\|");
+                Object[] objs = new Object[5];
+                for(int j = 0; j < 5; j++) {
+                    if(j != 4)
+                        objs[j] = (String)splits[j];
+                    else
+                        objs[j] = Boolean.valueOf(splits[j]);
+                }
+                
+                spams.add(objs);
             }
-            String[][] spamArray = new String[spams.size()][];
+            Object[][] spamArray = new Object[spams.size()][];
             return spams.toArray(spamArray);
         } catch (IOException e) {
             System.err.println(e);
@@ -86,6 +95,21 @@ public class SpamService {
         } else {
             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
 
+        }
+    }
+    
+    public void handleLockUser(int spamId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.LOCK_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(spamId);
+            clientSocket.dataOut.flush();
+
+        } catch (IOException e) {
+            System.err.println(e);
         }
     }
 

@@ -12,9 +12,10 @@ import java.sql.Timestamp;
  * @author tvan
  */
 public class User {
-
-    private String address, email, name, password, status, username, gender;
+    private int id;
+    private String address, email, name, password, status, username, genderStr;
     private Date birthday, timeCreate, loginDate;
+    private boolean gender;
 
     public Date getLoginDate() {
         return loginDate;
@@ -23,8 +24,6 @@ public class User {
     public void setLoginDate(Date loginDate) {
         this.loginDate = loginDate;
     }
-    private int id;
-//    private boolean gender;
 
     public void setAddress(String address) {
         this.address = address;
@@ -59,10 +58,11 @@ public class User {
     }
 
     public void setGender(boolean gender) {
+        this.gender = gender;
         if(gender){
-            this.gender = "Male";
+            this.genderStr = "Male";
         }else
-            this.gender = "Female";
+            this.genderStr = "Female";
     }
 
     public void setTimeCreate(Date timeCreate) {
@@ -101,11 +101,15 @@ public class User {
         return id;
     }
 
-    public String getGender() {
-        return gender;
+    public String getGenderStr() {
+        return genderStr;
     }
 
     public Date getTimeCreate() {
         return timeCreate;
+    }
+    
+    public boolean getGender() {
+        return this.gender;
     }
 }

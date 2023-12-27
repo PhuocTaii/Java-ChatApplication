@@ -68,13 +68,13 @@ public class OnlineUsers extends javax.swing.JPanel {
         endDate = new com.toedter.calendar.JDateChooser();
         Input = new javax.swing.JTextField();
         numberOptions = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableCustom1 = new com.btv.Admin.gui.components.TableCustom();
         statisticzone = new javax.swing.JPanel();
         zoneName = new javax.swing.JLabel();
         year = new javax.swing.JLabel();
         yearchooser = new com.toedter.calendar.JYearChooser();
         statistic = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tableCustom1 = new com.btv.Admin.gui.components.TableCustom();
 
         setOpaque(false);
 
@@ -179,6 +179,24 @@ public class OnlineUsers extends javax.swing.JPanel {
 
         //numberOptions.setVisible(false);
 
+        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Username", "Time create", "Time open app", "No. users chat with", "No. groups chat with"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tableCustom1);
+
         statisticzone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         statisticzone.setOpaque(false);
 
@@ -196,6 +214,7 @@ public class OnlineUsers extends javax.swing.JPanel {
             }
         });
 
+        statistic.setPreferredSize(new java.awt.Dimension(0, 160));
         statistic.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 statisticPropertyChange(evt);
@@ -210,7 +229,7 @@ public class OnlineUsers extends javax.swing.JPanel {
         );
         statisticLayout.setVerticalGroup(
             statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 243, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout statisticzoneLayout = new javax.swing.GroupLayout(statisticzone);
@@ -222,12 +241,12 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addComponent(year)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(yearchooser, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(412, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(statisticzoneLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, 937, Short.MAX_VALUE))
                 .addContainerGap())
         );
         statisticzoneLayout.setVerticalGroup(
@@ -240,30 +259,9 @@ public class OnlineUsers extends javax.swing.JPanel {
                     .addComponent(yearchooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(year, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10))
+                .addComponent(statistic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        tableCustom1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Username", "Time create", "Time open app", "No. users chat with", "No. groups chat with"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(tableCustom1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -285,10 +283,10 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(statisticzone, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(30, 30, 30))
+                .addComponent(statisticzone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(152, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

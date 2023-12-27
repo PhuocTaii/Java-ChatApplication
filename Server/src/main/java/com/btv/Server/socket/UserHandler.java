@@ -4,7 +4,7 @@
  */
 package com.btv.Server.socket;
 
-import com.btv.Server.database.ChatDB;
+import com.btv.Server.database.UserHandleDB;
 import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
 import com.btv.Server.model.ChatMessage;
@@ -35,9 +35,10 @@ public class UserHandler extends ClientHandler{
 
     public void handleMessage(String messStr) {
         UserMessage mess =  UserMessage.valueOf(messStr);
-        ChatDB db = ChatDB.getDBInstance();
+        UserHandleDB db = UserHandleDB.getDBInstance();
         boolean isSuccess;
         String messFail;
+        
         JSONObject messRes = new JSONObject();
         messRes.put("type", messStr);
         
@@ -459,7 +460,7 @@ public class UserHandler extends ClientHandler{
     }
     
     private void loginSuccess(int uid) {
-        ChatDB db = ChatDB.getDBInstance();
+        UserHandleDB db = UserHandleDB.getDBInstance();
         this.userId = uid;
         userHandlers.add(this);
         db.updateAccountStatus(uid, "ONLINE");
@@ -467,7 +468,7 @@ public class UserHandler extends ClientHandler{
     }
     
     public void broadCastStatusToFriends(boolean isOnline) {
-        ChatDB db = ChatDB.getDBInstance();
+        UserHandleDB db = UserHandleDB.getDBInstance();
         
         JSONObject messRes = new JSONObject();
         messRes.put("type", UserMessage.FRIEND_STATUS.toString());
@@ -493,7 +494,7 @@ public class UserHandler extends ClientHandler{
     
     protected void removeClientFromList() {
         userHandlers.remove(this);
-        ChatDB db = ChatDB.getDBInstance();
+        UserHandleDB db = UserHandleDB.getDBInstance();
         db.updateAccountStatus(this.userId, "OFFLINE");
         broadCastStatusToFriends(false);
     }

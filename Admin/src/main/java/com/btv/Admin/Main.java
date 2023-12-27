@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
         onlineUsers = new OnlineUsers();
         group = new AllGroups();
         
-        spam = new AllSpams();
+        spam = new AllSpams(this);
         
         listLogin = new ListLogin();
         

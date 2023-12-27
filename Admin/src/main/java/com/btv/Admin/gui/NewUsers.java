@@ -4,21 +4,13 @@
  */
 package com.btv.Admin.gui;
 
-//import com.btv.Admin.service.UserService;
 import com.btv.Admin.gui.components.GraphDrawer;
 import com.btv.Admin.service.NewUserService;
 import java.awt.BorderLayout;
-//import java.awt.BorderLayout;
-//import java.awt.Color;
-//import java.awt.Dimension;
-//import java.awt.Graphics;
-//import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.Date;
 import javax.swing.JComboBox;
-//import javax.swing.JPanel;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
@@ -244,7 +236,7 @@ public class NewUsers extends javax.swing.JPanel {
         );
         statisticLayout.setVerticalGroup(
             statisticLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 234, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout statisticzoneLayout = new javax.swing.GroupLayout(statisticzone);
@@ -255,15 +247,15 @@ public class NewUsers extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
-                        .addGap(0, 446, Short.MAX_VALUE)
+                        .addGap(0, 426, Short.MAX_VALUE)
                         .addComponent(year)
                         .addGap(18, 18, 18)
                         .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(435, 435, 435))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
-                        .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(statistic, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         statisticzoneLayout.setVerticalGroup(
@@ -276,8 +268,8 @@ public class NewUsers extends javax.swing.JPanel {
                     .addComponent(year, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(statistic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         tableUsers.setModel(new javax.swing.table.DefaultTableModel(

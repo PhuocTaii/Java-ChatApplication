@@ -6,7 +6,6 @@ import com.btv.Server.model.Login;
 import com.btv.Server.model.OnlineUser;
 import com.btv.Server.model.Spam;
 import com.btv.Server.model.User;
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,9 +19,7 @@ import java.util.ArrayList;
  */
 public class AdminHandleDB extends ChatDB{
 
-//    private Connection connection;
     private static AdminHandleDB dbInstance = null;
-
 
     private AdminHandleDB() {
         super();
@@ -84,7 +81,7 @@ public class AdminHandleDB extends ChatDB{
         //email,
         preparedStatement.setString(5, split[4]);
         //gender
-        preparedStatement.setString(6, split[5]);
+        preparedStatement.setBoolean(6, Boolean.valueOf(split[5]));
         //time_create
         preparedStatement.setString(7, split[6]);
         //u_status
@@ -112,7 +109,7 @@ public class AdminHandleDB extends ChatDB{
         //email,
         preparedStatement.setString(5, split[4]);
         //gender
-        preparedStatement.setString(6, split[5]);
+        preparedStatement.setBoolean(6, Boolean.valueOf(split[5]));
         //u_status
         preparedStatement.setString(7, split[7]);
         //u_password
@@ -298,18 +295,19 @@ public class AdminHandleDB extends ChatDB{
             Statement stmt = connection.createStatement();
 
             String sql = """
-                         SELECT spam_id, username, report_time, u_name
-                         FROM SpamList spam
-                         JOIN User user ON spam.reported_id = user.u_id
+                         SELECT s.spam_id, s.report_time, u.username as reporter, u1.username as reported, u1.u_status
+                         FROM SpamList s
+                         JOIN User u ON s.u_id = u.u_id
+                         JOIN User u1 ON s.reported_id = u1.u_id
             """;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Spam tempSpam = new Spam();
                 tempSpam.setSpamId(rs.getInt("spam_id"));
-                tempSpam.setSpamUsername(rs.getString("username"));
+                tempSpam.setReporter(rs.getString("reporter"));
                 tempSpam.setSpamTime(rs.getDate("report_time"));
-                tempSpam.setSpamName(rs.getString("u_name"));
-
+                tempSpam.setReportedUsername(rs.getString("reported"));
+                tempSpam.setIsLocked(rs.getString("u_status").equals("LOCKED"));
                 resList.add(tempSpam);
             }
 
@@ -421,5 +419,25 @@ public class AdminHandleDB extends ChatDB{
             e.printStackTrace();
         }
         return resList;
+    }
+    
+    public boolean lockUserSpam(int spamId) {
+        try {
+            String sql = """
+                         UPDATE User u
+                         SET u_status = 'LOCKED'
+                         WHERE (u.u_id = (SELECT s.reported_id
+                                          FROM SpamList s
+                                          WHERE s.spam_id = ?))
+                         """;
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, spamId);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

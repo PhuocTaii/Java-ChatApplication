@@ -47,7 +47,7 @@ public class AdminHandler extends ClientHandler {
                         dataOut.write(user.getName() + "|");
                         dataOut.write(user.getAddress() + "|");
                         dataOut.write(user.getBirthday().toString() + "|");
-                        dataOut.write(user.getGender() + "|");
+                        dataOut.write(user.getGenderStr() + "|");
                         dataOut.write(user.getEmail() + "|");
                         dataOut.write(user.getTimeCreate().toString() + "|");
                         dataOut.write(user.getStatus() + "|");
@@ -106,7 +106,7 @@ public class AdminHandler extends ClientHandler {
                 try {
                     String userData = dataIn.readLine();
                     String[] split = userData.split("\\|");
-                    System.out.println(split[0]);
+//                    System.out.println(split[0]);
                     db.deleteUser(split[0]);
                 } catch (IOException | SQLException ex) {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -248,9 +248,10 @@ public class AdminHandler extends ClientHandler {
                     // send data of all users
                     for (Spam spam : allSpams) {
                         dataOut.write(spam.getSpamId()+ "|");
-                        dataOut.write(spam.getSpamUsername()+ "|");
+                        dataOut.write(spam.getReporter()+ "|");
                         dataOut.write(spam.getSpamTime()+ "|");
-                        dataOut.write(spam.getSpamName()+ "|");
+                        dataOut.write(spam.getReportedUsername()+ "|");
+                        dataOut.write(spam.getIsLocked()+ "|");
 
                         dataOut.newLine();
                     }
@@ -263,7 +264,7 @@ public class AdminHandler extends ClientHandler {
             case VIEW_ONLINE_USERS:                
                 try {
                     String dates = dataIn.readLine();
-                    System.out.println(dates);
+//                    System.out.println(dates);
                     String[] split = dates.split("\\|");
                     
                     ArrayList<OnlineUser> allOnlineUsers = db.GetAllOnlineUsers(split);
@@ -289,6 +290,18 @@ public class AdminHandler extends ClientHandler {
                     Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
+                
+            case LOCK_USER:                
+                try {
+                    int spamId = dataIn.read();
+                    
+                    db.lockUserSpam(spamId);
+
+                } catch (IOException ex) {
+                    Logger.getLogger(AdminHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+                
             case VIEW_LOGINS_LOG:
                 ArrayList<Login> allLogins = db.GetAllLogins();
                 try {
