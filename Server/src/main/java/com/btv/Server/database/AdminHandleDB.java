@@ -295,19 +295,24 @@ public class AdminHandleDB extends ChatDB{
             Statement stmt = connection.createStatement();
 
             String sql = """
-                         SELECT s.spam_id, s.report_time, u.username as reporter, u1.username as reported, u1.u_status
-                         FROM SpamList s
-                         JOIN User u ON s.u_id = u.u_id
-                         JOIN User u1 ON s.reported_id = u1.u_id
+                         SELECT spam_id, username, report_time, u_name, u_status
+                         FROM SpamList spam
+                         JOIN User user ON spam.reported_id = user.u_id
             """;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Spam tempSpam = new Spam();
                 tempSpam.setSpamId(rs.getInt("spam_id"));
-                tempSpam.setReporter(rs.getString("reporter"));
+                tempSpam.setSpamName(rs.getString("username"));
                 tempSpam.setSpamTime(rs.getDate("report_time"));
-                tempSpam.setReportedUsername(rs.getString("reported"));
-                tempSpam.setIsLocked(rs.getString("u_status").equals("LOCKED"));
+                tempSpam.setSpamName(rs.getString("u_name"));
+                String blocked = rs.getString("u_status");
+                if ("LOCKED".equals(blocked)) {
+                    tempSpam.setBlocked(true);
+                } else {
+                    tempSpam.setBlocked(false);
+                }
+
                 resList.add(tempSpam);
             }
 
@@ -319,6 +324,24 @@ public class AdminHandleDB extends ChatDB{
         }
 
         return resList;
+    }
+
+    public void blockedUser(String[] split) throws SQLException {
+        String query = "UPDATE User SET u_status = ? WHERE username = ?";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        if (split[0].equals("true")) {
+            preparedStatement.setString(1, "LOCKED");
+        } else {
+            preparedStatement.setString(1, "OFFLINE");
+
+        }
+        //username
+        preparedStatement.setString(2, split[1]);
+
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
     }
 
 

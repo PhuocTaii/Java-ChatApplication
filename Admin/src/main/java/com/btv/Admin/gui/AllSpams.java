@@ -4,15 +4,29 @@
  */
 package com.btv.Admin.gui;
 
+import com.btv.Admin.gui.components.ScrollBar;
 import com.btv.Admin.model.Spam;
 import com.btv.Admin.service.SpamService;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.Timer;
+import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -20,7 +34,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AllSpams extends javax.swing.JPanel {
 
-    private JFrame mainFrame;
+    private DefaultTableModel tableModel;
     private Object[][] userList;
     SpamService spamService;
     Spam selectedSpam;
@@ -28,49 +42,63 @@ public class AllSpams extends javax.swing.JPanel {
     String query = "";
     String queryOrder = "";
 
-    public AllSpams(JFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    public AllSpams() {
         initComponents();
+        selectedSpam = new Spam();
         spamService = new SpamService();
         selectedSpam = new Spam();
-        
         updateTable();
-
-        tableClickHandle();
         searchUsername();
-        spamService.filterByField(tableSpams, "", "");
+        tableClickHandle();
     }
 
     public void updateTable() {
         userList = spamService.getAllSpam();
-        DefaultTableModel tableModel = (DefaultTableModel) tableSpams.getModel();
+        tableModel = (DefaultTableModel) tableSpams.getModel();
         tableModel.setRowCount(0);
         for (Object[] row : userList) {
             tableModel.addRow(row);
         }
     }
-    
+
     public void tableClickHandle() {
         tableSpams.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                int row = tableSpams.getSelectedRow();
-                if (row != -1) {
-                    DefaultTableModel tableModel = (DefaultTableModel)tableSpams.getModel();
-                    Boolean isLocked = (Boolean)tableModel.getValueAt(row, 4);
-                    System.out.println("row: " + row + "isLocked: " + isLocked);
-                    if(!isLocked) {
-                        Object[] options = { "YES", "NO" };
-                        int selectedOption = JOptionPane.showOptionDialog(mainFrame, "Sure you want to lock " + (String)tableModel.getValueAt(row, 3), "Confirm lock", 
-                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
-                                null, options, options[1]);
-                        if(selectedOption == 0) {
-                            String spamId = (String)tableModel.getValueAt(row, 0);
-                            spamService.handleLockUser(Integer.valueOf(spamId));
-                            updateTable();
+                int selectedRow = tableSpams.getSelectedRow();
+                if (selectedRow != -1) {
+                    for (int i = 0; i < tableSpams.getColumnCount(); i++) {
+                        switch (i) {
+                            case 0:
+                                selectedSpam.setReportId(Integer.parseInt(tableSpams.getValueAt(selectedRow, i).toString()));
+                                break;
+                            case 1:
+                                selectedSpam.setSpamUsername(tableSpams.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 2:
+                                String dateString = tableSpams.getValueAt(selectedRow, i).toString();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                try {
+                                    Date parsedDate = Date.valueOf(dateString);
+                                    selectedSpam.setSpamTime(parsedDate);
+                                } catch (IllegalArgumentException ex) {
+                                    // Handle incorrect date format or parsing issues
+                                    Logger.getLogger(AllUsers.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
+                            case 3:
+                                selectedSpam.setSpamName(tableSpams.getValueAt(selectedRow, i).toString());
+                                break;
+                            case 4:
+                                Boolean blocked = Boolean.parseBoolean(tableSpams.getValueAt(selectedRow, i).toString());
+                                selectedSpam.setBlocked(blocked);
+                                spamService.blockUser(selectedSpam);
+                                updateTable();
+                            default:
+                                break;
                         }
                     }
+                    System.out.println();
                 }
-                tableSpams.clearSelection();
             }
         });
     }
@@ -84,18 +112,25 @@ public class AllSpams extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         backgroundSpams = new javax.swing.JPanel();
         titleSpams = new javax.swing.JLabel();
         spamScrollPane = new javax.swing.JScrollPane();
         tableSpams = new com.btv.Admin.gui.components.TableCustom();
         controlSectionSpam = new javax.swing.JPanel();
+        SpamsFilter = new com.btv.Admin.gui.components.ComboboxCustom();
+        comboBoxOrderSpams = new com.btv.Admin.gui.components.ComboboxCustom();
         jLabel2 = new javax.swing.JLabel();
         SpamsSort = new com.btv.Admin.gui.components.ComboboxCustom();
+        jLabel3 = new javax.swing.JLabel();
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         fromDate = new com.toedter.calendar.JDateChooser();
         labelDate = new javax.swing.JLabel();
         toDate = new com.toedter.calendar.JDateChooser();
         searchField = new javax.swing.JTextField();
+        filterButton = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         setOpaque(false);
 
@@ -112,14 +147,14 @@ public class AllSpams extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "Reporter", "Time report", "Reported user", "Lock"
+                "ID", "Username", "Time report", "Report user", "Lock"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -134,11 +169,38 @@ public class AllSpams extends javax.swing.JPanel {
 
         controlSectionSpam.setOpaque(false);
 
-        jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        SpamsFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Username", "Time report" }));
+        SpamsFilter.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        SpamsFilter.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                SpamsFilterItemStateChanged(evt);
+            }
+        });
+        SpamsFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SpamsFilterActionPerformed(evt);
+            }
+        });
+
+        comboBoxOrderSpams.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ASC", "DESC" }));
+        comboBoxOrderSpams.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        comboBoxOrderSpams.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBoxOrderSpamsItemStateChanged(evt);
+            }
+        });
+        comboBoxOrderSpams.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxOrderSpamsActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         jLabel2.setText("Filtered by");
 
-        SpamsSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Username", "Time report" }));
+        SpamsSort.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Time report", "Username" }));
         SpamsSort.setToolTipText("");
+        SpamsSort.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         SpamsSort.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 SpamsSortItemStateChanged(evt);
@@ -149,6 +211,9 @@ public class AllSpams extends javax.swing.JPanel {
                 SpamsSortActionPerformed(evt);
             }
         });
+
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel3.setText("Sorted by");
 
         fromDate.setDateFormatString("dd-MM-yyyy");
         fromDate.setMaximumSize(new java.awt.Dimension(2147483647, 30));
@@ -164,8 +229,23 @@ public class AllSpams extends javax.swing.JPanel {
         toDate.setPreferredSize(new java.awt.Dimension(200, 30));
         toDate.setVisible(false);
 
-        searchField.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        searchField.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
         searchField.setVisible(false);
+
+        filterButton.setBackground(new java.awt.Color(48, 162, 255));
+        filterButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        filterButton.setForeground(new java.awt.Color(255, 255, 255));
+        filterButton.setText("Filter");
+        filterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlSectionSpamLayout = new javax.swing.GroupLayout(controlSectionSpam);
         controlSectionSpam.setLayout(controlSectionSpamLayout);
@@ -173,32 +253,46 @@ public class AllSpams extends javax.swing.JPanel {
             controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlSectionSpamLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SpamsFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboBoxOrderSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(SpamsSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(fromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelDate)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(toDate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(filterButton)
+                .addContainerGap())
             .addGroup(controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(filler2, javax.swing.GroupLayout.DEFAULT_SIZE, 1156, Short.MAX_VALUE))
+                .addComponent(filler2, javax.swing.GroupLayout.DEFAULT_SIZE, 1103, Short.MAX_VALUE))
         );
         controlSectionSpamLayout.setVerticalGroup(
             controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlSectionSpamLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(controlSectionSpamLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(controlSectionSpamLayout.createSequentialGroup()
+                        .addComponent(labelDate, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(SpamsSort, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboBoxOrderSpams, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(SpamsFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(searchField, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fromDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(toDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fromDate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(SpamsSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(searchField))
+                    .addComponent(filterButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(controlSectionSpamLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(controlSectionSpamLayout.createSequentialGroup()
@@ -215,12 +309,12 @@ public class AllSpams extends javax.swing.JPanel {
                     .addGroup(backgroundSpamsLayout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addGroup(backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(controlSectionSpam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(controlSectionSpam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(spamScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1002, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(backgroundSpamsLayout.createSequentialGroup()
                         .addGap(377, 377, 377)
                         .addComponent(titleSpams, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         backgroundSpamsLayout.setVerticalGroup(
             backgroundSpamsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,19 +344,42 @@ public class AllSpams extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void comboBoxOrderSpamsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxOrderSpamsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxOrderSpamsActionPerformed
+
+    private void comboBoxOrderSpamsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBoxOrderSpamsItemStateChanged
+        query = SpamsFilter.getSelectedItem().toString();
+        queryOrder = comboBoxOrderSpams.getSelectedItem().toString();
+
+        spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
+    }//GEN-LAST:event_comboBoxOrderSpamsItemStateChanged
+
+    private void SpamsFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpamsFilterActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SpamsFilterActionPerformed
+
+    private void SpamsFilterItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_SpamsFilterItemStateChanged
+        query = SpamsFilter.getSelectedItem().toString();
+        queryOrder = comboBoxOrderSpams.getSelectedItem().toString();
+
+        spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
+    }//GEN-LAST:event_SpamsFilterItemStateChanged
+
     private void SpamsSortItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_SpamsSortItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_SpamsSortItemStateChanged
 
     private void SpamsSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpamsSortActionPerformed
-        JComboBox cb = (JComboBox) evt.getSource();
-        String optionChosen = (String) cb.getSelectedItem();
-        if ("None".equalsIgnoreCase(optionChosen)) {
+        String optionChosen = SpamsSort.getSelectedItem().toString();
+        if (optionChosen.equals("None")) {
             fromDate.setVisible(false);
             toDate.setVisible(false);
             labelDate.setVisible(false);
             searchField.setVisible(false);
-        } else if ("Username".equalsIgnoreCase(optionChosen)) {
+            searchField.setText("");
+            // Show all data
+        } else if (optionChosen.equals("Username")) {
             fromDate.setVisible(false);
             toDate.setVisible(false);
             labelDate.setVisible(false);
@@ -272,35 +389,56 @@ public class AllSpams extends javax.swing.JPanel {
             toDate.setVisible(true);
             labelDate.setVisible(true);
             searchField.setVisible(false);
+            searchField.setText("");
         }
-        revalidate();
 //        spamService.filterByDate(tableSpams, "", optionChosen);
     }//GEN-LAST:event_SpamsSortActionPerformed
+
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+
+
+    }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void filterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterButtonActionPerformed
+        String optionChosen = SpamsSort.getSelectedItem().toString();
+        if (optionChosen.equals("None")) {
+            updateTable();
+        } else if (optionChosen.equals("Username")) {
+            spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
+        } else {
+            spamService.filterByDate(tableSpams, fromDate.getDate(), toDate.getDate());
+        }
+    }//GEN-LAST:event_filterButtonActionPerformed
 
     public void searchUsername() {
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
-                spamService.filterBySearch(tableSpams, searchField.getText(), "Username");
+                spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
             }
 
             public void removeUpdate(DocumentEvent e) {
-                spamService.filterBySearch(tableSpams, searchField.getText(), "Username");
+                spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
             }
 
             public void insertUpdate(DocumentEvent e) {
-                spamService.filterBySearch(tableSpams, searchField.getText(), "Username");
+                spamService.sortByField(tableSpams, query, queryOrder, searchField.getText());
             }
         });
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.btv.Admin.gui.components.ComboboxCustom SpamsFilter;
     private com.btv.Admin.gui.components.ComboboxCustom SpamsSort;
     private javax.swing.JPanel backgroundSpams;
+    private com.btv.Admin.gui.components.ComboboxCustom comboBoxOrderSpams;
     private javax.swing.JPanel controlSectionSpam;
     private javax.swing.Box.Filler filler2;
+    private javax.swing.JButton filterButton;
     private com.toedter.calendar.JDateChooser fromDate;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel labelDate;
     private javax.swing.JTextField searchField;
     private javax.swing.JScrollPane spamScrollPane;

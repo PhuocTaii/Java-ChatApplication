@@ -68,11 +68,11 @@ public class NewUsers extends javax.swing.JPanel {
         int monthCnt[] = newUserService.MakeChart(userList, 2021);
 
              
-        drawer = new GraphDrawer(monthCnt);
-        statistic.setLayout(new BorderLayout());
-        statistic.add(drawer, BorderLayout.CENTER);
-        statistic.setPreferredSize(drawer.getPreferredSize());
-        statistic.setMaximumSize(drawer.getPreferredSize());
+//        drawer = new GraphDrawer(monthCnt);
+//        statistic.setLayout(new BorderLayout());
+//        statistic.add(drawer, BorderLayout.CENTER);
+//        statistic.setPreferredSize(drawer.getPreferredSize());
+//        statistic.setMaximumSize(drawer.getPreferredSize());
     }
 
     /**

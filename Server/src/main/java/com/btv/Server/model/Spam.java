@@ -3,24 +3,29 @@ package com.btv.Server.model;
 import java.sql.Date;
 
 public class Spam {
-    private String reportedUsername, spamName, reporter;
+
+    private String spamUsername, spamName;
     private Date spamTime;
     private int spamId, reportedId, reportId;
-    private boolean isLocked;
+    private boolean blocked;
 
     public Spam() {
+    }
+
+    public boolean isBlocked() {
+        return blocked;
     }
 
     public String getSpamName() {
         return spamName;
     }
 
-    public String getReportedUsername() {
-        return reportedUsername;
+    public String getSpamUsername() {
+        return spamUsername;
     }
 
-    public void setReportedUsername(String reportedUsername) {
-        this.reportedUsername = reportedUsername;
+    public void setSpamUsername(String spamUsername) {
+        this.spamUsername = spamUsername;
     }
 
     public Date getSpamTime() {
@@ -55,24 +60,11 @@ public class Spam {
         return reportId;
     }
 
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     public void setReportId(int reportId) {
         this.reportId = reportId;
     }
-
-    public String getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(String reporter) {
-        this.reporter = reporter;
-    }
-
-    public boolean getIsLocked() {
-        return isLocked;
-    }
-
-    public void setIsLocked(boolean isLocked) {
-        this.isLocked = isLocked;
-    }
-    
 }

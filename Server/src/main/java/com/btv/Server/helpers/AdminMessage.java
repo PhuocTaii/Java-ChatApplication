@@ -31,6 +31,7 @@ public enum AdminMessage {
     VIEW_SPAMS,
     SORT_SPAMS,
     FILTER_SPAMS,
+    SPAM_USER,
     LOCK_USER,
     
     VIEW_NEW_USERS,

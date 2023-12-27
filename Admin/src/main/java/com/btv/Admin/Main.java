@@ -42,15 +42,13 @@ public class Main extends javax.swing.JFrame {
         userFriends = new UserFriends();
         onlineUsers = new OnlineUsers();
         group = new AllGroups();
-        
-        spam = new AllSpams(this);
+        spam = new AllSpams();
         
         listLogin = new ListLogin();
         
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
-                System.out.println(index);
                 switch (index) {
                     case 0:
                         setForm(users);
