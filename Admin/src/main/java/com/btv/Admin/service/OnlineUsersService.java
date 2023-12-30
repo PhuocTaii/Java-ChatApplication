@@ -27,15 +27,6 @@ import javax.swing.table.TableRowSorter;
 public class OnlineUsersService {
     public String[][] getAllOnlineUsers(String startDate, String endDate){
         ClientSocket clientSocket = ClientSocket.getInstance();
-        
-//        System.out.println(startDate.toString());
-//        System.out.println(endDate.toString());
-        
-//        LocalDate fromDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//        LocalDate toDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-//        System.out.println(fromDate);
-//        System.out.println(toDate);
         try{
             
             clientSocket.dataOut.write(MessageType.VIEW_ONLINE_USERS.toString());
@@ -63,6 +54,20 @@ public class OnlineUsersService {
         }
     }
     
+    public void filterBySearch(JTable table, String searchValue){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        
+        table.setRowSorter(rowSorter); 
+
+        
+        if (searchValue.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        }else
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
+        
+    }
+    
     public String[][] getAllLoginTimes(){
         ClientSocket clientSocket = ClientSocket.getInstance();
         try{
@@ -83,6 +88,7 @@ public class OnlineUsersService {
             return null;
         }
     }
+    
 //    
     public int[] MakeChart(String[][]tmp, int year){
         int monthCnt[] = new int[12];

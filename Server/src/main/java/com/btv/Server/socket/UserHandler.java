@@ -454,6 +454,139 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case RENAME_GROUP:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int groupId = messReceived.getInt("groupId");
+                    String newName = messReceived.getString("newName");
+                    
+                    Boolean renameGroup = db.renameGroupChat(groupId, newName);
+                    JSONObject messObj = new JSONObject();
+
+                    if(renameGroup){
+                        messObj.put("newName", newName);
+                        messObj.put("groupId", groupId);
+                    }
+                    messRes.put("data", messObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                    
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+            
+            case ADD_MEMBER:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int groupId = messReceived.getInt("groupId");
+                    String username = messReceived.getString("username");
+                    
+                    Boolean addMember = db.addGroupChatMember(groupId, username);
+                    
+                    JSONObject messObj = new JSONObject();
+
+                    if(addMember){
+                        ArrayList<GroupMember> listMems = db.getAllMembers(groupId);
+                        JSONArray memArr = new JSONArray();
+
+                        if(listMems == null) {
+                            messObj.put("list", memArr);
+                        }
+                        else {
+                            for(GroupMember mem : listMems) {
+                                memArr.put(new JSONObject(mem));
+                            }
+                            messObj.put("list", memArr);
+                        }
+                    }
+                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, groupId));
+                    messRes.put("data", messObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case ASSIGN_ADMIN_TO_MEMBER:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int groupId = messReceived.getInt("groupId");
+                    int u_id = messReceived.getInt("u_id");
+                    Boolean admin = messReceived.getBoolean("is_admin");
+                    
+                    Boolean setAdmin = db.setAdmin(groupId, u_id, admin);
+                    
+                    JSONObject messObj = new JSONObject();
+
+                    if(setAdmin){
+                        ArrayList<GroupMember> listMems = db.getAllMembers(groupId);
+                        JSONArray memArr = new JSONArray();
+
+                        if(listMems == null) {
+                            messObj.put("list", memArr);
+                        }
+                        else {
+                            for(GroupMember mem : listMems) {
+                                memArr.put(new JSONObject(mem));
+                            }
+                            messObj.put("list", memArr);
+                        }
+                    }
+                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, groupId));
+                    messRes.put("data", messObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+            
+            case DELETE_MEMBER:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int groupId = messReceived.getInt("groupId");
+                    int u_id = messReceived.getInt("u_id");
+                    
+                    Boolean setAdmin = db.removeMember(groupId, u_id);
+                    
+                    JSONObject messObj = new JSONObject();
+
+                    if(setAdmin){
+                        ArrayList<GroupMember> listMems = db.getAllMembers(groupId);
+                        JSONArray memArr = new JSONArray();
+
+                        if(listMems == null) {
+                            messObj.put("list", memArr);
+                        }
+                        else {
+                            for(GroupMember mem : listMems) {
+                                memArr.put(new JSONObject(mem));
+                            }
+                            messObj.put("list", memArr);
+                        }
+                    }
+                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, groupId));
+                    messRes.put("data", messObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
             default:
                 System.out.println("Invalid message");
         }

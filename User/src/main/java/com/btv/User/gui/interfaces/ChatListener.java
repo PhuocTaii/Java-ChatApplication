@@ -25,4 +25,9 @@ public interface ChatListener {
     public void blockNoti(MessageStatus res);
     public void loadListGroup(ArrayList<Group> listGroup);
     public void loadListMember(ArrayList<Member> listMem, boolean isAdmin);
+    public void updateGroupName(int groupId, String newName);
+    public void addGroupMember(ArrayList<Member> listMem, boolean isAdmin);
+    public void assignAdmin(ArrayList<Member> listMem, boolean isAdmin);
+    public void removeMember(ArrayList<Member> listMem, boolean isAdmin);
+
 }

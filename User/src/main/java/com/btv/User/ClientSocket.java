@@ -207,6 +207,68 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case RENAME_GROUP:
+            {
+                JSONObject memRes = messObj.getJSONObject("data");
+                String newName = memRes.getString("newName");
+                int groupId = memRes.getInt("groupId");
+
+                CustomListener.getInstance().getChatListener().updateGroupName(groupId, newName);
+            }
+                break;
+                
+            case ADD_MEMBER:
+            {
+                ArrayList<Member> listMem = new ArrayList<>();
+                JSONObject memRes = messObj.getJSONObject("data");
+                JSONArray memArr = memRes.getJSONArray("list");
+                for (int i = 0; i < memArr.length(); i++) {
+                    JSONObject memObj = memArr.getJSONObject(i);
+                    Member mem = new Member();
+                    mem.setId(memObj.getInt("id"));
+                    mem.setUsername(memObj.getString("username"));
+                    mem.setIsAdmin(memObj.getBoolean("isAdmin"));
+                    listMem.add(mem);
+                };
+                
+                CustomListener.getInstance().getChatListener().addGroupMember(listMem, memRes.getBoolean("isAdmin"));
+            }
+                break;
+            case ASSIGN_ADMIN_TO_MEMBER:
+            {
+                ArrayList<Member> listMem = new ArrayList<>();
+                JSONObject memRes = messObj.getJSONObject("data");
+                JSONArray memArr = memRes.getJSONArray("list");
+                for (int i = 0; i < memArr.length(); i++) {
+                    JSONObject memObj = memArr.getJSONObject(i);
+                    Member mem = new Member();
+                    mem.setId(memObj.getInt("id"));
+                    mem.setUsername(memObj.getString("username"));
+                    mem.setIsAdmin(memObj.getBoolean("isAdmin"));
+                    listMem.add(mem);
+                };
+                
+                CustomListener.getInstance().getChatListener().assignAdmin(listMem, memRes.getBoolean("isAdmin"));
+            }
+                break;
+                
+            case DELETE_MEMBER:
+            {
+                ArrayList<Member> listMem = new ArrayList<>();
+                JSONObject memRes = messObj.getJSONObject("data");
+                JSONArray memArr = memRes.getJSONArray("list");
+                for (int i = 0; i < memArr.length(); i++) {
+                    JSONObject memObj = memArr.getJSONObject(i);
+                    Member mem = new Member();
+                    mem.setId(memObj.getInt("id"));
+                    mem.setUsername(memObj.getString("username"));
+                    mem.setIsAdmin(memObj.getBoolean("isAdmin"));
+                    listMem.add(mem);
+                };
+                
+                CustomListener.getInstance().getChatListener().removeMember(listMem, memRes.getBoolean("isAdmin"));
+            }
+                break;
             default:
                 System.out.println("Invalid message");
         }

@@ -15,6 +15,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -41,6 +43,41 @@ public class AllUsers extends javax.swing.JPanel {
         addUserDialog.setLocationRelativeTo(null);
         tableClickHandle();        
         userService.filterByField(tableUsers, "", "");
+//        searchUsername();
+        searchName();
+    }
+    
+        
+//    public void searchUsername() {
+//        filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+//            public void changedUpdate(DocumentEvent e) {
+//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
+//            }
+//
+//            public void removeUpdate(DocumentEvent e) {
+//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
+//            }
+//
+//            public void insertUpdate(DocumentEvent e) {
+//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
+//            }
+//        });
+//    }
+    
+        public void searchName() {
+        filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                userService.filterBySearch(tableUsers, filterTextField.getText(), filterOptions.getSelectedItem().toString());
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                userService.filterBySearch(tableUsers, filterTextField.getText(), filterOptions.getSelectedItem().toString());
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                userService.filterBySearch(tableUsers, filterTextField.getText(), filterOptions.getSelectedItem().toString());
+            }
+        });
     }
 
     public void tableClickHandle() {
@@ -549,6 +586,7 @@ public class AllUsers extends javax.swing.JPanel {
                 filterOptionsActionPerformed(evt);
             }
         });
+        filterTextField.setVisible(false);
 
         filterTextField.setMinimumSize(new java.awt.Dimension(64, 30));
         filterTextField.setName(""); // NOI18N
@@ -628,7 +666,6 @@ public class AllUsers extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        filterTextField.setVisible(false);
         searchButton.setVisible(false);
 
         tableUsers.setModel(new javax.swing.table.DefaultTableModel(
@@ -919,9 +956,11 @@ public class AllUsers extends javax.swing.JPanel {
         } else {
             filterTextField.setVisible(true);
             statusOptions.setVisible(false);
-            searchButton.setVisible(true);
+            searchButton.setVisible(false);
         }
-        userService.filterByField(tableUsers, "", optionChosen);
+        revalidate();
+
+//        userService.filterByField(tableUsers, "", optionChosen);
     }//GEN-LAST:event_filterOptionsActionPerformed
 
     private void filterTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterTextFieldActionPerformed
@@ -1003,6 +1042,8 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void usernameAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAddFieldActionPerformed
         // TODO add your handling code here:
+//        searchName();
+//        searchUsername();
     }//GEN-LAST:event_usernameAddFieldActionPerformed
 
     private void emailAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailAddFieldActionPerformed

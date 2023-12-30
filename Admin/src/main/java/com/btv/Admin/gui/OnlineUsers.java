@@ -14,6 +14,8 @@ import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class OnlineUsers extends javax.swing.JPanel {
     private DefaultTableModel tableModel;
     private String[][] onlineUsersList;
+    
     private String[][] loginLog;
     private OnlineUsersService onlineUserService;
     private GraphDrawer drawer;
@@ -32,6 +35,16 @@ public class OnlineUsers extends javax.swing.JPanel {
     public OnlineUsers() {
         initComponents();
         onlineUserService = new OnlineUsersService();
+        searchName();
+        LocalDate fromDate = LocalDate.of(0, 1, 1);
+        LocalDate toDate = LocalDate.now();
+
+        onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
+        tableModel = (DefaultTableModel)tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for(Object[] row : onlineUsersList) {
+            tableModel.addRow(row);
+        }
 
         loginLog = onlineUserService.getAllLoginTimes();
         
@@ -45,6 +58,22 @@ public class OnlineUsers extends javax.swing.JPanel {
         statistic.setPreferredSize(drawer.getPreferredSize());
         statistic.setMaximumSize(drawer.getPreferredSize());
         onlineUserService.filterByName(tableCustom1, "");
+    }
+    
+    public void searchName() {
+        Input.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                onlineUserService.filterBySearch(tableCustom1, Input.getText());
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                onlineUserService.filterBySearch(tableCustom1, Input.getText());
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                onlineUserService.filterBySearch(tableCustom1, Input.getText());
+            }
+        });
     }
 
     /**
@@ -107,8 +136,10 @@ public class OnlineUsers extends javax.swing.JPanel {
             }
         });
 
-        filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Name", "Number" }));
+        filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Username", "Number" }));
         Input.setVisible(false);
+        numberOptions.setVisible(false);
+        searchButton1.setVisible(false);
         filterOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterOptionsActionPerformed(evt);
@@ -147,16 +178,16 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(connector, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addComponent(filter)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -165,16 +196,19 @@ public class OnlineUsers extends javax.swing.JPanel {
             .addGroup(optionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(searchButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Input)
                     .addComponent(connector, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(searchButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addGroup(optionsLayout.createSequentialGroup()
+                        .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(startDate, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         //numberOptions.setVisible(false);
@@ -202,7 +236,7 @@ public class OnlineUsers extends javax.swing.JPanel {
 
         zoneName.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         zoneName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        zoneName.setText("STATISTIC");
+        zoneName.setText("STATISTICS");
 
         year.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         year.setText("Year:");
@@ -246,7 +280,7 @@ public class OnlineUsers extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(zoneName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, 937, Short.MAX_VALUE))
+                    .addComponent(statistic, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE))
                 .addContainerGap())
         );
         statisticzoneLayout.setVerticalGroup(
@@ -321,14 +355,16 @@ public class OnlineUsers extends javax.swing.JPanel {
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);
+            searchButton1.setVisible(true);
         }
-        else if ("Name".equals(optionChosen)) {
+        else if ("Username".equals(optionChosen)) {
             Input.setVisible(true);
             numberOptions.setVisible(false);
+            searchButton1.setVisible(false);
         }else{
             Input.setVisible(true);
             numberOptions.setVisible(true);
-
+            searchButton1.setVisible(true);
         }
 
         filterOptions.revalidate();
@@ -342,27 +378,29 @@ public class OnlineUsers extends javax.swing.JPanel {
     private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
         // TODO add your handling code here:
         endDate.getDateEditor().addPropertyChangeListener(e -> {
-    if (startDate.getDate() != null){
-        Timer timer = new Timer(0, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                onlineUserService = new OnlineUsersService();
+        if (startDate.getDate() != null){
+            Timer timer = new Timer(0, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    onlineUserService = new OnlineUsersService();
 
-                LocalDate fromDate = startDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate toDate = endDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    System.out.println(startDate.getDate());
 
-                onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
-                tableModel = (DefaultTableModel)tableCustom1.getModel();
-                tableModel.setRowCount(0);
-                for(Object[] row : onlineUsersList) {
-                    tableModel.addRow(row);
+                    LocalDate fromDate = startDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate toDate = endDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
+                    tableModel = (DefaultTableModel)tableCustom1.getModel();
+                    tableModel.setRowCount(0);
+                    for(Object[] row : onlineUsersList) {
+                        tableModel.addRow(row);
+                    }
+
                 }
-
-            }
-        });
-        timer.setRepeats(false); // Set to false to run only once
-        timer.start();
-    }});        
+            });
+            timer.setRepeats(false); // Set to false to run only once
+            timer.start();
+        }});        
     }//GEN-LAST:event_endDatePropertyChange
 
     private void searchButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButton1MouseClicked

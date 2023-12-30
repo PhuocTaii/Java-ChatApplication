@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.Timer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -34,9 +36,12 @@ public class NewUsers extends javax.swing.JPanel {
         
         newUserService = new NewUserService();
         userList = newUserService.getAllNewUsers();
+        searchName();
+
         
         tableModel = (DefaultTableModel)tableUsers.getModel();
         tableModel.setRowCount(0);
+        
         for(Object[] row : userList) {
             tableModel.addRow(row);
         }
@@ -68,11 +73,11 @@ public class NewUsers extends javax.swing.JPanel {
         int monthCnt[] = newUserService.MakeChart(userList, 2021);
 
              
-//        drawer = new GraphDrawer(monthCnt);
-//        statistic.setLayout(new BorderLayout());
-//        statistic.add(drawer, BorderLayout.CENTER);
-//        statistic.setPreferredSize(drawer.getPreferredSize());
-//        statistic.setMaximumSize(drawer.getPreferredSize());
+        drawer = new GraphDrawer(monthCnt);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
     }
 
     /**
@@ -94,7 +99,6 @@ public class NewUsers extends javax.swing.JPanel {
         connector = new javax.swing.JLabel();
         endDate = new com.toedter.calendar.JDateChooser();
         jLabel2 = new javax.swing.JLabel();
-        searchButton = new javax.swing.JButton();
         statisticzone = new javax.swing.JPanel();
         zoneName = new javax.swing.JLabel();
         year = new javax.swing.JLabel();
@@ -148,18 +152,6 @@ public class NewUsers extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Period of time:");
 
-        searchButton.setBackground(new java.awt.Color(48, 162, 255));
-        searchButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        searchButton.setForeground(new java.awt.Color(255, 255, 255));
-        searchButton.setText("Search");
-        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        searchButton.setPreferredSize(new java.awt.Dimension(75, 30));
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout optionsLayout = new javax.swing.GroupLayout(options);
         options.setLayout(optionsLayout);
         optionsLayout.setHorizontalGroup(
@@ -171,14 +163,12 @@ public class NewUsers extends javax.swing.JPanel {
                 .addComponent(connector, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(endDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(filter)
                 .addGap(18, 18, 18)
                 .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(optionsLayout.createSequentialGroup()
@@ -197,8 +187,7 @@ public class NewUsers extends javax.swing.JPanel {
                     .addGroup(optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(Input, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                        .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                        .addComponent(filter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(connector, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, optionsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -247,7 +236,7 @@ public class NewUsers extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(statisticzoneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, statisticzoneLayout.createSequentialGroup()
-                        .addGap(0, 426, Short.MAX_VALUE)
+                        .addGap(0, 444, Short.MAX_VALUE)
                         .addComponent(year)
                         .addGap(18, 18, 18)
                         .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -322,7 +311,6 @@ public class NewUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
-        searchButton.setVisible(true);
 
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
@@ -335,16 +323,6 @@ public class NewUsers extends javax.swing.JPanel {
         filterOptions.revalidate();
         filterOptions.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
-
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        // TODO add your handling code here:
-        if("None".equals(filterOptions.getSelectedItem())){
-            Input.setText("");
-        }
-        String searchString = Input.getText();
-        newUserService.filterByName(tableUsers, searchString);
-        Input.setText("");
-    }//GEN-LAST:event_searchButtonActionPerformed
 
     private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
         // TODO add your handling code here:
@@ -386,7 +364,21 @@ public class NewUsers extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_endDatePropertyChange
     
-    
+    public void searchName() {
+        Input.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                newUserService.filterBySearch(tableUsers, Input.getText(), "Name");
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                newUserService.filterBySearch(tableUsers, Input.getText(), "Name");
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                newUserService.filterBySearch(tableUsers, Input.getText(), "Name");
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Input;
@@ -400,7 +392,6 @@ public class NewUsers extends javax.swing.JPanel {
     private com.toedter.calendar.JYearChooser jYearChooser1;
     private javax.swing.JPanel options;
     private javax.swing.JPanel pageHeader;
-    private javax.swing.JButton searchButton;
     private com.toedter.calendar.JDateChooser startDate;
     private javax.swing.JPanel statistic;
     private javax.swing.JPanel statisticzone;

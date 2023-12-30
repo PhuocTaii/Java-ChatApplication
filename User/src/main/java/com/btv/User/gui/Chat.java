@@ -73,7 +73,11 @@ public class Chat extends javax.swing.JPanel {
             public void removeMem(int row) {
                 MemberTableModel tableModel = (MemberTableModel)memberTable.getModel();
                 Member member = tableModel.getMember(row);
-                
+                int groupId = receiverId;
+                int userId = member.getId();
+                System.out.println(groupId);
+                System.out.println(userId);
+                GroupService.removeMember(groupId, userId);
             }
         };
         
@@ -161,6 +165,42 @@ public class Chat extends javax.swing.JPanel {
                 memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
                 memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
             }
+            
+            public void updateGroupName(int groupId, String newName){
+                DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+                for(int i = 0; i < listGroupModel.getSize(); i++){
+                    Group currGroup = listGroupModel.getElementAt(i);
+                    if(currGroup.getId() == groupId){
+                        currGroup.setName(newName);
+                        groupList.updateUI();
+                        receiverLabel.setText(newName);
+                    }
+                }
+            }
+            
+            public void addGroupMember(ArrayList<Member> listMem, boolean isAdmin){
+                MemberTableModel tableModel = new MemberTableModel(listMem);
+                memberTable.setModel(tableModel);
+                // set cell renderer for JTable memberTable
+                memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
+                memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
+            }
+            
+            public void assignAdmin(ArrayList<Member> listMem, boolean isAdmin){
+                MemberTableModel tableModel = new MemberTableModel(listMem);
+                memberTable.setModel(tableModel);
+                // set cell renderer for JTable memberTable
+                memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
+                memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
+            }
+            
+            public void removeMember(ArrayList<Member> listMem, boolean isAdmin){
+                MemberTableModel tableModel = new MemberTableModel(listMem);
+                memberTable.setModel(tableModel);
+                // set cell renderer for JTable memberTable
+                memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
+                memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
+            }
         });
         
         loadPanel();
@@ -220,10 +260,14 @@ public class Chat extends javax.swing.JPanel {
                 downButtonMouseClicked(evt);
             }
         });
+        downButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downButtonActionPerformed(evt);
+            }
+        });
 
         receiverLabel.setBackground(new java.awt.Color(255, 255, 255));
         receiverLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        receiverLabel.setForeground(new java.awt.Color(0, 0, 0));
         receiverLabel.setOpaque(true);
 
         javax.swing.GroupLayout pageHeaderLayout = new javax.swing.GroupLayout(pageHeader);
@@ -317,7 +361,6 @@ public class Chat extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(friendList);
 
-        groupList.setForeground(new java.awt.Color(0, 0, 0));
         groupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         groupList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -364,6 +407,11 @@ public class Chat extends javax.swing.JPanel {
             }
         });
         memberTable.setColumnSelectionAllowed(true);
+        memberTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                memberTableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(memberTable);
         memberTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (memberTable.getColumnModel().getColumnCount() > 0) {
@@ -517,8 +565,41 @@ public class Chat extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(mainFrame, "Please provide username to add member", "Add member warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        MemberTableModel tableModel = (MemberTableModel)memberTable.getModel();
+        for(int i = 0; i < tableModel.getRowCount(); i++) {
+            Member currMem = tableModel.getMember(i);
+            System.out.println(currMem.getUsername());
+            if(currMem.getUsername().equalsIgnoreCase(username)) {
+                JOptionPane.showMessageDialog(mainFrame, "This member already exists in the group chat", "Add member warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
         // call service here
+        GroupService.addMember(receiverId, username);
     }//GEN-LAST:event_addMemberButtonActionPerformed
+
+    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_downButtonActionPerformed
+
+    private void memberTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memberTableMouseClicked
+        // TODO add your handling code here:
+        int row = memberTable.rowAtPoint(evt.getPoint());
+        int col = memberTable.columnAtPoint(evt.getPoint());
+        // Xử lý sự kiện khi nhấp vào ô cụ thể
+        if (row >= 0 && col == 1) {
+            System.out.println("Clicked on Row: " + row + ", Column: " + col);
+            // Thêm mã xử lý tại đây
+            MemberTableModel model = (MemberTableModel)memberTable.getModel();
+            Member mem = model.getMember(row);
+            int user_id = mem.getId();
+            Boolean admin = (Boolean)model.getValueAt(row, col);
+//            System.out.println(;
+//            System.out.println(mem.getId());
+            GroupService.setAdmin(receiverId, user_id, admin);
+        }
+    }//GEN-LAST:event_memberTableMouseClicked
     
     public void handleReportUser() {        
         Object[] options = { "YES", "NO" };
@@ -550,8 +631,8 @@ public class Chat extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(mainFrame, "Please provide new name", "Rename group chat warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        // call service here
-        //
+
+        GroupService.renameChatGroup(receiverId, newName);
     }
     
     public void handleEncodeGroupChat() {

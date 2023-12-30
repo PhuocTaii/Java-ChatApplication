@@ -473,5 +473,73 @@ public class UserHandleDB extends ChatDB {
         }
     }
    
-   
+    public Boolean renameGroupChat(int groupId, String newName){
+        try{
+            String sql = "UPDATE ChatGroups" +
+                        " SET gr_name = ?" +
+                        " WHERE gr_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, newName);
+            stmt.setInt(2, groupId);
+
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean addGroupChatMember(int groupId, String username){
+        try{
+            String sql = "insert into GroupMembers values " + "(?, 0, (select u_id from User where username = ?))";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setString(2, username);
+            
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public Boolean setAdmin(int groupId, int u_id, Boolean admin){
+        try{
+            String sql = "update GroupMembers Set is_admin = ? where u_id = ? and gr_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setBoolean(1, admin);
+            stmt.setInt(2, u_id);
+            stmt.setInt(3, groupId);
+
+            
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public Boolean removeMember(int groupId, int u_id){
+        try{
+            String sql = "DELETE FROM GroupMembers WHERE gr_id = ? and u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, u_id);
+
+            System.out.println(stmt);
+            
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

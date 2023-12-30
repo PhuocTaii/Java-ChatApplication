@@ -295,24 +295,19 @@ public class AdminHandleDB extends ChatDB{
             Statement stmt = connection.createStatement();
 
             String sql = """
-                         SELECT spam_id, username, report_time, u_name, u_status
-                         FROM SpamList spam
-                         JOIN User user ON spam.reported_id = user.u_id
+                         SELECT s.spam_id, s.report_time, u.username as reporter, u1.username as reported, u1.u_status
+                         FROM SpamList s
+                         JOIN User u ON s.u_id = u.u_id
+                         JOIN User u1 ON s.reported_id = u1.u_id
             """;
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 Spam tempSpam = new Spam();
                 tempSpam.setSpamId(rs.getInt("spam_id"));
-                tempSpam.setSpamName(rs.getString("username"));
+                tempSpam.setReporter(rs.getString("reporter"));
                 tempSpam.setSpamTime(rs.getDate("report_time"));
-                tempSpam.setSpamName(rs.getString("u_name"));
-                String blocked = rs.getString("u_status");
-                if ("LOCKED".equals(blocked)) {
-                    tempSpam.setBlocked(true);
-                } else {
-                    tempSpam.setBlocked(false);
-                }
-
+                tempSpam.setReportedUsername(rs.getString("reported"));
+                tempSpam.setIsLocked(rs.getString("u_status").equals("LOCKED"));
                 resList.add(tempSpam);
             }
 
@@ -417,7 +412,12 @@ public class AdminHandleDB extends ChatDB{
     }
 
     public ArrayList<OnlineUser> GetAllOnlineUsers(String[] split) {
-        String query = " SELECT\n    U.u_id,\n    U.u_name,\n    U.username,\n    COUNT(DISTINCT L.id) AS app_open_count,\n    COUNT(DISTINCT C.receive_id) AS personal_chat_count,\n    COUNT(DISTINCT CH.group_id) AS group_chat_count\n FROM\n    User U\n LEFT JOIN\n    Logins L ON U.u_id = L.u_id AND L.login_time BETWEEN ? AND ?\n LEFT JOIN\n    ChatHistory C ON U.u_id = C.receive_id AND C.sendtime BETWEEN ? AND ?\n LEFT JOIN\n    ChatHistory CH ON U.u_id = CH.send_id AND CH.sendtime BETWEEN ? AND ?\n GROUP BY\n    U.u_id, U.u_name, U.username;\n";
+        String query = "SELECT U.time_create, U.u_id, U.username, COUNT(DISTINCT L.id) AS app_open_count, COUNT(DISTINCT C.receive_id) AS personal_chat_count, COUNT(DISTINCT CH.group_id) AS group_chat_count\n" +
+                        "FROM \n" +
+                        "User U LEFT JOIN Logins L ON U.u_id = L.u_id AND L.login_time BETWEEN ? AND ?\n" +
+                        "LEFT JOIN ChatHistory C ON U.u_id = C.receive_id AND C.sendtime BETWEEN ? AND ? \n" +
+                        "LEFT JOIN ChatHistory CH ON U.u_id = CH.send_id AND CH.sendtime BETWEEN ? AND ? \n" +
+                        "GROUP BY U.u_id, U.time_create ,U.username";
         ArrayList<OnlineUser> resList = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, split[0]);
@@ -430,8 +430,8 @@ public class AdminHandleDB extends ChatDB{
                 while (rs.next()) {
                     OnlineUser tempOnlUser = new OnlineUser();
                     tempOnlUser.setId(rs.getInt("u_id"));
-                    tempOnlUser.setName(rs.getString("u_name"));
                     tempOnlUser.setUsername(rs.getString("username"));
+                    tempOnlUser.setTimeCreate(rs.getDate("time_create"));
                     tempOnlUser.setloginTimes(rs.getInt("app_open_count"));
                     tempOnlUser.setuserChatWith(rs.getInt("personal_chat_count"));
                     tempOnlUser.setgroupChatWith(rs.getInt("group_chat_count"));
