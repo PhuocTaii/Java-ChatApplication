@@ -51,8 +51,10 @@ public class OnlineUsers extends javax.swing.JPanel {
         int year = yearchooser.getYear();
  
         int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
-        
-        drawer = new GraphDrawer(monthCnt);
+//        String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
+
         statistic.setLayout(new BorderLayout());
         statistic.add(drawer, BorderLayout.CENTER);
         statistic.setPreferredSize(drawer.getPreferredSize());
@@ -335,7 +337,7 @@ public class OnlineUsers extends javax.swing.JPanel {
         statistic.remove(drawer);
         int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
         
-        drawer = new GraphDrawer(monthCnt);
+        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
         statistic.setLayout(new BorderLayout());
         statistic.add(drawer, BorderLayout.CENTER);
         statistic.setPreferredSize(drawer.getPreferredSize());
