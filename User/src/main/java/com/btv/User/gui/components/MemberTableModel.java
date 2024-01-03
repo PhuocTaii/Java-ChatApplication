@@ -89,4 +89,18 @@ public class MemberTableModel extends AbstractTableModel {
     public Member getMember(int row) {
         return memList.get(row);
     }
+    
+    public void addMember(Member mem) {
+        memList.add(mem);
+        fireTableDataChanged();
+    }
+    
+    public void removeMember(Member mem) {
+        memList.remove(mem);
+        fireTableDataChanged();
+    }
+    
+    public ArrayList getMemberList() {
+        return memList;
+    }
 }

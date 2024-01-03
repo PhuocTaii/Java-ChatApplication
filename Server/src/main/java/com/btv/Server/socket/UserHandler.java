@@ -7,12 +7,14 @@ package com.btv.Server.socket;
 import com.btv.Server.database.UserHandleDB;
 import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
+import static com.btv.Server.helpers.UserMessage.DELETE_MEMBER;
 import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
-import com.btv.Server.socket.MailService;
+import com.btv.Server.service.MailService;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.net.Socket;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -587,6 +589,63 @@ public class UserHandler extends ClientHandler{
                 }
             }
                 break;
+                
+            case FIND_USER_BY_USERNAME:
+            {
+                try{
+                    String name = dataIn.readLine();
+                    User foundUser = db.findUserByUsername(this.userId, name);
+                    JSONObject resObj = new JSONObject();
+                    if(foundUser != null) {
+                        resObj.put("foundUser", new JSONObject(foundUser));
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "Found");
+                    }
+                    else {
+                        resObj.put("foundUser", new JSONObject());
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "User not found!");
+                    }
+                    messRes.put("data", resObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case CREATE_GROUP:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String groupName = messReceived.getString("name");
+                    JSONArray memArr = messReceived.getJSONArray("list");
+                    
+                    int groupId = db.createGroup(this.userId, groupName, memArr);
+                    JSONObject resObj = new JSONObject();
+                    resObj.put("id", groupId);
+                    resObj.put("name", groupName);
+                    if(groupId != -1) {
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "New group chat created!");
+                    }
+                    else {
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "System error! Please try again!");
+                    }
+                    
+                    messRes.put("data", resObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }

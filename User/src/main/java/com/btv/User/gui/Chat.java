@@ -201,6 +201,12 @@ public class Chat extends javax.swing.JPanel {
                 memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
                 memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
             }
+
+            @Override
+            public void addNewGroupChat(Group gr) {
+                DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+                listGroupModel.addElement(gr);
+            }
         });
         
         loadPanel();

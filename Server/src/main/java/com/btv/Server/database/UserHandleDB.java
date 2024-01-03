@@ -8,7 +8,7 @@ import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
-import com.btv.Server.socket.MailService;
+import com.btv.Server.service.MailService;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Random;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -74,11 +76,15 @@ public class UserHandleDB extends ChatDB {
             if (rs.next()) {
                 uid = rs.getInt(1);
             } else {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 stmt.close();
                 return -1;
             }
             // update login history
             if (updateLoginTime(uid) != 1) {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 stmt.close();
                 return -1;
             }
@@ -540,6 +546,107 @@ public class UserHandleDB extends ChatDB {
         } catch (SQLException e){
             e.printStackTrace();
             return false;
+        }
+    }
+    
+    public User findUserByUsername(int currentId, String username) {
+        User u = null;
+        try {
+            String sql = "select u_id, username " +
+                        "from User " +
+                        "where u_id != ? and username = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, currentId);
+            stmt.setString(2, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                u = new User();
+                u.setId(rs.getInt("u_id"));
+                u.setUsername(rs.getString("username"));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return u;
+    }
+    
+    public Boolean addGroupMemberById(int groupId, int memId, boolean isAdmin){
+        try{
+            String sql = "insert into GroupMembers (gr_id, is_admin, u_id) " +
+                        "values (?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setBoolean(2, isAdmin);
+            stmt.setInt(3, memId);
+            
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public int createGroup(int userId, String groupName, JSONArray memList){
+        try {
+            // create new group
+            connection.setAutoCommit(false);
+            String sql = "insert into ChatGroups(gr_name, created_time) values " +
+                        "(?, ?);";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, groupName);
+            stmt.setDate(2, new Date(new java.util.Date().getTime()));
+            stmt.executeUpdate();
+            
+            // get last id of group
+            sql = "SELECT LAST_INSERT_ID()";
+            stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            int groupId;
+            if (rs.next()) {
+                groupId = rs.getInt(1);
+            } else {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                stmt.close();
+                return -1;
+            }
+            
+            // add members
+            for(int i = 0; i < memList.length(); i++) {
+                JSONObject objMem = memList.getJSONObject(i);
+                if(!addGroupMemberById(groupId, objMem.getInt("id"), objMem.getBoolean("isAdmin"))) {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    stmt.close();
+                    return -1;
+                }
+            }
+            
+            // add yourself
+            if(!addGroupMemberById(groupId, userId, true)) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                stmt.close();
+                return -1;
+            }
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+            stmt.close();
+            return groupId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return -1;
         }
     }
 }

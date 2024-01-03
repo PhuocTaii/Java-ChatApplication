@@ -7,6 +7,7 @@ package com.btv.User;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
+import static com.btv.User.helper.MessageType.BLOCK_USER;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
 import com.btv.User.model.Member;
@@ -269,6 +270,38 @@ public class ClientSocket implements Runnable {
                 CustomListener.getInstance().getChatListener().removeMember(listMem, memRes.getBoolean("isAdmin"));
             }
                 break;
+                
+            case FIND_USER_BY_USERNAME:
+            {
+                Member mem = new Member();
+                JSONObject resObj = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(resObj.getString("status"));
+                res.setMessage(resObj.getString("statusDetail"));
+                if(res == MessageStatus.SUCCESS) {
+                    JSONObject foundUser = resObj.getJSONObject("foundUser");
+                    mem.setIsAdmin(false);
+                    mem.setId(foundUser.getInt("id"));
+                    mem.setUsername(foundUser.getString("username"));
+                }
+                CustomListener.getInstance().getCreateGroupListener().addFoundMember(res, mem);
+            }
+                break;
+                
+            case CREATE_GROUP:
+            {
+                JSONObject resObj = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(resObj.getString("status"));
+                res.setMessage(resObj.getString("statusDetail"));
+                Group gr = new Group();
+                if(res == MessageStatus.SUCCESS) {
+                    gr.setId(resObj.getInt("id"));
+                    gr.setName(resObj.getString("name"));
+                    CustomListener.getInstance().getChatListener().addNewGroupChat(gr);
+                }
+                CustomListener.getInstance().getCreateGroupListener().createGroup(res);
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }
