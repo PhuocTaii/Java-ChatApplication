@@ -429,6 +429,92 @@ public class UserHandleDB extends ChatDB {
             return false;
         }
     }
+    
+//    public boolean checkIfChatWithUser(int userId, int friendId) {
+//        try {
+//            String sql = "select exists " + "(select * " + "from Friends " + "where (u_id1 = ? and u_id2 = ?) or (u_id1 = ? and u_id2 = ?))";
+//            PreparedStatement stmt = connection.prepareStatement(sql);
+//            stmt.setInt(1, userId);
+//            stmt.setInt(2, friendId);
+//            stmt.setInt(3, friendId);
+//            stmt.setInt(4, userId);
+//            ResultSet rs = stmt.executeQuery();
+//            boolean isFriend = false;
+//            while (rs.next()) {
+//                isFriend = rs.getBoolean(1);
+//            }
+//            rs.close();
+//            stmt.close();
+//            return isFriend;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
+    
+    public ArrayList searchMessagesByUser(int userId, String chatName, String query) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql= "select c.content, u1.username as sender, u1.u_id as sendId " +
+                        "from ChatHistory c join User u on (c.receive_id = u.u_id) join User u1 on (c.send_id = u1.u_id) " +
+                        "where (c.send_id = ? or c.receive_id = ?) and (u.username like ? or u1.username like ?) and c.content like ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, chatName);
+            stmt.setString(4, chatName);
+            stmt.setString(5, "%" + query + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setSendName(userId != rs.getInt("sendId") ? rs.getString("sender") : "You");
+                mess.setChatName(chatName);
+                resList.add(mess);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resList;
+    }
+    
+    public ArrayList searchAllMessages(int userId, String query) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql= "select c.content, g.gr_name, u.username as receiver, u1.username as sender, u1.u_id as sendId " +
+                        "from ChatHistory c left join ChatGroups g on c.group_id = g.gr_id left join User u on (c.receive_id = u.u_id) left join User u1 on (c.send_id = u1.u_id) " +
+                        "where (c.send_id = ? or c.receive_id = ? or exists (select * " +
+                        "						from GroupMembers m " +
+                        "                                               where c.group_id = m.gr_id and m.u_id = ?)) and c.content like ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setInt(3, userId);
+            stmt.setString(4, "%" + query + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setSendName(userId != rs.getInt("sendId") ? rs.getString("sender") : "You");
+                if(rs.getString("gr_name") != null)
+                    mess.setChatName(rs.getString("gr_name"));
+                else {
+                    if(userId == rs.getInt("sendId"))
+                        mess.setChatName(rs.getString("receiver"));
+                    else
+                        mess.setChatName(rs.getString("sender"));
+                }
+                resList.add(mess);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resList;
+    }
 
     public ArrayList getAllGroupsOfUser(int userId) {
         ArrayList<GroupChat> resList = new ArrayList<>();

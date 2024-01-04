@@ -416,6 +416,32 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case FIND_MESSAGE:
+                try {
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String chatName = messReceived.getString("name");
+                    String query = messReceived.getString("query");
+                    ArrayList<ChatMessage> listMess;
+                    if(!chatName.equals(""))
+                        listMess = db.searchMessagesByUser(this.userId, chatName, query);
+                    else {
+                        listMess = db.searchAllMessages(this.userId, query);
+                    }
+                    JSONArray messArr = new JSONArray();
+                    for(ChatMessage chat : listMess) {
+                        JSONObject messObj = new JSONObject(chat);
+                        messArr.put(messObj);
+                    }
+                    messRes.put("data", messArr);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<GroupChat> listGroups = db.getAllGroupsOfUser(this.userId);

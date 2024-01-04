@@ -651,8 +651,6 @@ public class Chat extends javax.swing.JPanel {
             Member mem = model.getMember(row);
             int user_id = mem.getId();
             Boolean admin = (Boolean)model.getValueAt(row, col);
-//            System.out.println(;
-//            System.out.println(mem.getId());
             GroupService.setAdmin(receiverId, user_id, admin);
         }
     }//GEN-LAST:event_memberTableMouseClicked
@@ -747,6 +745,8 @@ public class Chat extends javax.swing.JPanel {
     public void loadPanel() {
         UserService.getListFriends();
         GroupService.getListGroups();
+        if(isGroup)
+            GroupService.getMembers(receiverId);
         
         this.revalidate();
         this.repaint();

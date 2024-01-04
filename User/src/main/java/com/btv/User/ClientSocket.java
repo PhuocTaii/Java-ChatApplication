@@ -201,6 +201,22 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case FIND_MESSAGE:
+            {
+                ArrayList<ChatMessage> listMess = new ArrayList<>();
+                JSONArray messArr = messObj.getJSONArray("data");
+                for (int i = 0; i < messArr.length(); i++) {
+                    JSONObject chatObj = messArr.getJSONObject(i);
+                    ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.setChatName(chatObj.getString("chatName"));
+                    chatMessage.setContent(chatObj.getString("content"));
+                    chatMessage.setSendName(chatObj.getString("sendName"));
+                    listMess.add(chatMessage);
+                }
+                CustomListener.getInstance().getSearchListener().showFoundMess(listMess);
+            }
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<Group> listGroup = new ArrayList<>();

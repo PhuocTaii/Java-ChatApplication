@@ -96,4 +96,22 @@ public class ChatService {
             e.printStackTrace();
         }
     }
+    
+    public static void searchMessages(String chatName, String query) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.FIND_MESSAGE.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            JSONObject mess = new JSONObject();
+            mess.put("name", chatName);
+            mess.put("query", query);
+            clientSocket.dataOut.write(mess.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

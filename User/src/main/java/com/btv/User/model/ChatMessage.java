@@ -11,7 +11,7 @@ import java.sql.Date;
  * @author tvan
  */
 public class ChatMessage {
-    private String content, sendName, receiveName;
+    private String content, sendName, receiveName, chatName;
     private int sendId, receiveId;
     private Date sendTime;
     boolean isMine;
@@ -70,6 +70,14 @@ public class ChatMessage {
 
     public void setReceiveName(String receiveName) {
         this.receiveName = receiveName;
+    }
+
+    public String getChatName() {
+        return chatName;
+    }
+
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
     }
     
 }

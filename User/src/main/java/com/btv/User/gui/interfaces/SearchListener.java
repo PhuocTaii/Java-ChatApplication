@@ -5,6 +5,7 @@
 package com.btv.User.gui.interfaces;
 
 import com.btv.User.helper.MessageStatus;
+import com.btv.User.model.ChatMessage;
 import com.btv.User.model.User;
 import java.util.ArrayList;
 
@@ -15,4 +16,5 @@ import java.util.ArrayList;
 public interface SearchListener {
     public void showFoundUsers(ArrayList<User> listUser);
     public void addFriend(MessageStatus res);
+    public void showFoundMess(ArrayList<ChatMessage> listMess);
 }

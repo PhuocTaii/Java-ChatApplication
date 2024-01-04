@@ -58,6 +58,7 @@ public class Layout extends javax.swing.JFrame {
                 // show search frame
                 chatPanel.setVisible(false);
                 searchPanel.setVisible(true);
+                searchPanel.loadPanel();
             }
             
         });
