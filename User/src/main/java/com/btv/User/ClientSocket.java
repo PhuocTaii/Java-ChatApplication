@@ -180,6 +180,18 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case NEW_MESSAGE_USER:
+            {
+                JSONObject chatObj = messObj.getJSONObject("data");
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage.setSendName(chatObj.getString("sender"));
+                chatMessage.setContent(chatObj.getString("content"));
+                chatMessage.setIsMine(false);
+                
+                CustomListener.getInstance().getChatListener().newMessUserCome(chatMessage, chatObj.getInt("senderId"));
+            }
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<Group> listGroup = new ArrayList<>();

@@ -44,6 +44,25 @@ public class ChatService {
         }
     }
     
+    public static void chatUser(int receiverId, String mess) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.CHAT_USER.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            JSONObject messObj = new JSONObject();
+            messObj.put("id", receiverId);
+            messObj.put("content", mess);
+            clientSocket.dataOut.write(messObj.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public static void chatGroup(int groupId, String mess) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         

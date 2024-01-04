@@ -50,6 +50,7 @@ public class Chat extends javax.swing.JPanel {
     private boolean isGroup;
     private JPanel messagesPanel;
     private ArrayList<Integer> highlightGroups;
+    private ArrayList<Integer> highlightUsers;
 
     /**
      * Creates new form Chat
@@ -59,6 +60,7 @@ public class Chat extends javax.swing.JPanel {
         this.mainFrame = mainFrame;
         
         highlightGroups = new ArrayList<>();
+        highlightUsers = new ArrayList<>();
         
         // Set vertical scrollbar policy
         chatZoneScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -90,6 +92,8 @@ public class Chat extends javax.swing.JPanel {
             public void loadListFriend(ArrayList<User> listFriend) {
                 DefaultListModel<User> listFriendModel = new DefaultListModel<>();
                 for(User friend : listFriend) {
+                    if(highlightUsers.contains(friend.getId()))
+                        friend.setIsSeen(false);
                     listFriendModel.addElement(friend);
                 }
                 friendList.setModel((ListModel)listFriendModel);
@@ -220,6 +224,19 @@ public class Chat extends javax.swing.JPanel {
                 }
                 else {
                     highlightSeenChatGroup(groupId, false);
+                }
+                if(!Chat.getChatPanelInst(mainFrame).isVisible()) {
+                    mainFrame.highlightChatIcon();
+                }
+            }
+
+            @Override
+            public void newMessUserCome(ChatMessage mess, int userId) {
+                if(!isGroup && userId == receiverId) {
+                    addMessageToChatZone(mess);
+                }
+                else {
+                    highlightSeenChatUser(userId, false);
                 }
                 if(!Chat.getChatPanelInst(mainFrame).isVisible()) {
                     mainFrame.highlightChatIcon();
@@ -686,6 +703,7 @@ public class Chat extends javax.swing.JPanel {
     public void handleChatWithFriend(int friendId, String friendName) {
         if(isGroup || friendId != receiverId) {
             CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName, false);
+            highlightSeenChatUser(friendId, true);
             ChatService.getChatUserHistory(friendId);
         }
     }
@@ -743,22 +761,41 @@ public class Chat extends javax.swing.JPanel {
             Group currGroup = listGroupModel.getElementAt(i);
             if(currGroup.getId() == groupId){
                 currGroup.setIsSeen(seen);
+                listGroupModel.setElementAt(currGroup, i);
                 break;
             }
         }
-        groupList.repaint();
+    }
+    
+    public void highlightSeenChatUser(int userId, boolean seen) {
+        if(seen)
+            highlightUsers.remove(Integer.valueOf(userId));
+        else
+            highlightUsers.add(userId);
+        DefaultListModel<User> listFriendModel = (DefaultListModel<User>)friendList.getModel();
+        for(int i = 0; i < listFriendModel.getSize(); i++){
+            User currUser = listFriendModel.getElementAt(i);
+            if(currUser.getId() == userId){
+                currUser.setIsSeen(seen);
+                listFriendModel.setElementAt(currUser, i);
+                break;
+            }
+        }
     }
     
     public void sendMessage() {
         String content = messageInput.getText();
         if(isGroup) {
             ChatService.chatGroup(receiverId, content);
-            ChatMessage mess = new ChatMessage();
-            mess.setContent(content);
-            mess.setSendName("You");
-            mess.setIsMine(true);
-            addMessageToChatZone(mess);
         }
+        else 
+            ChatService.chatUser(receiverId, content);
+        ChatMessage mess = new ChatMessage();
+        mess.setContent(content);
+        mess.setSendName("You");
+        mess.setIsMine(true);
+        addMessageToChatZone(mess);
+            
         messageInput.setText("");
     }
     

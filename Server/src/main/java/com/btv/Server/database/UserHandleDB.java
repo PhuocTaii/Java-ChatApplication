@@ -391,6 +391,26 @@ public class UserHandleDB extends ChatDB {
             return false;
         }
     }
+    
+    public boolean chatUser(int senderId, int receiverId, String content) {
+        try{
+            String sql = "insert into ChatHistory(send_id, receive_id, content, sendtime) values " +
+                        "(?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, senderId);
+            stmt.setInt(2, receiverId);
+            stmt.setString(3, content);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTime = sdf.format(new java.util.Date());
+            stmt.setString(4, currentTime);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public ArrayList getAllGroupsOfUser(int userId) {
         ArrayList<GroupChat> resList = new ArrayList<>();
@@ -659,7 +679,6 @@ public class UserHandleDB extends ChatDB {
             stmt.setInt(1, userId);
             stmt.setInt(2, grId);
             stmt.setString(3, content);
-//            stmt.setDate(4, new Date(new java.util.Date().getTime()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String currentTime = sdf.format(new java.util.Date());
             stmt.setString(4, currentTime);

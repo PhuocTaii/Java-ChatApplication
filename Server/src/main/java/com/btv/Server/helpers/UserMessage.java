@@ -43,5 +43,6 @@ public enum UserMessage {
     ENCRYPT_GROUP,
     
     FRIEND_STATUS,
-    NEW_MESSAGE_GROUP
+    NEW_MESSAGE_GROUP,
+    NEW_MESSAGE_USER,
 }

@@ -376,6 +376,20 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case CHAT_USER:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int receiverId = messReceived.getInt("id");
+                    String content = messReceived.getString("content");
+                    broadCastMessToUsers(clientUsername, receiverId, content);
+                    db.chatUser(this.userId, receiverId, content);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<GroupChat> listGroups = db.getAllGroupsOfUser(this.userId);
@@ -655,11 +669,6 @@ public class UserHandler extends ClientHandler{
                     String content = messReceived.getString("content");
                     broadCastMessToMembers(clientUsername, grId, content);
                     db.chatGroup(this.userId, grId, content);
-                    
-//                    messRes.put("data", 1);
-//                    dataOut.write(messRes.toString());
-//                    dataOut.newLine();
-//                    dataOut.flush();
                 } catch (IOException e){
                     e.printStackTrace();
                 }
@@ -727,6 +736,31 @@ public class UserHandler extends ClientHandler{
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+    
+    public void broadCastMessToUsers(String sender, int receiverId, String content) {        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_MESSAGE_USER.toString());
+        
+        JSONObject messObj = new JSONObject();
+        messObj.put("sender", sender);
+        messObj.put("senderId", this.userId);
+        messObj.put("content", content);
+        
+        messRes.put("data", messObj);
+        
+        for(UserHandler user : userHandlers) {
+            if(receiverId == user.userId) {
+                try {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
             }
         }
     }
