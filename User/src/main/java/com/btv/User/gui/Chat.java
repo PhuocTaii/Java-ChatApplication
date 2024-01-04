@@ -242,6 +242,18 @@ public class Chat extends javax.swing.JPanel {
                     mainFrame.highlightChatIcon();
                 }
             }
+
+            @Override
+            public void clearChatHistory(MessageStatus res) {
+                if(res == MessageStatus.SUCCESS) {
+                    messagesPanel = new JPanel();
+                    messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
+                    chatZoneScroll.getViewport().add(messagesPanel);
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Clear chat history notification", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Clear chat history notification", JOptionPane.WARNING_MESSAGE);
+            }
         });
         
         loadPanel();
@@ -661,8 +673,7 @@ public class Chat extends javax.swing.JPanel {
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
                 null, options, options[1]);
         if(selectedOption == 0) {
-            // call service here
-            //
+            ChatService.clearChatUserHistory(receiverId);
         }
     }
     

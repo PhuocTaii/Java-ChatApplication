@@ -81,4 +81,19 @@ public class ChatService {
             e.printStackTrace();
         }
     }
+    
+    public static void clearChatUserHistory(int userId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.CLEAR_CHAT_HISTORY.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(userId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

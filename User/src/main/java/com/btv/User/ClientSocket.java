@@ -192,6 +192,15 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case CLEAR_CHAT_HISTORY:
+            {
+                JSONObject resObj = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(resObj.getString("status"));
+                res.setMessage(resObj.getString("statusDetail"));
+                CustomListener.getInstance().getChatListener().clearChatHistory(res);
+            }
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<Group> listGroup = new ArrayList<>();

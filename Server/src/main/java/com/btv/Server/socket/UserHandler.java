@@ -390,6 +390,32 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case CLEAR_CHAT_HISTORY:
+            {
+                try {
+                    int otherUser = dataIn.read();
+                    
+                    JSONObject resObj = new JSONObject();
+                    if(db.clearChatUserHistory(this.userId, otherUser)) {
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "Clear chat history done!");
+                    }
+                    else {
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "System error! Please try again!");
+                    }
+                    messRes.put("data", resObj);
+
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                    
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<GroupChat> listGroups = db.getAllGroupsOfUser(this.userId);

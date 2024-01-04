@@ -32,4 +32,5 @@ public interface ChatListener {
     public void addNewGroupChat(Group gr);
     public void newMessGroupCome(ChatMessage mess, int groupId);
     public void newMessUserCome(ChatMessage mess, int userId);
+    public void clearChatHistory(MessageStatus res);
 }

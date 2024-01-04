@@ -411,6 +411,24 @@ public class UserHandleDB extends ChatDB {
             return false;
         }
     }
+    
+    public boolean clearChatUserHistory(int user1, int user2) {
+        try{
+            String sql = "delete from ChatHistory " +
+                        "where (send_id = ? and receive_id = ?) or (send_id = ? and receive_id = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user1);
+            stmt.setInt(2, user2);
+            stmt.setInt(3, user2);
+            stmt.setInt(4, user1);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public ArrayList getAllGroupsOfUser(int userId) {
         ArrayList<GroupChat> resList = new ArrayList<>();
