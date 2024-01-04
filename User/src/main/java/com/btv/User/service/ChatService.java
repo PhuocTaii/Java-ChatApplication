@@ -7,6 +7,7 @@ package com.btv.User.service;
 import com.btv.User.ClientSocket;
 import com.btv.User.helper.MessageType;
 import java.io.IOException;
+import org.json.JSONObject;
 
 /**
  *
@@ -37,6 +38,25 @@ public class ChatService {
             clientSocket.dataOut.flush();
             
             clientSocket.dataOut.write(groupId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void chatGroup(int groupId, String mess) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.CHAT_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            JSONObject messObj = new JSONObject();
+            messObj.put("id", groupId);
+            messObj.put("content", mess);
+            clientSocket.dataOut.write(messObj.toString());
+            clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -29,6 +29,7 @@ public class UserHandler extends ClientHandler{
     public static ArrayList<UserHandler> userHandlers = new ArrayList<>();
     
     private int userId;
+    private String clientUsername;
     private Socket clientSocket;
     public UserHandler(Socket clientSocket) {
         super(clientSocket);
@@ -83,7 +84,7 @@ public class UserHandler extends ClientHandler{
                                 isSuccess = false;
                             }
                             else {
-                                loginSuccess(uid);
+                                loginSuccess(uid, newUser.getUsername());
                             }
                         }
                     }
@@ -121,7 +122,7 @@ public class UserHandler extends ClientHandler{
                     }
                     int uid = db.login(username, password);
                     if(uid > 0) {
-                        loginSuccess(uid);
+                        loginSuccess(uid, username);
                         
                         dataOut.write(MessageStatus.SUCCESS.toString());
                         dataOut.newLine();
@@ -646,14 +647,34 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case CHAT_GROUP:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int grId = messReceived.getInt("id");
+                    String content = messReceived.getString("content");
+                    broadCastMessToMembers(clientUsername, grId, content);
+                    db.chatGroup(this.userId, grId, content);
+                    
+//                    messRes.put("data", 1);
+//                    dataOut.write(messRes.toString());
+//                    dataOut.newLine();
+//                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }
     }
     
-    private void loginSuccess(int uid) {
+    private void loginSuccess(int uid, String username) {
         UserHandleDB db = UserHandleDB.getDBInstance();
         this.userId = uid;
+        this.clientUsername = username;
         userHandlers.add(this);
         db.updateAccountStatus(uid, "ONLINE");
         broadCastStatusToFriends(true);
@@ -674,6 +695,32 @@ public class UserHandler extends ClientHandler{
         for(UserHandler user : userHandlers) {
             try {
                 if(user != this && db.checkIfIsFriend(this.userId, user.userId)) {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void broadCastMessToMembers(String sender, int groupId, String content) {
+        UserHandleDB db = UserHandleDB.getDBInstance();
+        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_MESSAGE_GROUP.toString());
+        
+        JSONObject messObj = new JSONObject();
+        messObj.put("sender", sender);
+        messObj.put("groupId", groupId);
+        messObj.put("content", content);
+        
+        messRes.put("data", messObj);
+        
+        for(UserHandler user : userHandlers) {
+            try {
+                if(user != this && db.checkIfInGroupChat(this.userId, groupId)) {
                     user.dataOut.write(messRes.toString());
                     user.dataOut.newLine();
                     user.dataOut.flush();

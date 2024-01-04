@@ -227,12 +227,7 @@ public class CreateGroupDlg extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(mainFrame, "Your group chat must have a name and at least 1 new member", "Create group notification", JOptionPane.WARNING_MESSAGE);
             return;
         }
-//        for(Member mem : members) {
-//            System.out.println(mem.getId());
-//            System.out.println(mem.getIsAdmin());
-//            System.out.println(mem.getUsername());
-//        }
-//        System.out.println(groupName);
+
         GroupService.createGroupChat(groupName, members);
     }//GEN-LAST:event_createBtnActionPerformed
 

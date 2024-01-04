@@ -143,8 +143,12 @@ public class ClientSocket implements Runnable {
                     JSONObject chatObj = chatArr.getJSONObject(i);
                     ChatMessage chat = new ChatMessage();
                     chat.setContent(chatObj.getString("content"));
-                    chat.setIsMine(chatObj.getBoolean("mine"));
-                    chat.setSendName(chatObj.getString("sendName"));
+                    boolean isMine = chatObj.getBoolean("mine");
+                    chat.setIsMine(isMine);
+                    if(!isMine)
+                        chat.setSendName(chatObj.getString("sendName"));
+                    else
+                        chat.setSendName("You");
                     listChat.add(chat);
                 }
                 CustomListener.getInstance().getChatListener().loadChatData(listChat);
@@ -299,6 +303,18 @@ public class ClientSocket implements Runnable {
                     CustomListener.getInstance().getChatListener().addNewGroupChat(gr);
                 }
                 CustomListener.getInstance().getCreateGroupListener().createGroup(res);
+            }
+                break;
+                
+            case NEW_MESSAGE_GROUP:
+            {
+                JSONObject chatObj = messObj.getJSONObject("data");
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage.setSendName(chatObj.getString("sender"));
+                chatMessage.setContent(chatObj.getString("content"));
+                chatMessage.setIsMine(false);
+                
+                CustomListener.getInstance().getChatListener().newMessGroupCome(chatMessage, chatObj.getInt("groupId"));
             }
                 break;
                 

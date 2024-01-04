@@ -49,6 +49,7 @@ public class Chat extends javax.swing.JPanel {
     private int receiverId;
     private boolean isGroup;
     private JPanel messagesPanel;
+    private ArrayList<Integer> highlightGroups;
 
     /**
      * Creates new form Chat
@@ -56,6 +57,8 @@ public class Chat extends javax.swing.JPanel {
     private Chat(Layout mainFrame) {
         initComponents();
         this.mainFrame = mainFrame;
+        
+        highlightGroups = new ArrayList<>();
         
         // Set vertical scrollbar policy
         chatZoneScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -152,6 +155,8 @@ public class Chat extends javax.swing.JPanel {
             public void loadListGroup(ArrayList<Group> listGroup) {
                 DefaultListModel<Group> listGroupModel = new DefaultListModel<>();
                 for(Group group : listGroup) {
+                    if(highlightGroups.contains(group.getId()))
+                        group.setIsSeen(false);
                     listGroupModel.addElement(group);
                 }
                 groupList.setModel((ListModel)listGroupModel);
@@ -206,6 +211,19 @@ public class Chat extends javax.swing.JPanel {
             public void addNewGroupChat(Group gr) {
                 DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
                 listGroupModel.addElement(gr);
+            }
+
+            @Override
+            public void newMessGroupCome(ChatMessage mess, int groupId) {
+                if(isGroup && groupId == receiverId) {
+                    addMessageToChatZone(mess);
+                }
+                else {
+                    highlightSeenChatGroup(groupId, false);
+                }
+                if(!Chat.getChatPanelInst(mainFrame).isVisible()) {
+                    mainFrame.highlightChatIcon();
+                }
             }
         });
         
@@ -490,6 +508,7 @@ public class Chat extends javax.swing.JPanel {
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
+        sendMessage();
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void createGroupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupBtnActionPerformed
@@ -499,6 +518,7 @@ public class Chat extends javax.swing.JPanel {
 
     private void messageInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageInputActionPerformed
         // TODO add your handling code here:
+        sendMessage();
     }//GEN-LAST:event_messageInputActionPerformed
 
     private void friendListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_friendListValueChanged
@@ -552,9 +572,10 @@ public class Chat extends javax.swing.JPanel {
         if (!evt.getValueIsAdjusting()) {
             Group selectedGroup = groupList.getSelectedValue();
             if (selectedGroup != null && (!isGroup || receiverId != selectedGroup.getId())) {
-                ChatService.getChatGroupHistory(selectedGroup.getId());
-                GroupService.getMembers(selectedGroup.getId());
                 CustomListener.getInstance().getChatListener().loadChatUI(selectedGroup.getId(), selectedGroup.getName(), true);
+                ChatService.getChatGroupHistory(selectedGroup.getId());
+                highlightSeenChatGroup(selectedGroup.getId(), true);
+                GroupService.getMembers(selectedGroup.getId());
             }
             
             groupList.clearSelection();
@@ -703,13 +724,42 @@ public class Chat extends javax.swing.JPanel {
     }
     
     public void addMessageToChatZone(ChatMessage mess) {
-        Message newMess = new Message(messagesPanel, mess.getContent(), mess.getSendName(), mess.getIsMine());
+        Message newMess = new Message(messagesPanel, mess);
         
         messagesPanel.add(newMess);
         messagesPanel.revalidate();
         messagesPanel.repaint();
         
         messagesPanel.setPreferredSize(new Dimension(messagesPanel.getPreferredSize().width, messagesPanel.getPreferredSize().height + 70));
+    }
+    
+    public void highlightSeenChatGroup(int groupId, boolean seen) {
+        if(seen)
+            highlightGroups.remove(Integer.valueOf(groupId));
+        else
+            highlightGroups.add(groupId);
+        DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+        for(int i = 0; i < listGroupModel.getSize(); i++){
+            Group currGroup = listGroupModel.getElementAt(i);
+            if(currGroup.getId() == groupId){
+                currGroup.setIsSeen(seen);
+                break;
+            }
+        }
+        groupList.repaint();
+    }
+    
+    public void sendMessage() {
+        String content = messageInput.getText();
+        if(isGroup) {
+            ChatService.chatGroup(receiverId, content);
+            ChatMessage mess = new ChatMessage();
+            mess.setContent(content);
+            mess.setSendName("You");
+            mess.setIsMine(true);
+            addMessageToChatZone(mess);
+        }
+        messageInput.setText("");
     }
     
     public String getCurrentNameChat() {

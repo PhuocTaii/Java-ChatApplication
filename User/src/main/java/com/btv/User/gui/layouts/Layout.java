@@ -10,6 +10,7 @@ import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.gui.interfaces.MenuListener;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
 /**
  *
@@ -41,6 +42,7 @@ public class Layout extends javax.swing.JFrame {
         CustomListener.getInstance().addMenuListener(new MenuListener() {
             @Override
             public void showChatPanel() {
+                chatItem.setText("");
                 chatItem.setBackground(new Color(6, 20, 133));
                 searchItem.setBackground(new Color(48, 162, 255));
                 // show chat frame
@@ -82,6 +84,7 @@ public class Layout extends javax.swing.JFrame {
         menuLayout.setPreferredSize(new java.awt.Dimension(60, 768));
 
         chatItem.setBackground(new java.awt.Color(48, 162, 255));
+        chatItem.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         chatItem.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         chatItem.setIcon(new ImageIcon(getClass().getResource("/images/message.png"))
         );
@@ -151,6 +154,12 @@ public class Layout extends javax.swing.JFrame {
         // TODO add your handling code here:
         CustomListener.getInstance().getMenuListener().showSearchPanel();
     }//GEN-LAST:event_searchItemMouseClicked
+    
+    public void highlightChatIcon() {
+        chatItem.setText("*");
+        chatItem.setForeground(Color.RED);
+        this.repaint();
+    }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel chatItem;

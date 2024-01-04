@@ -12,22 +12,24 @@ public class User {
     private int id;
     private String username;
     private String name;
-    private boolean isOnline;
+    private boolean isOnline, isSeen;
     
     public User() {
-        
+        isSeen = true;
     }
 
     public User(int id, String username, String name) {
         this.id = id;
         this.username = username;
         this.name = name;
+        isSeen = true;
     }
     
     public User(int id, String username, boolean isOnline) {
         this.id = id;
         this.username = username;
         this.isOnline = isOnline;
+        isSeen = true;
     }
 
     public int getId() {
@@ -61,6 +63,12 @@ public class User {
     public void setIsOnline(boolean isOnline) {
         this.isOnline = isOnline;
     }
-    
-    
+
+    public boolean getIsSeen() {
+        return isSeen;
+    }
+
+    public void setIsSeen(boolean isSeen) {
+        this.isSeen = isSeen;
+    }
 }

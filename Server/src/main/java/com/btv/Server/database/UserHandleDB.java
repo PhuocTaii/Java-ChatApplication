@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import org.json.JSONArray;
@@ -416,7 +417,7 @@ public class UserHandleDB extends ChatDB {
     public ArrayList getChatGroupHistory(int userId, int groupId) {
         ArrayList<ChatMessage> resList = new ArrayList<>();
         try {
-            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name " + "from ChatHistory c join User u on (c.send_id = u.u_id) " + "where c.group_id = ? " + "order by c.sendtime asc";
+            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name " + "from ChatHistory c join User u on (c.send_id = u.u_id) " + "where c.group_id = ? " + "order by c.c_id asc";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, groupId);
             ResultSet rs = stmt.executeQuery();
@@ -647,6 +648,48 @@ public class UserHandleDB extends ChatDB {
                 ex.printStackTrace();
             }
             return -1;
+        }
+    }
+    
+    public boolean chatGroup(int userId, int grId, String content) {
+        try{
+            String sql = "insert into ChatHistory(send_id, group_id, content, sendtime) values " +
+                        "(?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, grId);
+            stmt.setString(3, content);
+//            stmt.setDate(4, new Date(new java.util.Date().getTime()));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTime = sdf.format(new java.util.Date());
+            stmt.setString(4, currentTime);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean checkIfInGroupChat(int userId, int groupId) {
+        try {
+            String sql = "select * " +
+                        "from GroupMembers " +
+                        "where gr_id = ? and u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stmt.close();
+                return true;
+            }
+            stmt.close();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

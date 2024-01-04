@@ -4,6 +4,7 @@
  */
 package com.btv.User.gui.components;
 
+import com.btv.User.model.ChatMessage;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
@@ -18,11 +19,13 @@ import javax.swing.border.EmptyBorder;
  * @author taing
  */
 public class Message extends JPanel {
-    private String content;
-    private String name;
-    private Boolean type; // 1 for send, 0 for receive
+//    private String content;
+//    private String name;
+//    private Boolean type; // 1 for send, 0 for receive
+//    private ChatMessage mess;
 
-    public Message(JPanel container, String content, String name, Boolean type) {
+//    public Message(JPanel container, String content, String name, Boolean type) {
+    public Message(JPanel container, ChatMessage mess) {
         super();
         
         setBorder(new EmptyBorder(0, 5, 0, 5));
@@ -35,7 +38,7 @@ public class Message extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel nameLabel = new JLabel();
-        nameLabel.setText(name);
+        nameLabel.setText(mess.getSendName());
         nameLabel.setVerticalAlignment(JLabel.CENTER);
         
         messWidth = messWidth/2-10;
@@ -52,12 +55,12 @@ public class Message extends JPanel {
         TextPanel.setMinimumSize(new Dimension(messWidth, 40));
         TextPanel.setMaximumSize(new Dimension(messWidth, 40));
 
-        JTextArea contentArea = new JTextArea(content);
+        JTextArea contentArea = new JTextArea(mess.getContent());
         contentArea.setLineWrap(true);
         contentArea.setWrapStyleWord(true);
         contentArea.setEditable(false);
         TextPanel.getViewport().add(contentArea);
-        if (!type) {
+        if (!mess.getIsMine()) {
             nameLabel.setHorizontalAlignment(JLabel.LEFT);
             TextPanel.setAlignmentX(LEFT_ALIGNMENT);
             nameLabel.setAlignmentX(LEFT_ALIGNMENT);

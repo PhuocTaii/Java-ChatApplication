@@ -11,6 +11,11 @@ package com.btv.User.model;
 public class Group {
     private int id;
     private String name;
+    private boolean isSeen;
+    
+    public Group() {
+        isSeen = true;
+    }
 
     public int getId() {
         return id;
@@ -26,5 +31,13 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getIsSeen() {
+        return isSeen;
+    }
+
+    public void setIsSeen(boolean isSeen) {
+        this.isSeen = isSeen;
     }
 }

@@ -32,7 +32,10 @@ public class FriendListCellRender extends JLabel implements ListCellRenderer<Use
         setBorder(BorderFactory.createEmptyBorder(0, 5,0, 5));
         
         if(user.isIsOnline()) {
-            setForeground(Color.GREEN);
+            if(!user.getIsSeen())
+                setForeground(Color.RED);
+            else
+                setForeground(Color.GREEN);
         } else {
             setForeground(Color.BLACK);
         }

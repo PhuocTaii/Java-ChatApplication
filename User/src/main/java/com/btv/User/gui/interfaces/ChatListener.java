@@ -30,4 +30,5 @@ public interface ChatListener {
     public void assignAdmin(ArrayList<Member> listMem, boolean isAdmin);
     public void removeMember(ArrayList<Member> listMem, boolean isAdmin);
     public void addNewGroupChat(Group gr);
+    public void newMessGroupCome(ChatMessage mess, int groupId);
 }

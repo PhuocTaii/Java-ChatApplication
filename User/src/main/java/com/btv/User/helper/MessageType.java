@@ -42,5 +42,6 @@ public enum MessageType {
     CHAT_GROUP,
     ENCRYPT_GROUP,
     
-    FRIEND_STATUS
+    FRIEND_STATUS,
+    NEW_MESSAGE_GROUP
 }
