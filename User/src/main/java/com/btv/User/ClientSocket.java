@@ -12,13 +12,18 @@ import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
 import com.btv.User.model.Member;
 import com.btv.User.model.User;
+import com.btv.User.service.SecurityService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -51,6 +56,10 @@ public class ClientSocket implements Runnable {
             closeClientSocket();
         }
     }
+    
+    public Socket getSocket() {
+        return this.socket;
+    } 
     
     public static ClientSocket getInstance() {
         if(clientInstance == null) {
@@ -226,7 +235,12 @@ public class ClientSocket implements Runnable {
                     Group gr = new Group();
                     gr.setId(grObj.getInt("id"));
                     gr.setName(grObj.getString("name"));
+                    gr.setIsEncrypted(grObj.getBoolean("isEncrypted"));
                     listGroup.add(gr);
+                    if(grObj.getBoolean("isEncrypted")) {
+                        Group gr2 = new Group(gr);
+                        listGroup.add(gr2);
+                    }
                 }
                 CustomListener.getInstance().getChatListener().loadListGroup(listGroup);
             }
@@ -243,6 +257,12 @@ public class ClientSocket implements Runnable {
                     mem.setId(memObj.getInt("id"));
                     mem.setUsername(memObj.getString("username"));
                     mem.setIsAdmin(memObj.getBoolean("isAdmin"));
+                    if(memRes.getBoolean("isEncrypted")) {
+                        JSONArray keyArr = memObj.getJSONArray("publicKeys");
+                        for(int j = 0; j < keyArr.length(); j++) {
+                            mem.addPublicKey(Base64.getDecoder().decode(keyArr.getString(j)));
+                        }
+                    }
                     listMem.add(mem);
                 }
                 CustomListener.getInstance().getChatListener().loadListMember(listMem, memRes.getBoolean("isAdmin"));
@@ -351,7 +371,77 @@ public class ClientSocket implements Runnable {
                 chatMessage.setContent(chatObj.getString("content"));
                 chatMessage.setIsMine(false);
                 
-                CustomListener.getInstance().getChatListener().newMessGroupCome(chatMessage, chatObj.getInt("groupId"));
+                CustomListener.getInstance().getChatListener().newMessGroupCome(chatMessage, chatObj.getInt("groupId"), false);
+            }
+                break;
+                
+            case ENCRYPT_GROUP:
+            {
+                JSONObject resObj = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(resObj.getString("status"));
+                res.setMessage(resObj.getString("statusDetail"));
+                
+                CustomListener.getInstance().getChatListener().encryptGroupChat(res, resObj.getInt("groupId"));
+            }
+                break;
+                
+            case NEW_ENCRYPTED_MESSAGE_GROUP:
+            {
+                JSONObject chatObj = messObj.getJSONObject("data");
+                byte[] messBytes = Base64.getDecoder().decode(chatObj.getString("content"));
+                
+                String content;
+                try {
+                    content = SecurityService.decrypt(messBytes, MainApp.getPrivateKey());
+                } catch (Exception ex) {
+                    break;
+                }
+                
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage.setSendName(chatObj.getString("sender"));
+                chatMessage.setContent(content);
+                chatMessage.setIsMine(false);
+                
+                CustomListener.getInstance().getChatListener().newMessGroupCome(chatMessage, chatObj.getInt("groupId"), true);
+            }
+                break;
+                
+            case VIEW_ENCRYPTED_GROUP_CHAT_HISTORY:
+            {
+                ArrayList<ChatMessage> listChat = new ArrayList<>();
+                JSONArray chatArr = messObj.getJSONArray("data");
+                for (int i = 0; i < chatArr.length(); i++) {
+                    JSONObject chatObj = chatArr.getJSONObject(i);
+                    ChatMessage chat = new ChatMessage();
+                    String content;
+                    try {
+                        content = SecurityService.decrypt(Base64.getDecoder().decode(chatObj.getString("content")), MainApp.getPrivateKey());
+                        chat.setContent(content);
+                        boolean isMine = chatObj.getBoolean("mine");
+                        chat.setIsMine(isMine);
+                        if(!isMine)
+                            chat.setSendName(chatObj.getString("sendName"));
+                        else
+                            chat.setSendName("You");
+                        listChat.add(chat);                    
+                    } catch (Exception ex) {
+                    }
+                }
+                CustomListener.getInstance().getChatListener().loadChatData(listChat);
+            }
+                break;
+                
+            case NEW_USER_DEVICE_ENCRYPT:
+            {
+                JSONObject data = messObj.getJSONObject("data");
+                byte[] keyBytes = Base64.getDecoder().decode(data.getString("key"));
+                int newId = data.getInt("newUser");
+                
+                JSONArray grArr = data.getJSONArray("groups");
+                for (int i = 0; i < grArr.length(); i++) {
+                    if(CustomListener.getInstance().getChatListener().addNewKeyOfMember(grArr.getInt(i), newId, keyBytes))
+                        break;
+                }
             }
                 break;
                 

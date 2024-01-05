@@ -29,7 +29,7 @@ public class GroupService {
         }
     }
     
-    public static void getMembers(int groupId) {
+    public static void getMembers(int groupId, boolean isEncrypted) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         
         try {
@@ -37,7 +37,12 @@ public class GroupService {
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
             
-            clientSocket.dataOut.write(groupId);
+            JSONObject mess = new JSONObject();
+            mess.put("groupId", groupId);
+            mess.put("isEncrypted", isEncrypted);
+            
+            clientSocket.dataOut.write(mess.toString());
+            clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -143,6 +148,21 @@ public class GroupService {
             
             clientSocket.dataOut.write(mess.toString());
             clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+     public static void encryptGroupChat(int groupId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.ENCRYPT_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(groupId);
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();

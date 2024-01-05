@@ -257,7 +257,10 @@ public class Login extends javax.swing.JFrame {
         }
         AuthService authService = new AuthService();
         MessageStatus res = authService.forgotPassword(username);
-        JOptionPane.showMessageDialog(this, "We have sent new password to your email: " + res.getMessage(), "Forgot password information", JOptionPane.INFORMATION_MESSAGE);
+        if(res == MessageStatus.SUCCESS)
+            JOptionPane.showMessageDialog(this, "We have sent new password to your email: " + res.getMessage(), "Forgot password notification", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(this, res.getMessage(), "Forgot password notification", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_forgotPassLinkMouseClicked
 
     public boolean setTextFields() {

@@ -1,8 +1,10 @@
 package com.btv.User.service;
 
 import com.btv.User.ClientSocket;
+import com.btv.User.MainApp;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.helper.MessageType;
+import com.btv.User.model.User;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,6 +42,9 @@ public class AuthService {
             
             MessageStatus res = MessageStatus.valueOf(clientSocket.dataIn.readLine());
             if(res == MessageStatus.SUCCESS) {
+                User user = new User();
+                user.setId(clientSocket.dataIn.read());
+                MainApp.setUser(user);
                 return res;
             }
             else {
@@ -68,6 +73,9 @@ public class AuthService {
 
             MessageStatus res = MessageStatus.valueOf(clientSocket.dataIn.readLine());
             if(res == MessageStatus.SUCCESS) {
+                User user = new User();
+                user.setId(clientSocket.dataIn.read());
+                MainApp.setUser(user);
                 return res;
             }
             else {

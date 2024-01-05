@@ -103,4 +103,14 @@ public class MemberTableModel extends AbstractTableModel {
     public ArrayList getMemberList() {
         return memList;
     }
+    
+    public void addNewKeyOfMember(int memId, byte[] key) {
+        for(Member mem : memList) {
+            if(mem.getId() == memId) {
+                mem.addPublicKey(key);
+                break;
+            }
+        }
+        fireTableDataChanged();
+    }
 }

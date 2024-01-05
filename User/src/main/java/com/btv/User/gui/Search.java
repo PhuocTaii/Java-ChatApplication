@@ -51,7 +51,7 @@ public class Search extends javax.swing.JPanel {
                 
                 if(!user.getUsername().equalsIgnoreCase(Chat.getChatPanelInst(null).getCurrentNameChat())) {
                     // load ui
-                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername(), false);
+                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername(), false, false);
 
                     // send request
                     ChatService.getChatUserHistory(user.getId());

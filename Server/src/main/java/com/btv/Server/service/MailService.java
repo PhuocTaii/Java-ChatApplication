@@ -4,6 +4,7 @@
  */
 package com.btv.Server.service;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,27 +24,23 @@ import javax.mail.internet.MimeMessage;
 public class MailService {
     private static MailService mailInstance = null;
     
-    public static final String HOST_NAME = "smtp.gmail.com";
-    public static final int SSL_PORT = 465; // Port for SSL
-    public static final String APP_EMAIL = "ChatChat.BTV@gmail.com"; // your email
-    public static final String APP_PASSWORD = System.getenv("APP_MAIL_PASSWORD"); // your password
-    
     private Session session;
             
     private MailService() {
+        Dotenv dotenv = Dotenv.load();
         // Get properties object
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", HOST_NAME);
-        props.put("mail.smtp.socketFactory.port", SSL_PORT);
+        props.put("mail.smtp.host", dotenv.get("HOST_NAME_MAIL"));
+        props.put("mail.smtp.socketFactory.port", dotenv.get("SSL_PORT"));
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.port", SSL_PORT);
+        props.put("mail.smtp.port", dotenv.get("SSL_PORT"));
         
         //create the Session object
         Authenticator authenticator = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(APP_EMAIL, APP_PASSWORD);
+                return new PasswordAuthentication(dotenv.get("EMAIL"), dotenv.get("PASSWORD_MAIL"));
             }
         };
         session = Session.getInstance(props, authenticator);
