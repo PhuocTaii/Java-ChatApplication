@@ -12,7 +12,16 @@ import javax.swing.SwingUtilities;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.btv.User.gui.interfaces.LoginListener;
 import com.btv.User.gui.interfaces.SignUpListener;
+import com.btv.User.model.User;
 import com.btv.User.service.AuthService;
+import com.btv.User.service.SecurityService;
+import io.github.cdimascio.dotenv.Dotenv;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  *
@@ -24,6 +33,8 @@ public class MainApp {
     private SignUp signUpForm;
     private Layout mainLayout;
     private AuthService authService;
+    private static PrivateKey privateKey;
+    private static User user;
 
     public MainApp() {
         authService = new AuthService();
@@ -37,13 +48,7 @@ public class MainApp {
             
             @Override
             public void onLoginSuccess() {
-                logInForm.setVisible(false);
-                signUpForm.setVisible(false);
-
-                mainLayout = new Layout();
-                mainLayout.setVisible(true);
-                mainLayout.setTitle("ChatChat");
-                new Thread(ClientSocket.getInstance()).start();
+                openApp();
             }
         });
         signUpForm = new SignUp(new SignUpListener() {
@@ -55,20 +60,57 @@ public class MainApp {
             
             @Override
             public void onSignUpSuccess() {
-                logInForm.setVisible(false);
-                signUpForm.setVisible(false);
-
-                mainLayout = new Layout();
-                mainLayout.setVisible(true);
-                mainLayout.setTitle("ChatChat");
-                new Thread(ClientSocket.getInstance()).start();
+                openApp();
             }
         });
 
         logInForm.setVisible(true);
         signUpForm.setVisible(false);
     }
+    
+    private void openApp() {
+        logInForm.setVisible(false);
+        signUpForm.setVisible(false);
 
+        mainLayout = new Layout();
+        mainLayout.setVisible(true);
+        mainLayout.setTitle("ChatChat - " + user.getUsername());
+        new Thread(ClientSocket.getInstance()).start();
+        setSecurity();
+    }
+    
+    private boolean setSecurity() {
+        Dotenv dotenv = Dotenv.load();
+        Path pathPrivate = Paths.get(dotenv.get("PRIVATE_KEY_PATH") + "_" + MainApp.getUser().getId() + ".pem");
+        try {
+            if(Files.exists(pathPrivate)) {
+                this.privateKey = SecurityService.readPrivateKey(pathPrivate);
+            }
+            else {
+                KeyPair keyPair = SecurityService.generateKeyPair();
+                SecurityService.storeKey(keyPair.getPrivate(), pathPrivate);
+                SecurityService.storePublicKeyInDB(keyPair.getPublic());
+                this.privateKey = keyPair.getPrivate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static PrivateKey getPrivateKey() {
+        return privateKey;
+    }
+
+    public static User getUser() {
+        return user;
+    }
+
+    public static void setUser(User user) {
+        MainApp.user = user;
+    }
+    
     public static void main(String args[]) {
         FlatLightLaf.setup();
 

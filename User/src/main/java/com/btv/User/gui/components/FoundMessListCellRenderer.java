@@ -4,7 +4,7 @@
  */
 package com.btv.User.gui.components;
 
-import com.btv.User.model.User;
+import com.btv.User.model.ChatMessage;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -17,28 +17,23 @@ import javax.swing.ListCellRenderer;
  *
  * @author tvan
  */
-public class FriendListCellRender extends JLabel implements ListCellRenderer<User> {
-    public FriendListCellRender() {
+public class FoundMessListCellRenderer extends JLabel implements ListCellRenderer<ChatMessage> {
+    public FoundMessListCellRenderer() {
         setOpaque(true);
     }
     
     @Override
-    public Component getListCellRendererComponent(JList<? extends User> list, User user, int index,
+    public Component getListCellRendererComponent(JList<? extends ChatMessage> list, ChatMessage mess, int index,
         boolean isSelected, boolean cellHasFocus) {
                    
         setBackground(null);
-        setText(user.getUsername());
+        setForeground(Color.BLACK);
+        
+        setText("<html><font color='#30A2FF'><b>" + mess.getChatName() + "</b></font><br>"
+                + "<i>" + mess.getSendName() + "</i>" + ": " + mess.getContent()
+                + "</html>");
         
         setBorder(BorderFactory.createEmptyBorder(0, 5,0, 5));
-        
-        if(user.isIsOnline()) {
-            if(!user.getIsSeen())
-                setForeground(Color.RED);
-            else
-                setForeground(Color.GREEN);
-        } else {
-            setForeground(Color.BLACK);
-        }
         
         return this;
     }
@@ -46,7 +41,7 @@ public class FriendListCellRender extends JLabel implements ListCellRenderer<Use
     @Override
     public Dimension getPreferredSize() {
         Dimension preferredSize = super.getPreferredSize();
-        preferredSize.height = 20;
+        preferredSize.height = 40;
         return preferredSize;
     }
 }

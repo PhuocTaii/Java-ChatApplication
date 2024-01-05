@@ -27,6 +27,7 @@ public class TableCustom extends JTable {
 
                 Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 setBorder(noFocusBorder);
+                com.setBackground(null);
                 if (isSelected) {
                     com.setForeground(new Color(13, 113, 182));
                 } else {

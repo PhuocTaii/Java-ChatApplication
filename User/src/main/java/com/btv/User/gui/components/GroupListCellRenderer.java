@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -28,11 +30,22 @@ public class GroupListCellRenderer extends JLabel implements ListCellRenderer<Gr
                    
         setBackground(null);
         setText(group.getName());
+        if(group.getIsEncrypted()) {
+            setIcon(new ImageIcon(getClass().getResource("/images/encrypted-small.png")));
+        }
+        else
+            setIcon(null);
         
         setBorder(BorderFactory.createEmptyBorder(0, 5,0, 5));
         
-        if (isSelected) {
-            setForeground(new Color(13, 113, 182));
+//        if (isSelected) {
+//            setForeground(new Color(13, 113, 182));
+//        } else {
+//            setForeground(Color.BLACK);
+//        }
+        
+        if(!group.getIsSeen()) {
+            setForeground(Color.RED);
         } else {
             setForeground(Color.BLACK);
         }

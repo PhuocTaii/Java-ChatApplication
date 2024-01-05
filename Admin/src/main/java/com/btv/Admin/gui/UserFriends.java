@@ -7,6 +7,8 @@ package com.btv.Admin.gui;
 import com.btv.Admin.service.FriendService;
 import java.io.IOException;
 import javax.swing.JComboBox;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -32,6 +34,7 @@ public class UserFriends extends javax.swing.JPanel {
             tableModel.addRow(row);
         }
         friendService.filterByName(tableCustom1, "");
+        searchName();
     }
     
     public void updateTable(){
@@ -43,6 +46,21 @@ public class UserFriends extends javax.swing.JPanel {
         }
     }
 
+    public void searchName() {
+        Input.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+            }
+        });
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -94,6 +112,7 @@ public class UserFriends extends javax.swing.JPanel {
         filterOptions.setPreferredSize(new java.awt.Dimension(70, 30));
         Input.setVisible(false);
         numberOptions.setVisible(false);
+        searchButton.setVisible(false);
         filterOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterOptionsActionPerformed(evt);
@@ -194,15 +213,19 @@ public class UserFriends extends javax.swing.JPanel {
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);
+            searchButton.setVisible(false);
+
             // Show all data
         }
         else if ("Name".equals(optionChosen)) {
             Input.setVisible(true);
             numberOptions.setVisible(false);
+            searchButton.setVisible(false);
         }
         else {
             Input.setVisible(true);
             numberOptions.setVisible(true);
+            searchButton.setVisible(true);
         }
         
         filterOptions.revalidate();

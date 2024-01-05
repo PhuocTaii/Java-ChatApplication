@@ -13,6 +13,7 @@ public class CustomListener {
     private ChatListener chatListener;
     private SearchListener searchListener;
     private MenuListener menuListener;
+    private CreateGroupListener createGroupListener;
     
     private CustomListener() {
         
@@ -47,5 +48,13 @@ public class CustomListener {
 
     public MenuListener getMenuListener() {
         return menuListener;
+    }
+    
+    public void addCreateGroupListener(CreateGroupListener createGroupListener) {
+        this.createGroupListener = createGroupListener;
+    }
+
+    public CreateGroupListener getCreateGroupListener() {
+        return createGroupListener;
     }
 }

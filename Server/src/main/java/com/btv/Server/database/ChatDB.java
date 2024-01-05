@@ -6,6 +6,7 @@ package com.btv.Server.database;
 
 import java.sql.Connection;
 import com.mysql.cj.jdbc.Driver;
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,10 +18,6 @@ import java.sql.Statement;
 public class ChatDB { // Singleton
 
     private static ChatDB dbInstance = null;
-
-    private static final String URL = "jdbc:mysql://chatchat-db.c0kjxptbsciv.ap-southeast-1.rds.amazonaws.com:3306/?user=admin";
-    private static final String USERNAME = System.getenv("USERNAME_DB");
-    private static final String PASSWORD = System.getenv("PASS_DB");
     
     protected static Connection connection;
 
@@ -48,8 +45,9 @@ public class ChatDB { // Singleton
             DriverManager.registerDriver(myDriver);
             System.out.println("Connecting to database...");
 
+            Dotenv dotenv = Dotenv.load();
             // Establish connection
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(dotenv.get("URL_DB"), dotenv.get("USERNAME_DB"), dotenv.get("PASSWORD_DB"));
             System.out.println("Database connected");
             // Perform database operations here
             Statement stmt = connection.createStatement();

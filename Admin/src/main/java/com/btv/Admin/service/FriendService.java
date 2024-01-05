@@ -57,6 +57,27 @@ public class FriendService {
         
     }
     
+        public void filterBySearch(JTable table, String searchValue, String fieldName) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+
+        int columnIndex = 0;
+        switch (fieldName) {
+            case "Name" ->
+                columnIndex = 1;
+            default -> {
+            }
+        }
+
+        if (searchValue.trim().length() == 0) {
+            rowSorter.setRowFilter(null);
+        } else {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, columnIndex)); // Case-insensitive search
+
+        }
+    }
+    
     public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
