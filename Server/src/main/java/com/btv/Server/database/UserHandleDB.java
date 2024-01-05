@@ -946,4 +946,27 @@ public class UserHandleDB extends ChatDB {
         return resList;
     }
     
+    public boolean checkIfAccountLocked(int userId) {
+        try {
+            String sql = "select u_status " +
+                        "from User " +
+                        "where u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            String status = "";
+            while (rs.next()) {
+                status = rs.getString(1);
+            }
+            rs.close();
+            stmt.close();
+            if(status.equals("LOCKED")) {
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

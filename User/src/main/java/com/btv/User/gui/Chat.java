@@ -293,6 +293,13 @@ public class Chat extends javax.swing.JPanel {
                 }
                 return false;
             }
+
+            @Override
+            public void messNoti(MessageStatus res) {
+                if(res == MessageStatus.FAIL) {
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Chat warning", JOptionPane.WARNING_MESSAGE);                    
+                }
+            }
         });
         
         loadPanel();

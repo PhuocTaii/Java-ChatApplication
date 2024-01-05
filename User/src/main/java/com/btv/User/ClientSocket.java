@@ -189,6 +189,16 @@ public class ClientSocket implements Runnable {
             }
                 break;
                 
+            case CHAT_USER:
+            {
+                JSONObject chatRes = messObj.getJSONObject("data");
+                MessageStatus res = MessageStatus.valueOf(chatRes.getString("status"));
+                res.setMessage(chatRes.getString("statusDetail"));
+                
+                CustomListener.getInstance().getChatListener().messNoti(res);
+            }
+                break;
+                
             case NEW_MESSAGE_USER:
             {
                 JSONObject chatObj = messObj.getJSONObject("data");

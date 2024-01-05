@@ -44,6 +44,7 @@ public class AuthService {
             if(res == MessageStatus.SUCCESS) {
                 User user = new User();
                 user.setId(clientSocket.dataIn.read());
+                user.setUsername(clientSocket.dataIn.readLine());
                 MainApp.setUser(user);
                 return res;
             }
@@ -75,6 +76,7 @@ public class AuthService {
             if(res == MessageStatus.SUCCESS) {
                 User user = new User();
                 user.setId(clientSocket.dataIn.read());
+                user.setUsername(clientSocket.dataIn.readLine());
                 MainApp.setUser(user);
                 return res;
             }

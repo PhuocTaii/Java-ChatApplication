@@ -103,6 +103,8 @@ public class UserHandler extends ClientHandler{
                         dataOut.write(MessageStatus.SUCCESS.toString());
                         dataOut.newLine();
                         dataOut.write(uid);
+                        dataOut.write(newUser.getUsername());
+                        dataOut.newLine();
                     }
                     else {
                         dataOut.write(MessageStatus.FAIL.toString());
@@ -137,6 +139,8 @@ public class UserHandler extends ClientHandler{
                         dataOut.write(MessageStatus.SUCCESS.toString());
                         dataOut.newLine();
                         dataOut.write(uid);
+                        dataOut.write(username);
+                        dataOut.newLine();
                         dataOut.flush();
                         break;
                     }
@@ -393,8 +397,32 @@ public class UserHandler extends ClientHandler{
                     JSONObject messReceived = new JSONObject(dataIn.readLine());
                     int receiverId = messReceived.getInt("id");
                     String content = messReceived.getString("content");
-                    broadCastMessToUsers(clientUsername, receiverId, content);
-                    db.chatUser(this.userId, receiverId, content);
+                    
+                    JSONObject chatRes = new JSONObject();
+                        
+                    if(db.checkIfAccountLocked(receiverId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! This account has been locked!");
+                    }
+                    else if(db.checkIfBlocked(this.userId, receiverId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! You have blocked this user!");
+                    }
+                    else if(db.checkIfBlocked(receiverId, this.userId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! You have been blocked!");
+                    }
+                    else {
+                        chatRes.put("status", MessageStatus.SUCCESS.toString());
+                        chatRes.put("statusDetail", "");
+                        
+                        broadCastMessToUsers(clientUsername, receiverId, content);
+                        db.chatUser(this.userId, receiverId, content);
+                    }
+                    messRes.put("data", chatRes);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
                 } catch (IOException e){
                     e.printStackTrace();
                 }

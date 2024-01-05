@@ -32,6 +32,7 @@ public interface ChatListener {
     public void addNewGroupChat(Group gr);
     public void newMessGroupCome(ChatMessage mess, int groupId, boolean isEncrypted);
     public void newMessUserCome(ChatMessage mess, int userId);
+    public void messNoti(MessageStatus res);
     public void clearChatHistory(MessageStatus res);
     public void encryptGroupChat(MessageStatus res, int groupId);
     public boolean addNewKeyOfMember(int groupId, int memId, byte[] key);

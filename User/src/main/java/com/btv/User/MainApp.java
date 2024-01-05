@@ -74,7 +74,7 @@ public class MainApp {
 
         mainLayout = new Layout();
         mainLayout.setVisible(true);
-        mainLayout.setTitle("ChatChat");
+        mainLayout.setTitle("ChatChat - " + user.getUsername());
         new Thread(ClientSocket.getInstance()).start();
         setSecurity();
     }
