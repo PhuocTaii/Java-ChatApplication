@@ -54,3 +54,4 @@ nbdist/
 .nb-gradle/
 Server/.env
 User/.env
+User/*.pem
