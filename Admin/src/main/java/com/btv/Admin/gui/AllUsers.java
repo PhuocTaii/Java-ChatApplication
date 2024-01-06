@@ -6,6 +6,7 @@ package com.btv.Admin.gui;
 
 import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
+import java.awt.Color;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -43,26 +44,9 @@ public class AllUsers extends javax.swing.JPanel {
         addUserDialog.setLocationRelativeTo(null);
         tableClickHandle();        
         userService.filterByField(tableUsers, "", "");
-//        searchUsername();
         searchName();
     }
     
-        
-//    public void searchUsername() {
-//        filterTextField.getDocument().addDocumentListener(new DocumentListener() {
-//            public void changedUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//
-//            public void removeUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//
-//            public void insertUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//        });
-//    }
     
         public void searchName() {
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -685,6 +669,10 @@ public class AllUsers extends javax.swing.JPanel {
             }
         });
         jScrollPane3.setViewportView(tableUsers);
+        if (tableUsers.getColumnModel().getColumnCount() > 0) {
+            tableUsers.getColumnModel().getColumn(9).setMinWidth(0);
+            tableUsers.getColumnModel().getColumn(9).setMaxWidth(0);
+        }
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
         infoSection.setOpaque(false);
@@ -999,14 +987,18 @@ public class AllUsers extends javax.swing.JPanel {
         if (res == JOptionPane.YES_OPTION) {
             getUserField();
             String message = userService.validateUser(selectedUser);
-//            System.out.println(selectedUser.getStatus());
 
             if (message.equals("valid")) {
                 userService.modifyUser(selectedUser);
                 clearField();
                 updateTable();
+                messageField.setText("Modify user successfully");
+                messageField.setForeground(new Color(0, 128, 0));
+
             } else {
                 messageField.setText(message);
+                messageField.setForeground(new Color(255, 0, 0));
+
             }
         }
     }//GEN-LAST:event_updateButtonActionPerformed
@@ -1042,8 +1034,6 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void usernameAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAddFieldActionPerformed
         // TODO add your handling code here:
-//        searchName();
-//        searchUsername();
     }//GEN-LAST:event_usernameAddFieldActionPerformed
 
     private void emailAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailAddFieldActionPerformed
@@ -1103,10 +1093,11 @@ public class AllUsers extends javax.swing.JPanel {
             nameAddField.setText("");
             passwordAddField.setText("");
             usernameAddField.setText("");
+            JOptionPane.showMessageDialog(this, "User added", "Add user notification", JOptionPane.INFORMATION_MESSAGE);
+
             updateTable();
         } else {
-//            messageAddLabel.setText(validMessage);
-//            messageAddLabel.setForeground(Color.red);
+            JOptionPane.showMessageDialog(this, validMessage, "Add user notification", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 

@@ -43,7 +43,7 @@ public class FriendService {
         }
     }
     
-    public void filterByName(JTable table, String searchValue){
+    public void filterByName(JTable table, String searchValue ){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         
@@ -57,7 +57,7 @@ public class FriendService {
         
     }
     
-        public void filterBySearch(JTable table, String searchValue, String fieldName) {
+    public void filterBySearch(JTable table, String searchValue, String fieldName,JComboBox numberOptions) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         table.setRowSorter(rowSorter);
@@ -66,15 +66,18 @@ public class FriendService {
         switch (fieldName) {
             case "Name" ->
                 columnIndex = 1;
+            case "Time open app" ->
+                columnIndex = 3;
             default -> {
             }
         }
 
         if (searchValue.trim().length() == 0) {
             rowSorter.setRowFilter(null);
-        } else {
+        } else if (columnIndex == 1) {
             rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, columnIndex)); // Case-insensitive search
-
+        } else if (columnIndex == 3){
+            filterByNumber(table, searchValue, numberOptions);
         }
     }
     

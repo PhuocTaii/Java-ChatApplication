@@ -54,18 +54,28 @@ public class OnlineUsersService {
         }
     }
     
-    public void filterBySearch(JTable table, String searchValue){
+    public void filterBySearch(JTable table, String searchValue, String fieldName,JComboBox numberOptions){
+        
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
-        
-        table.setRowSorter(rowSorter); 
+        table.setRowSorter(rowSorter);
+        int columnIndex = 0;
+        switch (fieldName) {
+            case "Username" ->
+                columnIndex = 1;
+            case "Direct friends" ->
+                columnIndex = 3;
+            default -> {
+            }
+        }
 
-        
         if (searchValue.trim().length() == 0) {
             rowSorter.setRowFilter(null);
-        }else
-            rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
-        
+        } else if (columnIndex == 1) {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, columnIndex)); // Case-insensitive search
+        } else if (columnIndex == 3){
+            filterByNumber(table, searchValue, numberOptions);
+        }
     }
     
     public String[][] getAllLoginTimes(){
@@ -124,7 +134,7 @@ public class OnlineUsersService {
             rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
     }
     
-        public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
+    public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         
