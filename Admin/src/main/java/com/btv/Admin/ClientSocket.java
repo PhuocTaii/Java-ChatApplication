@@ -25,7 +25,7 @@ public class ClientSocket { // signleton
     
     private MessageType mess;
     
-    private ClientSocket() {
+        private ClientSocket() {
         try {
             socket = new Socket("127.0.0.1", 6868);
             dataIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));

@@ -57,7 +57,7 @@ public class FriendService {
         
     }
     
-        public void filterBySearch(JTable table, String searchValue, String fieldName) {
+    public void filterBySearch(JTable table, String searchValue, String fieldName) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         table.setRowSorter(rowSorter);
