@@ -33,6 +33,7 @@ public class UserFriends extends javax.swing.JPanel {
         for(Object[] row : friendList) {
             tableModel.addRow(row);
         }
+        friendService.filterByField(tableCustom1);
         searchName();
     }
     

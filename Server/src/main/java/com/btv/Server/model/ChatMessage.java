@@ -15,7 +15,6 @@ public class ChatMessage {
     private int sendId, receiveId, groupId;
     private Date sendTime;
     private boolean isMine;
-    private byte[] encryptedContent;
 
     public String getContent() {
         return content;
@@ -81,11 +80,4 @@ public class ChatMessage {
         this.chatName = chatName;
     }
 
-//    public byte[] getEncryptedContent() {
-//        return encryptedContent;
-//    }
-//
-//    public void setEncryptedContent(byte[] encryptedContent) {
-//        this.encryptedContent = encryptedContent;
-//    }
 }

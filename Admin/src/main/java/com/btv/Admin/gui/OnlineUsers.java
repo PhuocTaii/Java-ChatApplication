@@ -50,7 +50,21 @@ public class OnlineUsers extends javax.swing.JPanel {
         drawChart();
         
         searchName();
+        
+        onlineUserService.filterByField(tableCustom1);
 
+    }
+    
+    public void updateTable() {
+        LocalDate fromDate = LocalDate.of(0, 1, 1);
+        LocalDate toDate = LocalDate.now();
+
+        onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
+        tableModel = (DefaultTableModel)tableCustom1.getModel();
+        tableModel.setRowCount(0);
+        for(Object[] row : onlineUsersList) {
+            tableModel.addRow(row);
+        }
     }
     
     public void searchName() {
