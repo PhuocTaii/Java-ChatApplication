@@ -68,6 +68,13 @@ public class NewUserService {
         }
     }
     
+    public void filterByField(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        rowSorter.setRowFilter(null);
+    }
+    
     public void filterByName(JTable table, String searchValue){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);

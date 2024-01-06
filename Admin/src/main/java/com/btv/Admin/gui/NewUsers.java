@@ -124,12 +124,6 @@ public class NewUsers extends javax.swing.JPanel {
 
         options.setOpaque(false);
 
-        Input.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InputActionPerformed(evt);
-            }
-        });
-
         filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Name" }));
         Input.setVisible(false);
         filterOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -140,6 +134,12 @@ public class NewUsers extends javax.swing.JPanel {
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         filter.setText("Filter:");
+
+        startDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                startDatePropertyChange(evt);
+            }
+        });
 
         connector.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         connector.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -313,6 +313,10 @@ public class NewUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
+        newUserService.filterByField(tableUsers);
+        Input.setText("");
+        startDate.setCalendar(null);
+        endDate.setCalendar(null);
 
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
@@ -326,15 +330,10 @@ public class NewUsers extends javax.swing.JPanel {
         filterOptions.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
 
-    private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_InputActionPerformed
-
     private void jYearChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jYearChooser1PropertyChange
         // TODO add your handling code here:
         int year = jYearChooser1.getYear();
         statistic.remove(drawer);
-//        String[][] tmp = newUserService.getAllNewUsers(); 
         int monthCnt[] = newUserService.MakeChart(userList, year);
         
         drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
@@ -351,6 +350,7 @@ public class NewUsers extends javax.swing.JPanel {
 
     private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
         // TODO add your handling code here:
+        Input.setText("");
         endDate.getDateEditor().addPropertyChangeListener(e -> {
         if ("date".equals(e.getPropertyName())){
                 if (startDate.getDate() != null){
@@ -366,6 +366,11 @@ public class NewUsers extends javax.swing.JPanel {
             } 
         });
     }//GEN-LAST:event_endDatePropertyChange
+
+    private void startDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startDatePropertyChange
+        // TODO add your handling code here:
+        Input.setText("");
+    }//GEN-LAST:event_startDatePropertyChange
     
     public void searchName() {
         Input.getDocument().addDocumentListener(new DocumentListener() {

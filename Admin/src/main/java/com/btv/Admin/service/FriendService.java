@@ -66,7 +66,7 @@ public class FriendService {
         switch (fieldName) {
             case "Name" ->
                 columnIndex = 1;
-            case "Time open app" ->
+            case "Direct friends" ->
                 columnIndex = 3;
             default -> {
             }
@@ -81,6 +81,13 @@ public class FriendService {
         }
     }
     
+    public void filterByField(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        rowSorter.setRowFilter(null);
+    }
+    
     public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
@@ -93,7 +100,13 @@ public class FriendService {
             rowSorter.setRowFilter(null);
         } else{
             if("Equal".equals(numberOptions.getSelectedItem())){
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + numString + ".*", 3));
+                                RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
+                    public boolean include(Entry<? extends Object, ? extends Object> entry) {
+                        int value1 = Integer.parseInt((String) entry.getValue(3)); // adjust these indices to match your table structure
+                        return value1 == Integer.parseInt(numString);
+                    }
+                };
+                rowSorter.setRowFilter(filter);
             }
             else if("Greater".equals(numberOptions.getSelectedItem())){
                 RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {

@@ -209,6 +209,8 @@ public class UserFriends extends javax.swing.JPanel {
         // TODO add your handling code here:        
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
+        friendService.filterByField(tableCustom1);
+        Input.setText("");
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);

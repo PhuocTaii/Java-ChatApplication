@@ -35,7 +35,6 @@ public class OnlineUsers extends javax.swing.JPanel {
     public OnlineUsers() {
         initComponents();
         onlineUserService = new OnlineUsersService();
-        searchName();
         LocalDate fromDate = LocalDate.of(0, 1, 1);
         LocalDate toDate = LocalDate.now();
 
@@ -48,17 +47,10 @@ public class OnlineUsers extends javax.swing.JPanel {
 
         loginLog = onlineUserService.getAllLoginTimes();
         
-        int year = yearchooser.getYear();
- 
-        int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
+        drawChart();
+        
+        searchName();
 
-        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
-
-        statistic.setLayout(new BorderLayout());
-        statistic.add(drawer, BorderLayout.CENTER);
-        statistic.setPreferredSize(drawer.getPreferredSize());
-        statistic.setMaximumSize(drawer.getPreferredSize());
-        onlineUserService.filterByName(tableCustom1, "");
     }
     
     public void searchName() {
@@ -87,6 +79,20 @@ public class OnlineUsers extends javax.swing.JPanel {
                 }
             }
         });
+    }
+    
+    public void drawChart(){
+        int year = yearchooser.getYear();
+        if(drawer != null){
+            statistic.remove(drawer);
+        }
+        int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
+        
+        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
+        statistic.setLayout(new BorderLayout());
+        statistic.add(drawer, BorderLayout.CENTER);
+        statistic.setPreferredSize(drawer.getPreferredSize());
+        statistic.setMaximumSize(drawer.getPreferredSize());
     }
 
     /**
@@ -148,6 +154,12 @@ public class OnlineUsers extends javax.swing.JPanel {
         filter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         filter.setText("Filter:");
 
+        startDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                startDatePropertyChange(evt);
+            }
+        });
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Period of time:");
 
@@ -164,6 +176,11 @@ public class OnlineUsers extends javax.swing.JPanel {
         });
 
         numberOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Equal", "Greater", "Less" }));
+        numberOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numberOptionsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout optionsLayout = new javax.swing.GroupLayout(options);
         options.setLayout(optionsLayout);
@@ -327,17 +344,7 @@ public class OnlineUsers extends javax.swing.JPanel {
 
     private void yearchooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_yearchooserPropertyChange
         // TODO add your handling code here:
-        int year = yearchooser.getYear();
-        statistic.remove(drawer);
-        int monthCnt[] = onlineUserService.MakeChart(loginLog, year);
-        
-        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
-        statistic.setLayout(new BorderLayout());
-        statistic.add(drawer, BorderLayout.CENTER);
-        statistic.setPreferredSize(drawer.getPreferredSize());
-        statistic.setMaximumSize(drawer.getPreferredSize());
-        
-        
+        drawChart();
         statistic.revalidate();
         statistic.repaint();
     }//GEN-LAST:event_yearchooserPropertyChange
@@ -346,15 +353,30 @@ public class OnlineUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
+        drawChart();
+        onlineUserService.filterByField(tableCustom1);
+        Input.setText("");
+        startDate.setCalendar(null);
+        endDate.setCalendar(null);
 
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);
+            
+            LocalDate fromDate = LocalDate.of(0, 1, 1);
+            LocalDate toDate = LocalDate.now();
+            
+            onlineUsersList = onlineUserService.getAllOnlineUsers(fromDate.toString(), toDate.toString());
+            tableModel = (DefaultTableModel)tableCustom1.getModel();
+            tableModel.setRowCount(0);
+            for(Object[] row : onlineUsersList) {
+                tableModel.addRow(row);
+            }
         }
         else if ("Username".equals(optionChosen)) {
             Input.setVisible(true);
             numberOptions.setVisible(false);
-        }else{
+        }else if ("Number".equals(optionChosen)){
             Input.setVisible(true);
             numberOptions.setVisible(true);
         }
@@ -369,6 +391,7 @@ public class OnlineUsers extends javax.swing.JPanel {
 
     private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
         // TODO add your handling code here:
+        Input.setText("");
         endDate.getDateEditor().addPropertyChangeListener(e -> {
         if (startDate.getDate() != null){
             Timer timer = new Timer(0, new ActionListener() {
@@ -394,6 +417,20 @@ public class OnlineUsers extends javax.swing.JPanel {
             timer.start();
         }});        
     }//GEN-LAST:event_endDatePropertyChange
+
+    private void startDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startDatePropertyChange
+        // TODO add your handling code here:
+        Input.setText("");
+    }//GEN-LAST:event_startDatePropertyChange
+
+    private void numberOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOptionsActionPerformed
+        // TODO add your handling code here:
+        String numString = Input.getText();
+        onlineUserService.filterByNumber(tableCustom1, numString, numberOptions);
+        
+        numberOptions.revalidate();
+        numberOptions.repaint();
+    }//GEN-LAST:event_numberOptionsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
