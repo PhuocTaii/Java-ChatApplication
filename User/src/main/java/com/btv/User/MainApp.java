@@ -4,7 +4,7 @@
 package com.btv.User;
 
 //import com.btv.User.components.Layout;
-import com.btv.User.gui.layouts.Layout;
+import com.btv.User.gui.Layout;
 import com.btv.User.gui.Login;
 import com.btv.User.gui.SignUp;
 import javax.swing.SwingUtilities;

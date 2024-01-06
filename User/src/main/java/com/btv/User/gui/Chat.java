@@ -13,7 +13,6 @@ import com.btv.User.gui.components.RemoveMemCellRenderer;
 import com.btv.User.gui.interfaces.ChatListener;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.gui.interfaces.GroupMemActionEvent;
-import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
