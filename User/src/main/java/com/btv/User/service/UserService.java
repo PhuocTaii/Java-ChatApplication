@@ -100,4 +100,19 @@ public class UserService {
             e.printStackTrace();
         }
     }
+    
+    public static void findUserByUsername(String username) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        try {
+            clientSocket.dataOut.write(MessageType.FIND_USER_BY_USERNAME.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(username);
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

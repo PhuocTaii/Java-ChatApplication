@@ -7,15 +7,24 @@ package com.btv.Server.socket;
 import com.btv.Server.database.UserHandleDB;
 import com.btv.Server.helpers.MessageStatus;
 import com.btv.Server.helpers.UserMessage;
+import static com.btv.Server.helpers.UserMessage.DELETE_MEMBER;
 import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
-import com.btv.Server.socket.MailService;
+import com.btv.Server.service.MailService;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.reflect.Member;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +36,7 @@ public class UserHandler extends ClientHandler{
     public static ArrayList<UserHandler> userHandlers = new ArrayList<>();
     
     private int userId;
+    private String clientUsername;
     private Socket clientSocket;
     public UserHandler(Socket clientSocket) {
         super(clientSocket);
@@ -64,6 +74,8 @@ public class UserHandler extends ClientHandler{
                         isSuccess = false;
                     }
                     
+                    int uid = -1;
+                    
                     if(isSuccess) {
                         // CHECK VALID MAIL
                         MailService mailService = MailService.getMailInstance();
@@ -76,12 +88,12 @@ public class UserHandler extends ClientHandler{
                             messFail = "Username already exists";
                         }
                         else {
-                            int uid = db.signUp(newUser);
+                            uid = db.signUp(newUser);
                             if(uid <= 0) {
                                 isSuccess = false;
                             }
                             else {
-                                loginSuccess(uid);
+                                loginSuccess(uid, newUser.getUsername());
                             }
                         }
                     }
@@ -89,6 +101,9 @@ public class UserHandler extends ClientHandler{
                     // SEND STATUS
                     if(isSuccess) {
                         dataOut.write(MessageStatus.SUCCESS.toString());
+                        dataOut.newLine();
+                        dataOut.write(uid);
+                        dataOut.write(newUser.getUsername());
                         dataOut.newLine();
                     }
                     else {
@@ -119,9 +134,12 @@ public class UserHandler extends ClientHandler{
                     }
                     int uid = db.login(username, password);
                     if(uid > 0) {
-                        loginSuccess(uid);
+                        loginSuccess(uid, username);
                         
                         dataOut.write(MessageStatus.SUCCESS.toString());
+                        dataOut.newLine();
+                        dataOut.write(uid);
+                        dataOut.write(username);
                         dataOut.newLine();
                         dataOut.flush();
                         break;
@@ -373,6 +391,96 @@ public class UserHandler extends ClientHandler{
             }
                 break;
                 
+            case CHAT_USER:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int receiverId = messReceived.getInt("id");
+                    String content = messReceived.getString("content");
+                    
+                    JSONObject chatRes = new JSONObject();
+                        
+                    if(db.checkIfAccountLocked(receiverId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! This account has been locked!");
+                    }
+                    else if(db.checkIfBlocked(this.userId, receiverId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! You have blocked this user!");
+                    }
+                    else if(db.checkIfBlocked(receiverId, this.userId)) {
+                        chatRes.put("status", MessageStatus.FAIL.toString());
+                        chatRes.put("statusDetail", "Cannot chat! You have been blocked!");
+                    }
+                    else {
+                        chatRes.put("status", MessageStatus.SUCCESS.toString());
+                        chatRes.put("statusDetail", "");
+                        
+                        broadCastMessToUsers(clientUsername, receiverId, content);
+                        db.chatUser(this.userId, receiverId, content);
+                    }
+                    messRes.put("data", chatRes);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case CLEAR_CHAT_HISTORY:
+            {
+                try {
+                    int otherUser = dataIn.read();
+                    
+                    JSONObject resObj = new JSONObject();
+                    if(db.clearChatUserHistory(this.userId, otherUser)) {
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "Clear chat history done!");
+                    }
+                    else {
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "System error! Please try again!");
+                    }
+                    messRes.put("data", resObj);
+
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                    
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case FIND_MESSAGE:
+                try {
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String chatName = messReceived.getString("name");
+                    String query = messReceived.getString("query");
+                    ArrayList<ChatMessage> listMess;
+                    if(!chatName.equals(""))
+                        listMess = db.searchMessagesByUser(this.userId, chatName, query);
+                    else {
+                        listMess = db.searchAllMessages(this.userId, query);
+                    }
+                    JSONArray messArr = new JSONArray();
+                    for(ChatMessage chat : listMess) {
+                        JSONObject messObj = new JSONObject(chat);
+                        messArr.put(messObj);
+                    }
+                    messRes.put("data", messArr);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                
+                break;
+                
             case VIEW_ALL_GROUPS:
             {
                 ArrayList<GroupChat> listGroups = db.getAllGroupsOfUser(this.userId);
@@ -428,22 +536,40 @@ public class UserHandler extends ClientHandler{
             case VIEW_MEMBERS:
             {
                 try {
-                    int grId = dataIn.read();
-
-                    ArrayList<GroupMember> listMems = db.getAllMembers(grId);
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int groupId = messReceived.getInt("groupId");
+                    boolean isEncrypted = messReceived.getBoolean("isEncrypted");
+                    ArrayList<GroupMember> listMems;
                     JSONArray memArr = new JSONArray();
                     JSONObject messObj = new JSONObject();
-
-                    if(listMems == null) {
-                        messObj.put("list", memArr);
+                    
+                    if(!isEncrypted) {
+                        listMems = db.getAllMembers(groupId);
+                        if(listMems != null) {
+                            for(GroupMember mem : listMems) {
+                                memArr.put(new JSONObject(mem));
+                            }
+                        }  
                     }
                     else {
-                        for(GroupMember mem : listMems) {
-                            memArr.put(new JSONObject(mem));
+                        listMems = db.getAllMembersWithKeys(groupId);
+                        if(listMems != null) {
+                            for(GroupMember mem : listMems) {
+                                JSONObject memObj = new JSONObject(mem);
+                                JSONArray keyStrs = new JSONArray();
+                                for(Byte[] keyByte : mem.getPublicKeys()) {
+                                    keyStrs.put(Base64.getEncoder().encodeToString(ArrayUtils.toPrimitive(keyByte)));
+                                }
+                                memObj.put("publicKeys", keyStrs);
+                                memArr.put(memObj);
+                            }
                         }
-                        messObj.put("list", memArr);
                     }
-                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, grId));
+                                              
+                    messObj.put("list", memArr);
+                    
+                    messObj.put("isAdmin", db.checkIfIsAdmin(this.userId, groupId));
+                    messObj.put("isEncrypted", isEncrypted);
                     messRes.put("data", messObj);
                     dataOut.write(messRes.toString());
                     dataOut.newLine();
@@ -587,14 +713,170 @@ public class UserHandler extends ClientHandler{
                 }
             }
                 break;
+                
+            case FIND_USER_BY_USERNAME:
+            {
+                try{
+                    String name = dataIn.readLine();
+                    User foundUser = db.findUserByUsername(this.userId, name);
+                    JSONObject resObj = new JSONObject();
+                    if(foundUser != null) {
+                        resObj.put("foundUser", new JSONObject(foundUser));
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "Found");
+                    }
+                    else {
+                        resObj.put("foundUser", new JSONObject());
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "User not found!");
+                    }
+                    messRes.put("data", resObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case CREATE_GROUP:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String groupName = messReceived.getString("name");
+                    JSONArray memArr = messReceived.getJSONArray("list");
+                    
+                    int groupId = db.createGroup(this.userId, groupName, memArr);
+                    JSONObject resObj = new JSONObject();
+                    resObj.put("id", groupId);
+                    resObj.put("name", groupName);
+                    if(groupId != -1) {
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "New group chat created!");
+                    }
+                    else {
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "System error! Please try again!");
+                    }
+                    
+                    messRes.put("data", resObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case CHAT_GROUP:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int grId = messReceived.getInt("id");
+                    String content = messReceived.getString("content");
+                    broadCastMessToMembers(clientUsername, grId, content);
+                    db.chatGroup(this.userId, grId, content);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case ENCRYPT_GROUP:
+            {
+                try{
+                    int groupId = dataIn.read();
+                    JSONObject resObj = new JSONObject();
+                    if(db.encryptGroupChat(groupId)) {
+                        resObj.put("status", MessageStatus.SUCCESS.toString());
+                        resObj.put("statusDetail", "Done encrypt!");
+                    }
+                    else {
+                        resObj.put("status", MessageStatus.FAIL.toString());
+                        resObj.put("statusDetail", "System error! Please try again!");
+                    }
+                    resObj.put("groupId", groupId);
+                    
+                    messRes.put("data", resObj);
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case STORE_PUBLIC_KEY:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    String keyStr = messReceived.getString("key");
+                    byte[] keyBytes = Base64.getDecoder().decode(keyStr);
+                    if(db.storePublicKey(this.userId, keyBytes)) {
+                        broadCastPublicKeyToMembers(keyStr);
+                    }
+                    
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case CHAT_GROUP_ENCRYPTED:
+            {
+                try{
+                    JSONObject messReceived = new JSONObject(dataIn.readLine());
+                    int grId = messReceived.getInt("groupId");
+                    int memId = messReceived.getInt("memId");
+                    String content = messReceived.getString("content");
+                    byte[] contentBytes = Base64.getDecoder().decode(content);
+                    
+                    broadCastEncryptedMessToMembers(clientUsername, memId, grId, contentBytes);
+                    db.chatGroupEncrypted(this.userId, memId, grId, contentBytes);
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
+            case VIEW_ENCRYPTED_GROUP_CHAT_HISTORY:
+            {
+                try{
+                    int grId = dataIn.read();
+                    
+                    ArrayList<ChatMessage> listChat = db.getEncryptedChatGroupHistory(this.userId, grId);
+                    JSONArray chatArr = new JSONArray();
+                    if(listChat == null) {
+                        messRes.put("data", chatArr);
+                    }
+                    else {
+                        for(ChatMessage chat : listChat) {
+                            JSONObject chatObj = new JSONObject(chat);
+                            chatArr.put(chatObj);
+                        }
+                        messRes.put("data", chatArr);
+                    }
+                    dataOut.write(messRes.toString());
+                    dataOut.newLine();
+                    dataOut.flush();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+                break;
+                
             default:
                 System.out.println("Invalid message");
         }
     }
     
-    private void loginSuccess(int uid) {
+    private void loginSuccess(int uid, String username) {
         UserHandleDB db = UserHandleDB.getDBInstance();
         this.userId = uid;
+        this.clientUsername = username;
         userHandlers.add(this);
         db.updateAccountStatus(uid, "ONLINE");
         broadCastStatusToFriends(true);
@@ -621,6 +903,114 @@ public class UserHandler extends ClientHandler{
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+    
+    public void broadCastMessToMembers(String sender, int groupId, String content) {
+        UserHandleDB db = UserHandleDB.getDBInstance();
+        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_MESSAGE_GROUP.toString());
+        
+        JSONObject messObj = new JSONObject();
+        messObj.put("sender", sender);
+        messObj.put("groupId", groupId);
+        messObj.put("content", content);
+        
+        messRes.put("data", messObj);
+        
+        for(UserHandler user : userHandlers) {
+            try {
+                if(user != this && db.checkIfInGroupChat(this.userId, groupId)) {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void broadCastEncryptedMessToMembers(String sender, int receiverId, int groupId, byte[] content) {
+        UserHandleDB db = UserHandleDB.getDBInstance();
+        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_ENCRYPTED_MESSAGE_GROUP.toString());
+        
+        JSONObject messObj = new JSONObject();
+        messObj.put("sender", sender);
+        messObj.put("groupId", groupId);
+        messObj.put("content", Base64.getEncoder().encodeToString(content));
+        
+        messRes.put("data", messObj);
+        
+        for(UserHandler user : userHandlers) {
+            if(this.userId != receiverId && user.userId == receiverId) {
+                try {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
+        }
+    }
+    
+    public void broadCastMessToUsers(String sender, int receiverId, String content) {        
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_MESSAGE_USER.toString());
+        
+        JSONObject messObj = new JSONObject();
+        messObj.put("sender", sender);
+        messObj.put("senderId", this.userId);
+        messObj.put("content", content);
+        
+        messRes.put("data", messObj);
+        
+        for(UserHandler user : userHandlers) {
+            if(receiverId == user.userId) {
+                try {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+    
+    public void broadCastPublicKeyToMembers(String keyStr) {
+        JSONObject messRes = new JSONObject();
+        messRes.put("type", UserMessage.NEW_USER_DEVICE_ENCRYPT.toString());
+        
+        UserHandleDB db = UserHandleDB.getDBInstance();
+        
+        HashMap<Integer, ArrayList<Integer>> res = db.getAllEncryptedGroupsAndMembers(this.userId);
+        if(res == null)
+            return;
+        
+        JSONObject keyObj = new JSONObject();
+        keyObj.put("newUser", this.userId);
+        keyObj.put("key", keyStr);
+        for(UserHandler user : userHandlers) {
+            if(res.containsKey(user.userId)) {
+                JSONArray grArr = new JSONArray(res.get(user.userId));
+                keyObj.put("groups", grArr);
+                
+                messRes.put("data", keyObj);
+                try {
+                    user.dataOut.write(messRes.toString());
+                    user.dataOut.newLine();
+                    user.dataOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

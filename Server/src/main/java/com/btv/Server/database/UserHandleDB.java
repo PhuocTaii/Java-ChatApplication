@@ -8,14 +8,21 @@ import com.btv.Server.model.ChatMessage;
 import com.btv.Server.model.GroupChat;
 import com.btv.Server.model.GroupMember;
 import com.btv.Server.model.User;
-import com.btv.Server.socket.MailService;
+import com.btv.Server.service.MailService;
+import java.security.PublicKey;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLSyntaxErrorException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -74,11 +81,15 @@ public class UserHandleDB extends ChatDB {
             if (rs.next()) {
                 uid = rs.getInt(1);
             } else {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 stmt.close();
                 return -1;
             }
             // update login history
             if (updateLoginTime(uid) != 1) {
+                connection.rollback();
+                connection.setAutoCommit(true);
                 stmt.close();
                 return -1;
             }
@@ -384,11 +395,115 @@ public class UserHandleDB extends ChatDB {
             return false;
         }
     }
+    
+    public boolean chatUser(int senderId, int receiverId, String content) {
+        try{
+            String sql = "insert into ChatHistory(send_id, receive_id, content, sendtime) values " +
+                        "(?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, senderId);
+            stmt.setInt(2, receiverId);
+            stmt.setString(3, content);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTime = sdf.format(new java.util.Date());
+            stmt.setString(4, currentTime);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean clearChatUserHistory(int user1, int user2) {
+        try{
+            String sql = "delete from ChatHistory " +
+                        "where (send_id = ? and receive_id = ?) or (send_id = ? and receive_id = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, user1);
+            stmt.setInt(2, user2);
+            stmt.setInt(3, user2);
+            stmt.setInt(4, user1);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public ArrayList searchMessagesByUser(int userId, String chatName, String query) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql= "select c.content, u1.username as sender, u1.u_id as sendId " +
+                        "from ChatHistory c join User u on (c.receive_id = u.u_id) join User u1 on (c.send_id = u1.u_id) " +
+                        "where (c.send_id = ? or c.receive_id = ?) and (u.username like ? or u1.username like ?) and c.content like ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setString(3, chatName);
+            stmt.setString(4, chatName);
+            stmt.setString(5, "%" + query + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setSendName(userId != rs.getInt("sendId") ? rs.getString("sender") : "You");
+                mess.setChatName(chatName);
+                resList.add(mess);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resList;
+    }
+    
+    public ArrayList searchAllMessages(int userId, String query) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql= "select c.content, g.gr_name, u.username as receiver, u1.username as sender, u1.u_id as sendId " +
+                        "from ChatHistory c left join ChatGroups g on c.group_id = g.gr_id left join User u on (c.receive_id = u.u_id) left join User u1 on (c.send_id = u1.u_id) " +
+                        "where (c.send_id = ? or c.receive_id = ? or exists (select * " +
+                        "						from GroupMembers m " +
+                        "                                               where c.group_id = m.gr_id and m.u_id = ?)) and c.content like ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            stmt.setInt(3, userId);
+            stmt.setString(4, "%" + query + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(rs.getString("content"));
+                mess.setSendName(userId != rs.getInt("sendId") ? rs.getString("sender") : "You");
+                if(rs.getString("gr_name") != null)
+                    mess.setChatName(rs.getString("gr_name"));
+                else {
+                    if(userId == rs.getInt("sendId"))
+                        mess.setChatName(rs.getString("receiver"));
+                    else
+                        mess.setChatName(rs.getString("sender"));
+                }
+                resList.add(mess);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resList;
+    }
 
     public ArrayList getAllGroupsOfUser(int userId) {
         ArrayList<GroupChat> resList = new ArrayList<>();
         try {
-            String sql = "select g.gr_id, g.gr_name " + "from GroupMembers m join ChatGroups g on m.gr_id = g.gr_id " + "where u_id = ?";
+            String sql= "select g.gr_id, g.gr_name, is_encrypted " +
+                        "from ChatGroups g join GroupMembers m on g.gr_id = m.gr_id " +
+                        "where u_id = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -396,6 +511,7 @@ public class UserHandleDB extends ChatDB {
                 GroupChat gr = new GroupChat();
                 gr.setId(rs.getInt("gr_id"));
                 gr.setName(rs.getString("gr_name"));
+                gr.setIsEncrypted(rs.getBoolean("is_encrypted"));
                 resList.add(gr);
             }
             rs.close();
@@ -410,7 +526,7 @@ public class UserHandleDB extends ChatDB {
     public ArrayList getChatGroupHistory(int userId, int groupId) {
         ArrayList<ChatMessage> resList = new ArrayList<>();
         try {
-            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name " + "from ChatHistory c join User u on (c.send_id = u.u_id) " + "where c.group_id = ? " + "order by c.sendtime asc";
+            String sql = "select c.content, c.send_id, c.sendtime, u.username as send_name " + "from ChatHistory c join User u on (c.send_id = u.u_id) " + "where c.group_id = ? " + "order by c.c_id asc";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, groupId);
             ResultSet rs = stmt.executeQuery();
@@ -419,6 +535,33 @@ public class UserHandleDB extends ChatDB {
                 mess.setContent(rs.getString("content"));
                 mess.setIsMine(rs.getInt("send_id") == userId);
                 mess.setSendName(rs.getString("send_name"));
+                resList.add(mess);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList<ChatMessage> getEncryptedChatGroupHistory(int userId, int groupId) {
+        ArrayList<ChatMessage> resList = new ArrayList<>();
+        try {
+            String sql = "select content, send_id, username as sender, sendtime " +
+                        "from EncryptedChatHistory h join User u on h.send_id = u.u_id " +
+                        "where h.group_id = ? and h.receive_id = ? " +
+                        "order by h.c_id asc";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ChatMessage mess = new ChatMessage();
+                mess.setContent(Base64.getEncoder().encodeToString(rs.getBytes("content")));
+                mess.setIsMine(rs.getInt("send_id") == userId);
+                mess.setSendName(rs.getString("sender"));
                 resList.add(mess);
             }
             rs.close();
@@ -443,6 +586,42 @@ public class UserHandleDB extends ChatDB {
                 mem.setUsername(rs.getString("username"));
                 mem.setIsAdmin(rs.getBoolean("is_admin"));
                 resList.add(mem);
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public ArrayList getAllMembersWithKeys(int groupId) {
+        ArrayList<GroupMember> resList = new ArrayList<>();
+        try {
+            String sql = "select u.u_id, u.username, m.is_admin, k.public_key " +
+                        "from GroupMembers m join User u on m.u_id = u.u_id left join PublicKeys k on u.u_id = k.u_id " +
+                        "where gr_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            ResultSet rs = stmt.executeQuery();
+            HashMap<Integer, Integer> memIds = new HashMap<Integer, Integer>();
+            while (rs.next()) {
+                if(memIds.containsKey(rs.getInt("u_id"))) {
+                    GroupMember mem = resList.get(memIds.get(rs.getInt("u_id")));
+                    if(rs.getBytes("public_key") != null)
+                        mem.addPublicKey(rs.getBytes("public_key"));
+                }
+                else {
+                    memIds.put(rs.getInt("u_id"), resList.size());
+                    GroupMember mem = new GroupMember();
+                    mem.setId(rs.getInt("u_id"));
+                    mem.setUsername(rs.getString("username"));
+                    mem.setIsAdmin(rs.getBoolean("is_admin"));
+                    if(rs.getBytes("public_key") != null)
+                        mem.addPublicKey(rs.getBytes("public_key"));
+                    resList.add(mem);
+                }
             }
             rs.close();
             stmt.close();
@@ -538,6 +717,254 @@ public class UserHandleDB extends ChatDB {
             stmt.close();
             return true;
         } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public User findUserByUsername(int currentId, String username) {
+        User u = null;
+        try {
+            String sql = "select u_id, username " +
+                        "from User " +
+                        "where u_id != ? and username = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, currentId);
+            stmt.setString(2, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                u = new User();
+                u.setId(rs.getInt("u_id"));
+                u.setUsername(rs.getString("username"));
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return u;
+    }
+    
+    public Boolean addGroupMemberById(int groupId, int memId, boolean isAdmin){
+        try{
+            String sql = "insert into GroupMembers (gr_id, is_admin, u_id) " +
+                        "values (?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setBoolean(2, isAdmin);
+            stmt.setInt(3, memId);
+            
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public int createGroup(int userId, String groupName, JSONArray memList){
+        try {
+            // create new group
+            connection.setAutoCommit(false);
+            String sql = "insert into ChatGroups(gr_name, created_time) values " +
+                        "(?, ?);";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, groupName);
+            stmt.setDate(2, new Date(new java.util.Date().getTime()));
+            stmt.executeUpdate();
+            
+            // get last id of group
+            sql = "SELECT LAST_INSERT_ID()";
+            stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery(sql);
+            int groupId;
+            if (rs.next()) {
+                groupId = rs.getInt(1);
+            } else {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                stmt.close();
+                return -1;
+            }
+            
+            // add members
+            for(int i = 0; i < memList.length(); i++) {
+                JSONObject objMem = memList.getJSONObject(i);
+                if(!addGroupMemberById(groupId, objMem.getInt("id"), objMem.getBoolean("isAdmin"))) {
+                    connection.rollback();
+                    connection.setAutoCommit(true);
+                    stmt.close();
+                    return -1;
+                }
+            }
+            
+            // add yourself
+            if(!addGroupMemberById(groupId, userId, true)) {
+                connection.rollback();
+                connection.setAutoCommit(true);
+                stmt.close();
+                return -1;
+            }
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+            stmt.close();
+            return groupId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return -1;
+        }
+    }
+    
+    public boolean chatGroup(int userId, int grId, String content) {
+        try{
+            String sql = "insert into ChatHistory(send_id, group_id, content, sendtime) values " +
+                        "(?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setInt(2, grId);
+            stmt.setString(3, content);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTime = sdf.format(new java.util.Date());
+            stmt.setString(4, currentTime);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean chatGroupEncrypted(int senderId, int receiverId, int groupId, byte[] content) {
+        try{
+            String sql = "insert into EncryptedChatHistory(send_id, receive_id, group_id, content, sendtime) values " +
+                        "(?, ?, ?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, senderId);
+            stmt.setInt(2, receiverId);
+            stmt.setInt(3, groupId);
+            stmt.setBytes(4, content);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentTime = sdf.format(new java.util.Date());
+            stmt.setString(5, currentTime);
+            stmt.executeUpdate();
+            stmt.close();
+            return true;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean checkIfInGroupChat(int userId, int groupId) {
+        try {
+            String sql = "select * " +
+                        "from GroupMembers " +
+                        "where gr_id = ? and u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, groupId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                stmt.close();
+                return true;
+            }
+            stmt.close();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean encryptGroupChat(int groupId) {
+        try {
+            String sql = "update ChatGroups " +
+                        "set is_encrypted = ? " +
+                        "where gr_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setBoolean(1, true);
+            stmt.setInt(2, groupId);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean storePublicKey(int userId, byte[] key) {
+        try {
+            String sql = "insert into PublicKeys " +
+                        "values (?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            stmt.setBytes(2, key);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public HashMap<Integer, ArrayList<Integer>> getAllEncryptedGroupsAndMembers(int userId) {
+        HashMap<Integer, ArrayList<Integer>> resList = new HashMap<Integer, ArrayList<Integer>>();
+        try {
+            String sql = "select c.gr_id, m.u_id " +
+                            "from ChatGroups c join GroupMembers m on c.gr_id = m.gr_id " +
+                            "where c.is_encrypted = 1 and exists (select * " +
+                            "                                     from GroupMembers m1 " +
+                            "                                      where m1.gr_id = c.gr_id and m1.u_id = ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                if(resList.containsKey(rs.getInt("u_id"))) {
+                    resList.get(rs.getInt("u_id")).add(rs.getInt("gr_id"));
+                }
+                else {
+                    ArrayList<Integer> listGroup = new ArrayList<>();
+                    listGroup.add(rs.getInt("gr_id"));
+                    resList.put(rs.getInt("u_id"), listGroup);
+                }
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return resList;
+    }
+    
+    public boolean checkIfAccountLocked(int userId) {
+        try {
+            String sql = "select u_status " +
+                        "from User " +
+                        "where u_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            String status = "";
+            while (rs.next()) {
+                status = rs.getString(1);
+            }
+            rs.close();
+            stmt.close();
+            if(status.equals("LOCKED")) {
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }

@@ -6,7 +6,10 @@ package com.btv.User.service;
 
 import com.btv.User.ClientSocket;
 import com.btv.User.helper.MessageType;
+import com.btv.User.model.Member;
 import java.io.IOException;
+import java.util.ArrayList;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +29,7 @@ public class GroupService {
         }
     }
     
-    public static void getMembers(int groupId) {
+    public static void getMembers(int groupId, boolean isEncrypted) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         
         try {
@@ -34,7 +37,12 @@ public class GroupService {
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
             
-            clientSocket.dataOut.write(groupId);
+            JSONObject mess = new JSONObject();
+            mess.put("groupId", groupId);
+            mess.put("isEncrypted", isEncrypted);
+            
+            clientSocket.dataOut.write(mess.toString());
+            clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,6 +126,45 @@ public class GroupService {
             clientSocket.dataOut.newLine();
             clientSocket.dataOut.flush();
         } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    
+    public static void createGroupChat(String groupName, ArrayList<Member> memList) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.CREATE_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            JSONObject mess = new JSONObject();
+            mess.put("name", groupName);
+            JSONArray memArr = new JSONArray();
+            for(Member mem : memList) {
+                memArr.put(new JSONObject(mem));
+            }
+            mess.put("list", memArr);
+            
+            clientSocket.dataOut.write(mess.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+     public static void encryptGroupChat(int groupId) {
+        ClientSocket clientSocket = ClientSocket.getInstance();
+        
+        try {
+            clientSocket.dataOut.write(MessageType.ENCRYPT_GROUP.toString());
+            clientSocket.dataOut.newLine();
+            clientSocket.dataOut.flush();
+            
+            clientSocket.dataOut.write(groupId);
+            clientSocket.dataOut.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

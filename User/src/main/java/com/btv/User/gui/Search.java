@@ -4,19 +4,22 @@
  */
 package com.btv.User.gui;
 
+import com.btv.User.gui.components.FoundMessListCellRenderer;
 import com.btv.User.gui.components.SearchTableModel;
 import com.btv.User.gui.components.TableActionCellEditor;
 import com.btv.User.gui.components.TableActionCellRender;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.gui.interfaces.SearchListener;
 import com.btv.User.gui.interfaces.SearchUserActionEvent;
-import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
+import com.btv.User.model.ChatMessage;
 import com.btv.User.model.User;
 import com.btv.User.service.ChatService;
 import com.btv.User.service.UserService;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 
 /**
  *
@@ -34,6 +37,11 @@ public class Search extends javax.swing.JPanel {
         initComponents();
         this.mainFrame = mainFrame;
         
+        foundMessList.setCellRenderer(new FoundMessListCellRenderer());
+        
+        DefaultListModel<ChatMessage> listChatModel = new DefaultListModel<>();
+        foundMessList.setModel((ListModel)listChatModel);
+        
         SearchUserActionEvent event = new SearchUserActionEvent() {
             @Override
             public void onChat(int row) {
@@ -42,7 +50,7 @@ public class Search extends javax.swing.JPanel {
                 
                 if(!user.getUsername().equalsIgnoreCase(Chat.getChatPanelInst(null).getCurrentNameChat())) {
                     // load ui
-                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername(), false);
+                    CustomListener.getInstance().getChatListener().loadChatUI(user.getId(), user.getUsername(), false, false);
 
                     // send request
                     ChatService.getChatUserHistory(user.getId());
@@ -81,6 +89,15 @@ public class Search extends javax.swing.JPanel {
             public void addFriend(MessageStatus res) {
                 JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Add friend", JOptionPane.INFORMATION_MESSAGE);
             }
+
+            @Override
+            public void showFoundMess(ArrayList<ChatMessage> listMess) {
+                DefaultListModel<ChatMessage> listChatModel = new DefaultListModel<>();
+                for(ChatMessage chatMessage : listMess) {
+                    listChatModel.addElement(chatMessage);
+                }
+                foundMessList.setModel((ListModel)listChatModel);
+            }
         });
     }
     
@@ -99,34 +116,20 @@ public class Search extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        backgroundSearch = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         tableUserSearch = new com.btv.User.gui.components.TableCustom();
         buttonSearchUser = new javax.swing.JButton();
         textFieldSearchMessage = new javax.swing.JTextField();
         comboboxSearch = new com.btv.User.gui.components.ComboboxCustom();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        textFieldSearchName = new javax.swing.JTextField();
+        textFieldSearchUser = new javax.swing.JTextField();
         buttonSearchMessage = new javax.swing.JButton();
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        javax.swing.JScrollPane jScrollPane2 = new javax.swing.JScrollPane();
         foundMessList = new javax.swing.JList<>();
         textFieldChatWith = new javax.swing.JTextField();
         javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
-
-        backgroundSearch.setPreferredSize(new java.awt.Dimension(1080, 768));
-
-        javax.swing.GroupLayout backgroundSearchLayout = new javax.swing.GroupLayout(backgroundSearch);
-        backgroundSearch.setLayout(backgroundSearchLayout);
-        backgroundSearchLayout.setHorizontalGroup(
-            backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1140, Short.MAX_VALUE)
-        );
-        backgroundSearchLayout.setVerticalGroup(
-            backgroundSearchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 768, Short.MAX_VALUE)
-        );
 
         setPreferredSize(new java.awt.Dimension(1080, 768));
 
@@ -162,10 +165,10 @@ public class Search extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setText("Search by");
 
-        textFieldSearchName.setPreferredSize(new java.awt.Dimension(64, 32));
-        textFieldSearchName.addActionListener(new java.awt.event.ActionListener() {
+        textFieldSearchUser.setPreferredSize(new java.awt.Dimension(64, 32));
+        textFieldSearchUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFieldSearchNameActionPerformed(evt);
+                textFieldSearchUserActionPerformed(evt);
             }
         });
 
@@ -185,9 +188,15 @@ public class Search extends javax.swing.JPanel {
         jLabel3.setText("Chat with:");
         jLabel3.setPreferredSize(new java.awt.Dimension(62, 32));
 
+        foundMessList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jScrollPane2.setViewportView(foundMessList);
 
         textFieldChatWith.setPreferredSize(new java.awt.Dimension(115, 32));
+        textFieldChatWith.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textFieldChatWithActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("USER");
@@ -228,7 +237,7 @@ public class Search extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(comboboxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(textFieldSearchName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textFieldSearchUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(buttonSearchUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
@@ -247,7 +256,7 @@ public class Search extends javax.swing.JPanel {
                         .addComponent(comboboxSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(textFieldSearchName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textFieldSearchUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(buttonSearchUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -269,21 +278,23 @@ public class Search extends javax.swing.JPanel {
 
     private void textFieldSearchMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchMessageActionPerformed
         // TODO add your handling code here:
+        handleSearchMess();
     }//GEN-LAST:event_textFieldSearchMessageActionPerformed
 
-    private void textFieldSearchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchNameActionPerformed
+    private void textFieldSearchUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldSearchUserActionPerformed
         // TODO add your handling code here:
         buttonSearchUserActionPerformed(evt);
-    }//GEN-LAST:event_textFieldSearchNameActionPerformed
+    }//GEN-LAST:event_textFieldSearchUserActionPerformed
 
     private void buttonSearchMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchMessageActionPerformed
         // TODO add your handling code here:
+        handleSearchMess();
     }//GEN-LAST:event_buttonSearchMessageActionPerformed
 
     private void buttonSearchUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSearchUserActionPerformed
         // TODO add your handling code here:
         String optionSearch =  (String)comboboxSearch.getSelectedItem();
-        String query = textFieldSearchName.getText();
+        String query = textFieldSearchUser.getText();
         if(query.equalsIgnoreCase("")) {
             SearchTableModel tableModel = (SearchTableModel) tableUserSearch.getModel();
             tableModel.clearData();
@@ -292,18 +303,43 @@ public class Search extends javax.swing.JPanel {
             new UserService().searchUsers(optionSearch, query);
     }//GEN-LAST:event_buttonSearchUserActionPerformed
 
+    private void textFieldChatWithActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldChatWithActionPerformed
+        // TODO add your handling code here:
+        handleSearchMess();
+    }//GEN-LAST:event_textFieldChatWithActionPerformed
+
+    public void handleSearchMess() {
+        if(textFieldSearchMessage.getText().equals("")) {
+            DefaultListModel<ChatMessage> listChatModel = (DefaultListModel<ChatMessage>)foundMessList.getModel();
+            listChatModel.removeAllElements();
+            return;
+        }
+        ChatService.searchMessages(textFieldChatWith.getText(), textFieldSearchMessage.getText());
+    }
+    
+    public void loadPanel() {
+        textFieldSearchUser.setText("");
+        
+        SearchTableModel tableModel = (SearchTableModel) tableUserSearch.getModel();
+        tableModel.clearData();
+        
+        textFieldSearchMessage.setText("");
+        textFieldChatWith.setText("");
+        DefaultListModel<ChatMessage> listChatModel = (DefaultListModel<ChatMessage>)foundMessList.getModel();
+        listChatModel.removeAllElements();
+        
+        this.revalidate();
+        this.repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel backgroundSearch;
     private javax.swing.JButton buttonSearchMessage;
     private javax.swing.JButton buttonSearchUser;
     private com.btv.User.gui.components.ComboboxCustom comboboxSearch;
-    private javax.swing.JList<String> foundMessList;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<ChatMessage> foundMessList;
     private com.btv.User.gui.components.TableCustom tableUserSearch;
     private javax.swing.JTextField textFieldChatWith;
     private javax.swing.JTextField textFieldSearchMessage;
-    private javax.swing.JTextField textFieldSearchName;
+    private javax.swing.JTextField textFieldSearchUser;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,6 +6,8 @@ package com.btv.Server.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  *
@@ -16,6 +18,11 @@ public class User {
     private String address, email, name, password, status, username, genderStr;
     private Date birthday, timeCreate, loginDate;
     private boolean gender;
+    private ArrayList<Byte[]> publicKeys;
+    
+    public User() {
+        publicKeys = new ArrayList<>();
+    }
 
     public Date getLoginDate() {
         return loginDate;
@@ -111,5 +118,13 @@ public class User {
     
     public boolean getGender() {
         return this.gender;
+    }
+
+    public ArrayList<Byte[]> getPublicKeys() {
+        return publicKeys;
+    }
+
+    public void addPublicKey(byte[] key) {
+        publicKeys.add(ArrayUtils.toObject(key));
     }
 }

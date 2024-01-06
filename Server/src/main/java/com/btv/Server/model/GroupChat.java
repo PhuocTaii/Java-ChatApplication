@@ -11,6 +11,7 @@ package com.btv.Server.model;
 public class GroupChat {
     private int id;
     private String name;
+    private boolean isEncrypted;
 
     public int getId() {
         return id;
@@ -27,4 +28,13 @@ public class GroupChat {
     public void setName(String name) {
         this.name = name;
     }
+
+    public boolean getIsEncrypted() {
+        return isEncrypted;
+    }
+
+    public void setIsEncrypted(boolean isEncrypted) {
+        this.isEncrypted = isEncrypted;
+    }
+    
 }

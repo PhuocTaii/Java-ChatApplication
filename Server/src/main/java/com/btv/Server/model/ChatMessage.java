@@ -11,10 +11,11 @@ import java.sql.Date;
  * @author tvan
  */
 public class ChatMessage {
-    private String content, sendName;
+    private String content, sendName, chatName;
     private int sendId, receiveId, groupId;
     private Date sendTime;
     private boolean isMine;
+    private byte[] encryptedContent;
 
     public String getContent() {
         return content;
@@ -71,6 +72,20 @@ public class ChatMessage {
     public void setSendName(String sendName) {
         this.sendName = sendName;
     }
-    
-    
+
+    public String getChatName() {
+        return chatName;
+    }
+
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
+    }
+
+//    public byte[] getEncryptedContent() {
+//        return encryptedContent;
+//    }
+//
+//    public void setEncryptedContent(byte[] encryptedContent) {
+//        this.encryptedContent = encryptedContent;
+//    }
 }

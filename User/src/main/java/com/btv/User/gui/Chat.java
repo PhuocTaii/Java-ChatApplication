@@ -13,7 +13,6 @@ import com.btv.User.gui.components.RemoveMemCellRenderer;
 import com.btv.User.gui.interfaces.ChatListener;
 import com.btv.User.gui.interfaces.CustomListener;
 import com.btv.User.gui.interfaces.GroupMemActionEvent;
-import com.btv.User.gui.layouts.Layout;
 import com.btv.User.helper.MessageStatus;
 import com.btv.User.model.ChatMessage;
 import com.btv.User.model.Group;
@@ -37,6 +36,7 @@ import com.btv.User.model.User;
 import com.btv.User.service.ChatService;
 import com.btv.User.service.GroupService;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JList;
 
 /**
@@ -45,10 +45,12 @@ import javax.swing.JList;
  */
 public class Chat extends javax.swing.JPanel {
     private static Chat chatPanelInst = null;
-    private Layout mainFrame;
+    final private Layout mainFrame;
     private int receiverId;
-    private boolean isGroup;
+    private boolean isGroup, isEncrypted, isAdmin;
     private JPanel messagesPanel;
+    private ArrayList<Group> highlightGroups;
+    private ArrayList<Integer> highlightUsers;
 
     /**
      * Creates new form Chat
@@ -56,6 +58,9 @@ public class Chat extends javax.swing.JPanel {
     private Chat(Layout mainFrame) {
         initComponents();
         this.mainFrame = mainFrame;
+        
+        highlightGroups = new ArrayList<>();
+        highlightUsers = new ArrayList<>();
         
         // Set vertical scrollbar policy
         chatZoneScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -87,6 +92,8 @@ public class Chat extends javax.swing.JPanel {
             public void loadListFriend(ArrayList<User> listFriend) {
                 DefaultListModel<User> listFriendModel = new DefaultListModel<>();
                 for(User friend : listFriend) {
+                    if(highlightUsers.contains(friend.getId()))
+                        friend.setIsSeen(false);
                     listFriendModel.addElement(friend);
                 }
                 friendList.setModel((ListModel)listFriendModel);
@@ -118,12 +125,18 @@ public class Chat extends javax.swing.JPanel {
             }
 
             @Override
-            public void loadChatUI(int id, String name, boolean isGroup) {
+            public void loadChatUI(int id, String name, boolean isGroup, boolean isEncrypted) {
                 Chat.getChatPanelInst(null).setReceiverId(id);
                 receiverLabel.setText(name);
+                if(isEncrypted)
+                    receiverLabel.setIcon(new ImageIcon(getClass().getResource("/images/encrypted.png")));
+                else
+                    receiverLabel.setIcon(null);
                 
                 Chat.getChatPanelInst(null).setIsGroup(isGroup);
                 groupInfoPanel.setVisible(isGroup);
+                
+                Chat.getChatPanelInst(null).setIsEncrypted(isEncrypted);
         
                 messagesPanel = new JPanel();
                 messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
@@ -152,6 +165,8 @@ public class Chat extends javax.swing.JPanel {
             public void loadListGroup(ArrayList<Group> listGroup) {
                 DefaultListModel<Group> listGroupModel = new DefaultListModel<>();
                 for(Group group : listGroup) {
+                    if(highlightGroups.contains(new Group(group.getId(), group.getIsEncrypted())))
+                        group.setIsSeen(false);
                     listGroupModel.addElement(group);
                 }
                 groupList.setModel((ListModel)listGroupModel);
@@ -159,6 +174,7 @@ public class Chat extends javax.swing.JPanel {
 
             @Override
             public void loadListMember(ArrayList<Member> listMem, boolean isAdmin) {
+                Chat.getChatPanelInst(null).setIsAdmin(isAdmin);
                 MemberTableModel tableModel = new MemberTableModel(listMem);
                 memberTable.setModel(tableModel);
                 // set cell renderer for JTable memberTable
@@ -200,6 +216,88 @@ public class Chat extends javax.swing.JPanel {
                 // set cell renderer for JTable memberTable
                 memberTable.getColumnModel().getColumn(2).setCellRenderer(new RemoveMemCellRenderer(isAdmin));
                 memberTable.getColumnModel().getColumn(2).setCellEditor(new RemoveMemCellEditor(groupMemActionEvent, isAdmin));
+            }
+
+            @Override
+            public void addNewGroupChat(Group gr) {
+                DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+                listGroupModel.addElement(gr);
+            }
+
+            @Override
+            public void newMessGroupCome(ChatMessage mess, int groupId, boolean isEncrypted) {
+                if(isGroup && groupId == receiverId && Chat.getChatPanelInst(null).getIsEncrypted() == isEncrypted) {
+                    addMessageToChatZone(mess);
+                }
+                else {
+                    highlightSeenChatGroup(groupId, isEncrypted, false);
+                }
+                if(!Chat.getChatPanelInst(mainFrame).isVisible()) {
+                    mainFrame.highlightChatIcon();
+                }
+            }
+
+            @Override
+            public void newMessUserCome(ChatMessage mess, int userId) {
+                if(!isGroup && userId == receiverId) {
+                    addMessageToChatZone(mess);
+                }
+                else {
+                    highlightSeenChatUser(userId, false);
+                }
+                if(!Chat.getChatPanelInst(mainFrame).isVisible()) {
+                    mainFrame.highlightChatIcon();
+                }
+            }
+
+            @Override
+            public void clearChatHistory(MessageStatus res) {
+                if(res == MessageStatus.SUCCESS) {
+                    messagesPanel = new JPanel();
+                    messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
+                    chatZoneScroll.getViewport().add(messagesPanel);
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Clear chat history notification", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Clear chat history notification", JOptionPane.WARNING_MESSAGE);
+            }
+
+            @Override
+            public void encryptGroupChat(MessageStatus res, int groupId) {
+                if(res == MessageStatus.SUCCESS) {
+                    DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+                    for(int i = 0; i < listGroupModel.getSize(); i++){
+                        Group currGroup = listGroupModel.getElementAt(i);
+                        if(currGroup.getId() == groupId){
+                            Group encryptedGroup = new Group(currGroup);
+                            encryptedGroup.setIsEncrypted(true);
+                            listGroupModel.addElement(encryptedGroup);
+                            break;
+                        }
+                    }
+                    
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Encrypt group chat notification", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Encrypt group chat notification", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+            @Override
+            public boolean addNewKeyOfMember(int groupId, int memId, byte[] key) {
+                if(groupId == receiverId) {
+                    MemberTableModel memberTableModel = (MemberTableModel)memberTable.getModel();
+                    memberTableModel.addNewKeyOfMember(memId, key);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public void messNoti(MessageStatus res) {
+                if(res == MessageStatus.FAIL) {
+                    JOptionPane.showMessageDialog(mainFrame, res.getMessage(), "Chat warning", JOptionPane.WARNING_MESSAGE);                    
+                }
             }
         });
         
@@ -258,11 +356,6 @@ public class Chat extends javax.swing.JPanel {
         downButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 downButtonMouseClicked(evt);
-            }
-        });
-        downButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                downButtonActionPerformed(evt);
             }
         });
 
@@ -484,6 +577,7 @@ public class Chat extends javax.swing.JPanel {
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         // TODO add your handling code here:
+        sendMessage();
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void createGroupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupBtnActionPerformed
@@ -493,6 +587,7 @@ public class Chat extends javax.swing.JPanel {
 
     private void messageInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messageInputActionPerformed
         // TODO add your handling code here:
+        sendMessage();
     }//GEN-LAST:event_messageInputActionPerformed
 
     private void friendListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_friendListValueChanged
@@ -529,13 +624,14 @@ public class Chat extends javax.swing.JPanel {
         }
         else {
             JMenuItem renameItem = new JMenuItem("Rename");
-            JMenuItem encodeItem = new JMenuItem("Encode");
-
-            chatSettingMenu.add(renameItem);
-            chatSettingMenu.add(encodeItem);
-
             renameItem.addActionListener(e -> handleRenameGroupChat());
-            encodeItem.addActionListener(e -> handleEncodeGroupChat());
+            chatSettingMenu.add(renameItem);
+            
+            if(isAdmin && !isEncrypted) {
+                JMenuItem encodeItem = new JMenuItem("Encrypt");
+                encodeItem.addActionListener(e -> handleEncryptGroupChat());
+                chatSettingMenu.add(encodeItem);
+            }
         }
         
         chatSettingMenu.show(downButton, evt.getX() , evt.getY());
@@ -545,10 +641,14 @@ public class Chat extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (!evt.getValueIsAdjusting()) {
             Group selectedGroup = groupList.getSelectedValue();
-            if (selectedGroup != null && (!isGroup || receiverId != selectedGroup.getId())) {
-                ChatService.getChatGroupHistory(selectedGroup.getId());
-                GroupService.getMembers(selectedGroup.getId());
-                CustomListener.getInstance().getChatListener().loadChatUI(selectedGroup.getId(), selectedGroup.getName(), true);
+            if (selectedGroup != null && (!isGroup || receiverId != selectedGroup.getId() || isEncrypted != selectedGroup.getIsEncrypted())) {
+                CustomListener.getInstance().getChatListener().loadChatUI(selectedGroup.getId(), selectedGroup.getName(), true, selectedGroup.getIsEncrypted());
+                if(!selectedGroup.getIsEncrypted())
+                    ChatService.getChatGroupHistory(selectedGroup.getId());
+                else
+                    ChatService.getEncryptedChatGroupHistory(selectedGroup.getId());
+                highlightSeenChatGroup(selectedGroup.getId(), selectedGroup.getIsEncrypted(), true);
+                GroupService.getMembers(selectedGroup.getId(), selectedGroup.getIsEncrypted());
             }
             
             groupList.clearSelection();
@@ -579,10 +679,6 @@ public class Chat extends javax.swing.JPanel {
         GroupService.addMember(receiverId, username);
     }//GEN-LAST:event_addMemberButtonActionPerformed
 
-    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_downButtonActionPerformed
-
     private void memberTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_memberTableMouseClicked
         // TODO add your handling code here:
         int row = memberTable.rowAtPoint(evt.getPoint());
@@ -595,8 +691,6 @@ public class Chat extends javax.swing.JPanel {
             Member mem = model.getMember(row);
             int user_id = mem.getId();
             Boolean admin = (Boolean)model.getValueAt(row, col);
-//            System.out.println(;
-//            System.out.println(mem.getId());
             GroupService.setAdmin(receiverId, user_id, admin);
         }
     }//GEN-LAST:event_memberTableMouseClicked
@@ -617,8 +711,7 @@ public class Chat extends javax.swing.JPanel {
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,
                 null, options, options[1]);
         if(selectedOption == 0) {
-            // call service here
-            //
+            ChatService.clearChatUserHistory(receiverId);
         }
     }
     
@@ -635,7 +728,8 @@ public class Chat extends javax.swing.JPanel {
         GroupService.renameChatGroup(receiverId, newName);
     }
     
-    public void handleEncodeGroupChat() {
+    public void handleEncryptGroupChat() {
+        GroupService.encryptGroupChat(receiverId);
     }
     
     public void showFriendMenu(int selectedIndex, User selectedFriend, Component component, int x, int y) {
@@ -658,7 +752,8 @@ public class Chat extends javax.swing.JPanel {
     
     public void handleChatWithFriend(int friendId, String friendName) {
         if(isGroup || friendId != receiverId) {
-            CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName, false);
+            CustomListener.getInstance().getChatListener().loadChatUI(friendId, friendName, false , false);
+            highlightSeenChatUser(friendId, true);
             ChatService.getChatUserHistory(friendId);
         }
     }
@@ -691,19 +786,82 @@ public class Chat extends javax.swing.JPanel {
     public void loadPanel() {
         UserService.getListFriends();
         GroupService.getListGroups();
+        if(isGroup)
+            GroupService.getMembers(receiverId, isEncrypted);
         
         this.revalidate();
         this.repaint();
     }
     
     public void addMessageToChatZone(ChatMessage mess) {
-        Message newMess = new Message(messagesPanel, mess.getContent(), mess.getSendName(), mess.getIsMine());
+        Message newMess = new Message(messagesPanel, mess);
         
         messagesPanel.add(newMess);
         messagesPanel.revalidate();
         messagesPanel.repaint();
         
         messagesPanel.setPreferredSize(new Dimension(messagesPanel.getPreferredSize().width, messagesPanel.getPreferredSize().height + 70));
+    }
+    
+    public void highlightSeenChatGroup(int groupId, boolean isEncrypted, boolean seen) {
+        if(seen) {
+            Iterator itr = highlightGroups.iterator(); 
+            while (itr.hasNext()) {
+                Group tmp = (Group)itr.next();
+                if(tmp.getId() == groupId && tmp.getIsEncrypted() == isEncrypted) {
+                    itr.remove();
+                    break;
+                }
+            } 
+        }
+        else
+            highlightGroups.add(new Group(groupId, isEncrypted));
+        DefaultListModel<Group> listGroupModel = (DefaultListModel<Group>)groupList.getModel();
+        for(int i = 0; i < listGroupModel.getSize(); i++){
+            Group currGroup = listGroupModel.getElementAt(i);
+            if(currGroup.getId() == groupId && currGroup.getIsEncrypted() == isEncrypted){
+                currGroup.setIsSeen(seen);
+                listGroupModel.setElementAt(currGroup, i);
+                break;
+            }
+        }
+    }
+    
+    public void highlightSeenChatUser(int userId, boolean seen) {
+        if(seen)
+            highlightUsers.remove(Integer.valueOf(userId));
+        else
+            highlightUsers.add(userId);
+        DefaultListModel<User> listFriendModel = (DefaultListModel<User>)friendList.getModel();
+        for(int i = 0; i < listFriendModel.getSize(); i++){
+            User currUser = listFriendModel.getElementAt(i);
+            if(currUser.getId() == userId){
+                currUser.setIsSeen(seen);
+                listFriendModel.setElementAt(currUser, i);
+                break;
+            }
+        }
+    }
+    
+    public void sendMessage() {
+        String content = messageInput.getText();
+        if(isGroup) {
+            if(isEncrypted) {
+                MemberTableModel memberTableModel = (MemberTableModel)memberTable.getModel();
+                ChatService.chatGroupEncrypted(receiverId, content, memberTableModel.getMemberList());
+            }
+            else
+                ChatService.chatGroup(receiverId, content);
+        }
+        else 
+            ChatService.chatUser(receiverId, content);
+        ChatMessage mess = new ChatMessage();
+        mess.setContent(content);
+        mess.setSendName("You");
+        mess.setIsMine(true);
+        addMessageToChatZone(mess);
+            
+        messageInput.setText("");
     }
     
     public String getCurrentNameChat() {
@@ -724,6 +882,18 @@ public class Chat extends javax.swing.JPanel {
 
     public void setIsGroup(boolean isGroup) {
         this.isGroup = isGroup;
+    }
+    
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+    
+    public void setIsEncrypted(boolean isEncrypted) {
+        this.isEncrypted = isEncrypted;
+    }
+    
+    public boolean getIsEncrypted() {
+        return this.isEncrypted;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
