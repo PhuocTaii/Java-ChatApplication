@@ -146,9 +146,6 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JTextField" name="Input">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="InputActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="filterOptions">
           <Properties>
@@ -176,6 +173,9 @@
           </Properties>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="startDate">
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="startDatePropertyChange"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="connector">
           <Properties>

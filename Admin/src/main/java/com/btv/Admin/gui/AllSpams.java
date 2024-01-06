@@ -85,6 +85,7 @@ public AllSpams(JFrame mainFrame) {
                                 null, options, options[1]);
                         if(selectedOption == 0) {
                             String spamId = (String)tableModel.getValueAt(row, 0);
+                            System.out.println(spamId);
                             spamService.handleLockUser(Integer.valueOf(spamId));
                             updateTable();
                         }
@@ -135,14 +136,14 @@ public AllSpams(JFrame mainFrame) {
 
             },
             new String [] {
-                "ID", "Username", "Time report", "Report user", "Lock"
+                "ID", "Reporter", "Time report", "Reported", "Lock"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -177,6 +178,11 @@ public AllSpams(JFrame mainFrame) {
         fromDate.setDateFormatString("dd-MM-yyyy");
         fromDate.setMaximumSize(new java.awt.Dimension(2147483647, 30));
         fromDate.setPreferredSize(new java.awt.Dimension(200, 30));
+        fromDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                fromDatePropertyChange(evt);
+            }
+        });
         fromDate.setVisible(false);
 
         labelDate.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -295,6 +301,11 @@ public AllSpams(JFrame mainFrame) {
     private void SpamsSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SpamsSortActionPerformed
         JComboBox cb = (JComboBox) evt.getSource();
         String optionChosen = (String) cb.getSelectedItem();
+        spamService.filterByField(tableSpams,"","");
+        searchField.setText("");
+        fromDate.setCalendar(null);
+        toDate.setCalendar(null);
+        
         if ("None".equalsIgnoreCase(optionChosen)) {
             fromDate.setVisible(false);
             toDate.setVisible(false);
@@ -319,6 +330,7 @@ public AllSpams(JFrame mainFrame) {
 
     private void toDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_toDatePropertyChange
         // TODO add your handling code here:
+        searchField.setText("");
         toDate.getDateEditor().addPropertyChangeListener(e -> {
         if (fromDate.getDate() != null){
             Timer timer = new Timer(500, new ActionListener() {
@@ -332,6 +344,11 @@ public AllSpams(JFrame mainFrame) {
         }});   
 
     }//GEN-LAST:event_toDatePropertyChange
+
+    private void fromDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_fromDatePropertyChange
+        // TODO add your handling code here:
+        searchField.setText("");
+    }//GEN-LAST:event_fromDatePropertyChange
 
     public void searchUsername() {
         searchField.getDocument().addDocumentListener(new DocumentListener() {

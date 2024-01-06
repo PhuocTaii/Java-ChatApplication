@@ -33,7 +33,7 @@ public class UserFriends extends javax.swing.JPanel {
         for(Object[] row : friendList) {
             tableModel.addRow(row);
         }
-        friendService.filterByName(tableCustom1, "");
+        friendService.filterByField(tableCustom1);
         searchName();
     }
     
@@ -49,15 +49,27 @@ public class UserFriends extends javax.swing.JPanel {
     public void searchName() {
         Input.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
-                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+                if("Name".equals(filterOptions.getSelectedItem())){
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Name", null);
+                } else{
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Direct friends", numberOptions);
+                }
             }
 
             public void removeUpdate(DocumentEvent e) {
-                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+                if("Name".equals(filterOptions.getSelectedItem())){
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Name", null);
+                } else{
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Direct friends", numberOptions);
+                }
             }
 
             public void insertUpdate(DocumentEvent e) {
-                friendService.filterBySearch(tableCustom1, Input.getText(), "Name");
+                if("Name".equals(filterOptions.getSelectedItem())){
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Name", null);
+                } else{
+                    friendService.filterBySearch(tableCustom1, Input.getText(), "Direct friends", numberOptions);
+                }
             }
         });
     }
@@ -77,7 +89,6 @@ public class UserFriends extends javax.swing.JPanel {
         Input = new javax.swing.JTextField();
         numberOptions = new javax.swing.JComboBox<>();
         filterOptions = new javax.swing.JComboBox<>();
-        searchButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableCustom1 = new com.btv.Admin.gui.components.TableCustom();
 
@@ -107,27 +118,19 @@ public class UserFriends extends javax.swing.JPanel {
         });
 
         numberOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Equal", "Greater", "Less" }));
+        numberOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numberOptionsActionPerformed(evt);
+            }
+        });
 
         filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Name", "Number" }));
         filterOptions.setPreferredSize(new java.awt.Dimension(70, 30));
         Input.setVisible(false);
         numberOptions.setVisible(false);
-        searchButton.setVisible(false);
         filterOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filterOptionsActionPerformed(evt);
-            }
-        });
-
-        searchButton.setBackground(new java.awt.Color(48, 162, 255));
-        searchButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        searchButton.setForeground(new java.awt.Color(255, 255, 255));
-        searchButton.setText("Search");
-        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        searchButton.setPreferredSize(new java.awt.Dimension(75, 30));
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
             }
         });
 
@@ -144,9 +147,7 @@ public class UserFriends extends javax.swing.JPanel {
                 .addComponent(Input, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(386, Short.MAX_VALUE))
+                .addContainerGap(479, Short.MAX_VALUE))
         );
         optionsLayout.setVerticalGroup(
             optionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,8 +157,7 @@ public class UserFriends extends javax.swing.JPanel {
                     .addComponent(filter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(numberOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Input, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                    .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -202,7 +202,7 @@ public class UserFriends extends javax.swing.JPanel {
                 .addComponent(options, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 555, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -210,22 +210,21 @@ public class UserFriends extends javax.swing.JPanel {
         // TODO add your handling code here:        
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
+        friendService.filterByField(tableCustom1);
+        Input.setText("");
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
             numberOptions.setVisible(false);
-            searchButton.setVisible(false);
 
             // Show all data
         }
         else if ("Name".equals(optionChosen)) {
             Input.setVisible(true);
             numberOptions.setVisible(false);
-            searchButton.setVisible(false);
         }
         else {
             Input.setVisible(true);
             numberOptions.setVisible(true);
-            searchButton.setVisible(true);
         }
         
         filterOptions.revalidate();
@@ -236,22 +235,14 @@ public class UserFriends extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_InputActionPerformed
 
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    private void numberOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberOptionsActionPerformed
         // TODO add your handling code here:
-        if("None".equals(filterOptions.getSelectedItem())){
-            Input.setText("");
-        }
-        else if("Name".equals(filterOptions.getSelectedItem())){
-            String searchString = Input.getText();
-            friendService.filterByName(tableCustom1, searchString);
-            Input.setText("");
-        }
-        else{
-            String numString = Input.getText();
-            friendService.filterByNumber(tableCustom1, numString, numberOptions);
-            Input.setText("");
-        }
-    }//GEN-LAST:event_searchButtonActionPerformed
+        String numString = Input.getText();
+        friendService.filterByNumber(tableCustom1, numString, numberOptions);
+        
+        numberOptions.revalidate();
+        numberOptions.repaint();
+    }//GEN-LAST:event_numberOptionsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -263,7 +254,6 @@ public class UserFriends extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JComboBox<String> numberOptions;
     private javax.swing.JPanel options;
-    private javax.swing.JButton searchButton;
     private com.btv.Admin.gui.components.TableCustom tableCustom1;
     // End of variables declaration//GEN-END:variables
 }

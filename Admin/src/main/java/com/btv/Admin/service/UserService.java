@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -46,23 +47,13 @@ public class UserService {
         }
     }
 
-    public void filterByField(JTable table, String fieldName, String searchValue) {
+    public void filterByField(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         table.setRowSorter(rowSorter);
-        if (searchValue.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        } else {
-            switch (fieldName) {
-                case "Username" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
-                case "Name" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
-                case "Status" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
-                default -> {
-                }
-            }
-        }
+        rowSorter.setRowFilter(null);
     }
-
+    
     public void addNewUser(User newUser) {
         ClientSocket clientSocket = ClientSocket.getInstance();
         try {
@@ -220,27 +211,31 @@ public class UserService {
         }
     }
     
-    public void filterBySearch(JTable table, String searchValue, String fieldName) {
+    public void filterBySearch(JTable table,String searchValue, String fieldName) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         table.setRowSorter(rowSorter);
-
-        int columnIndex = 0;
-        switch (fieldName) {
-            case "Username" ->
-                columnIndex = 1;
-            case "Name" ->
-                columnIndex = 2;
-            default -> {
-            }
-        }
-
         if (searchValue.trim().length() == 0) {
             rowSorter.setRowFilter(null);
         } else {
-            System.out.println(columnIndex);
-            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, columnIndex)); // Case-insensitive search
+            switch (fieldName) {
+                case "Username" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 1)); // Case-insensitive search
+                case "Name" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 2)); // Case-insensitive search
+                case "Status" -> rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, 8)); // Case-insensitive search
+                default -> {
+                }
+            }
         }
     }
-
+    
+    public void filterByStatus(JTable table,JComboBox statusOptions){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        if (statusOptions.getSelectedItem() == ""){
+            rowSorter.setRowFilter(null);
+        } else{
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + statusOptions.getSelectedItem(), 8));
+        }
+    }
 }

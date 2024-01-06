@@ -78,6 +78,7 @@ public class Main extends javax.swing.JFrame {
                         break;
                     default:
                         setForm(onlineUsers);
+                        onlineUsers.updateTable();
                         break;
                 }
             }

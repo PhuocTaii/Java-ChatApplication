@@ -67,5 +67,4 @@ public class ChatDB { // Singleton
         }
         return dbInstance;
     }
-    
 }

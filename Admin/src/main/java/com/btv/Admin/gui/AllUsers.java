@@ -6,6 +6,7 @@ package com.btv.Admin.gui;
 
 import com.btv.Admin.model.User;
 import com.btv.Admin.service.UserService;
+import java.awt.Color;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -42,27 +43,10 @@ public class AllUsers extends javax.swing.JPanel {
         updateTable();
         addUserDialog.setLocationRelativeTo(null);
         tableClickHandle();        
-        userService.filterByField(tableUsers, "", "");
-//        searchUsername();
+        userService.filterByField(tableUsers);
         searchName();
     }
     
-        
-//    public void searchUsername() {
-//        filterTextField.getDocument().addDocumentListener(new DocumentListener() {
-//            public void changedUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//
-//            public void removeUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//
-//            public void insertUpdate(DocumentEvent e) {
-//                userService.filterBySearch(tableUsers, filterTextField.getText(), "Username");
-//            }
-//        });
-//    }
     
         public void searchName() {
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -312,7 +296,6 @@ public class AllUsers extends javax.swing.JPanel {
         statusOptions = new javax.swing.JComboBox<>();
         javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         addBtn = new javax.swing.JButton();
-        searchButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableUsers = new com.btv.Admin.gui.components.TableCustom();
         javax.swing.JPanel infoSection = new javax.swing.JPanel();
@@ -619,18 +602,6 @@ public class AllUsers extends javax.swing.JPanel {
             }
         });
 
-        searchButton.setBackground(new java.awt.Color(48, 162, 255));
-        searchButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        searchButton.setForeground(new java.awt.Color(255, 255, 255));
-        searchButton.setText("Search");
-        searchButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        searchButton.setPreferredSize(new java.awt.Dimension(75, 30));
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout controlSectionLayout = new javax.swing.GroupLayout(controlSection);
         controlSection.setLayout(controlSectionLayout);
         controlSectionLayout.setHorizontalGroup(
@@ -645,28 +616,22 @@ public class AllUsers extends javax.swing.JPanel {
                 .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         controlSectionLayout.setVerticalGroup(
             controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(controlSectionLayout.createSequentialGroup()
-                .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(filler2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(statusOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(filterLabel))
-                    .addGroup(controlSectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        searchButton.setVisible(false);
 
         tableUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -685,6 +650,10 @@ public class AllUsers extends javax.swing.JPanel {
             }
         });
         jScrollPane3.setViewportView(tableUsers);
+        if (tableUsers.getColumnModel().getColumnCount() > 0) {
+            tableUsers.getColumnModel().getColumn(9).setMinWidth(0);
+            tableUsers.getColumnModel().getColumn(9).setMaxWidth(0);
+        }
 
         infoSection.setMaximumSize(new java.awt.Dimension(32767, 396));
         infoSection.setOpaque(false);
@@ -944,21 +913,26 @@ public class AllUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         JComboBox cb = (JComboBox) evt.getSource();
         String optionChosen = (String) cb.getSelectedItem();
+        filterTextField.setText("");
+        statusOptions.setSelectedItem(null);
+        userService.filterByField(tableUsers);
+
         if ("None".equals(optionChosen)) {
-            filterTextField.setVisible(false);
+            filterTextField.setVisible(false);            
             statusOptions.setVisible(false);
-            searchButton.setVisible(false);
             // Show all data
+
         } else if ("Status".equals(optionChosen)) {
             filterTextField.setVisible(false);
             statusOptions.setVisible(true);
-            searchButton.setVisible(true);
         } else {
             filterTextField.setVisible(true);
             statusOptions.setVisible(false);
-            searchButton.setVisible(false);
         }
+        
+        
         revalidate();
+        repaint();
 
 //        userService.filterByField(tableUsers, "", optionChosen);
     }//GEN-LAST:event_filterOptionsActionPerformed
@@ -969,23 +943,19 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void statusOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusOptionsActionPerformed
         // TODO add your handling code here:
+//        String searchString = filterTextField.getText();
+//        searchString = statusOptions.getSelectedItem().toString();
+//        userService.filterByField(tableUsers);
+        userService.filterByStatus(tableUsers, statusOptions);
+        
+        statusOptions.revalidate();
+        statusOptions.repaint();
     }//GEN-LAST:event_statusOptionsActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
         // TODO add your handling code here:
         addUserDialog.setVisible(true);
     }//GEN-LAST:event_addBtnActionPerformed
-
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        // TODO add your handling code here:
-        String searchString = filterTextField.getText();
-        String searchOption = filterOptions.getSelectedItem().toString();
-        if (searchOption.equals("Status")) {
-            searchString = statusOptions.getSelectedItem().toString();
-        }
-        userService.filterByField(tableUsers, searchOption, searchString);
-        filterTextField.setText("");
-    }//GEN-LAST:event_searchButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
@@ -999,14 +969,18 @@ public class AllUsers extends javax.swing.JPanel {
         if (res == JOptionPane.YES_OPTION) {
             getUserField();
             String message = userService.validateUser(selectedUser);
-//            System.out.println(selectedUser.getStatus());
 
             if (message.equals("valid")) {
                 userService.modifyUser(selectedUser);
                 clearField();
                 updateTable();
+                messageField.setText("Modify user successfully");
+                messageField.setForeground(new Color(0, 128, 0));
+
             } else {
                 messageField.setText(message);
+                messageField.setForeground(new Color(255, 0, 0));
+
             }
         }
     }//GEN-LAST:event_updateButtonActionPerformed
@@ -1042,8 +1016,6 @@ public class AllUsers extends javax.swing.JPanel {
 
     private void usernameAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameAddFieldActionPerformed
         // TODO add your handling code here:
-//        searchName();
-//        searchUsername();
     }//GEN-LAST:event_usernameAddFieldActionPerformed
 
     private void emailAddFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailAddFieldActionPerformed
@@ -1103,10 +1075,11 @@ public class AllUsers extends javax.swing.JPanel {
             nameAddField.setText("");
             passwordAddField.setText("");
             usernameAddField.setText("");
+            JOptionPane.showMessageDialog(this, "User added", "Add user notification", JOptionPane.INFORMATION_MESSAGE);
+
             updateTable();
         } else {
-//            messageAddLabel.setText(validMessage);
-//            messageAddLabel.setForeground(Color.red);
+            JOptionPane.showMessageDialog(this, validMessage, "Add user notification", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -1146,7 +1119,6 @@ public class AllUsers extends javax.swing.JPanel {
     private javax.swing.JTextField passwordAddField;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JButton saveButton;
-    private javax.swing.JButton searchButton;
     private javax.swing.JComboBox<String> statusOptions;
     private com.btv.Admin.gui.components.TableCustom tableUsers;
     private javax.swing.JLabel titleAddDialg;

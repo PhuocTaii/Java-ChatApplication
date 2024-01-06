@@ -68,6 +68,13 @@ public class NewUserService {
         }
     }
     
+    public void filterByField(JTable table) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        rowSorter.setRowFilter(null);
+    }
+    
     public void filterByName(JTable table, String searchValue){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
@@ -132,7 +139,6 @@ public class NewUserService {
     
     public int[] MakeChart(String[][]tmp, int year){
         int monthCnt[] = new int[12];
-
         try{
             for(int i = 0; i < tmp.length; i++){
                 Date creationTime = new SimpleDateFormat("yyyy-MM-dd").parse(tmp[i][3]);
@@ -144,7 +150,7 @@ public class NewUserService {
                     monthCnt[idx]++;
                 }
             }
-                return monthCnt;
+            return monthCnt;
         } catch (ParseException e){
             e.printStackTrace();
             return null;

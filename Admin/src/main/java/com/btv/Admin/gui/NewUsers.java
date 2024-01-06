@@ -33,11 +33,12 @@ public class NewUsers extends javax.swing.JPanel {
     
     public NewUsers() {
         initComponents();
+        if(drawer != null)
+            statistic.remove(drawer);
         
         newUserService = new NewUserService();
         userList = newUserService.getAllNewUsers();
-        searchName();
-
+        drawChart();
         
         tableModel = (DefaultTableModel)tableUsers.getModel();
         tableModel.setRowCount(0);
@@ -46,10 +47,22 @@ public class NewUsers extends javax.swing.JPanel {
             tableModel.addRow(row);
         }
         
-        int year = jYearChooser1.getYear();
- 
-        int monthCnt[] = newUserService.MakeChart(userList, year);
+        
+        searchName();
+        newUserService.filterByName(tableUsers, "");
 
+    }
+    
+    public void drawChart(){
+        int year = jYearChooser1.getYear();
+        if(drawer != null){
+            statistic.remove(drawer);
+        }
+        int monthCnt[] = newUserService.MakeChart(userList, year);
+        
+        for(int i = 0; i < monthCnt.length; i++){
+            System.out.println(monthCnt[i]);
+        }
              
         drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
 
@@ -57,8 +70,9 @@ public class NewUsers extends javax.swing.JPanel {
         statistic.add(drawer, BorderLayout.CENTER);
         statistic.setPreferredSize(drawer.getPreferredSize());
         statistic.setMaximumSize(drawer.getPreferredSize());
-        newUserService.filterByName(tableUsers, "");
-
+        
+        statistic.revalidate();
+        statistic.repaint();
     }
     
     public void updateTable() {
@@ -68,18 +82,6 @@ public class NewUsers extends javax.swing.JPanel {
         for (Object[] row : userList) {
             tableModel.addRow(row);
         }
-        
-        statistic.remove(drawer);
-        
-        int monthCnt[] = newUserService.MakeChart(userList, 2021);
-
-             
-        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
-
-        statistic.setLayout(new BorderLayout());
-        statistic.add(drawer, BorderLayout.CENTER);
-        statistic.setPreferredSize(drawer.getPreferredSize());
-        statistic.setMaximumSize(drawer.getPreferredSize());
     }
 
     /**
@@ -124,12 +126,6 @@ public class NewUsers extends javax.swing.JPanel {
 
         options.setOpaque(false);
 
-        Input.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InputActionPerformed(evt);
-            }
-        });
-
         filterOptions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Name" }));
         Input.setVisible(false);
         filterOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -140,6 +136,12 @@ public class NewUsers extends javax.swing.JPanel {
 
         filter.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         filter.setText("Filter:");
+
+        startDate.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                startDatePropertyChange(evt);
+            }
+        });
 
         connector.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         connector.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -313,6 +315,11 @@ public class NewUsers extends javax.swing.JPanel {
         // TODO add your handling code here:
         JComboBox cb = (JComboBox)evt.getSource();
         String optionChosen = (String)cb.getSelectedItem();
+        newUserService.filterByField(tableUsers);
+//        drawChart();
+        Input.setText("");
+        startDate.setCalendar(null);
+        endDate.setCalendar(null);
 
         if ("None".equals(optionChosen)) {
             Input.setVisible(false);
@@ -326,31 +333,16 @@ public class NewUsers extends javax.swing.JPanel {
         filterOptions.repaint();
     }//GEN-LAST:event_filterOptionsActionPerformed
 
-    private void InputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_InputActionPerformed
-
     private void jYearChooser1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jYearChooser1PropertyChange
         // TODO add your handling code here:
-        int year = jYearChooser1.getYear();
-        statistic.remove(drawer);
-//        String[][] tmp = newUserService.getAllNewUsers(); 
-        int monthCnt[] = newUserService.MakeChart(userList, year);
-        
-        drawer = new GraphDrawer(monthCnt, 50, 0, 939, 251);
-
-        statistic.setLayout(new BorderLayout());
-        statistic.add(drawer, BorderLayout.CENTER);
-        statistic.setPreferredSize(drawer.getPreferredSize());
-        statistic.setMaximumSize(drawer.getPreferredSize());
-        
-        
+        drawChart();
         statistic.revalidate();
         statistic.repaint();
     }//GEN-LAST:event_jYearChooser1PropertyChange
 
     private void endDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDatePropertyChange
         // TODO add your handling code here:
+        Input.setText("");
         endDate.getDateEditor().addPropertyChangeListener(e -> {
         if ("date".equals(e.getPropertyName())){
                 if (startDate.getDate() != null){
@@ -366,6 +358,11 @@ public class NewUsers extends javax.swing.JPanel {
             } 
         });
     }//GEN-LAST:event_endDatePropertyChange
+
+    private void startDatePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_startDatePropertyChange
+        // TODO add your handling code here:
+        Input.setText("");
+    }//GEN-LAST:event_startDatePropertyChange
     
     public void searchName() {
         Input.getDocument().addDocumentListener(new DocumentListener() {

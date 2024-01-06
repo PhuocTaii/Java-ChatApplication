@@ -54,18 +54,33 @@ public class OnlineUsersService {
         }
     }
     
-    public void filterBySearch(JTable table, String searchValue){
+    public void filterByField(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        rowSorter.setRowFilter(null);
+    }
+    
+    public void filterBySearch(JTable table, String searchValue, String fieldName,JComboBox numberOptions){
         
-        table.setRowSorter(rowSorter); 
-
-        
-        if (searchValue.trim().length() == 0) {
-            rowSorter.setRowFilter(null);
-        }else
-            rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
-        
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
+        table.setRowSorter(rowSorter);
+        int columnIndex = 0;
+        switch (fieldName) {
+            case "Username" ->
+                columnIndex = 1;
+            case "Time open app" ->
+                columnIndex = 3;
+            default -> {
+            }
+        }
+;
+        if (columnIndex == 1) {
+            rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchValue, columnIndex)); // Case-insensitive search
+        } else if (columnIndex == 3){
+            filterByNumber(table, searchValue, numberOptions);
+        }
     }
     
     public String[][] getAllLoginTimes(){
@@ -124,7 +139,7 @@ public class OnlineUsersService {
             rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + searchValue + ".*", 1));
     }
     
-        public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
+    public void filterByNumber(JTable table, String numString, JComboBox numberOptions){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         TableRowSorter<DefaultTableModel> rowSorter = new TableRowSorter<>(model);
         
@@ -136,7 +151,13 @@ public class OnlineUsersService {
             rowSorter.setRowFilter(null);
         } else{
             if("Equal".equals(numberOptions.getSelectedItem())){
-                rowSorter.setRowFilter(RowFilter.regexFilter("(?i).*" + numString + ".*", 3));
+                RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
+                    public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
+                        int value1 = Integer.parseInt((String) entry.getValue(3)); // adjust these indices to match your table structure
+                        return value1 == Integer.parseInt(numString);
+                    }
+                };
+                rowSorter.setRowFilter(filter);
             }
             else if("Greater".equals(numberOptions.getSelectedItem())){
                 RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {

@@ -37,9 +37,7 @@ public class ClientSocket implements Runnable {
     private Socket socket;
     public BufferedReader dataIn;
     public BufferedWriter dataOut;
-    
-    private MessageType mess;
-    
+        
     private ClientSocket() {
         try {
             socket = new Socket("127.0.0.1", 6868);
@@ -56,10 +54,6 @@ public class ClientSocket implements Runnable {
             closeClientSocket();
         }
     }
-    
-    public Socket getSocket() {
-        return this.socket;
-    } 
     
     public static ClientSocket getInstance() {
         if(clientInstance == null) {
